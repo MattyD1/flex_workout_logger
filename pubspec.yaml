@@ -15,6 +15,46 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_flavorizr: ^2.2.1
 
 flutter:
   uses-material-design: true
+
+
+flavorizr:
+  flavors:
+    local:
+      app:
+        name: "Flex"
+
+      android:
+        applicationId: "com.mattdunn.flex.local"
+      ios:
+        bundleId: "com.mattdunn.flex.local"
+
+    development:
+      app:
+        name: "Flex Development"
+
+      android:
+        applicationId: "com.mattdunn.flex.dev"
+      ios:
+        bundleId: "com.mattdunn.flex.dev"
+
+    staging:
+      app:
+        name: "Flex Staging"
+
+      android:
+        applicationId: "com.mattdunn.flex.staging"
+      ios:
+        bundleId: "com.mattdunn.flex.staging"
+
+    production:
+      app:
+        name: "Flex Production"
+
+      android:
+        applicationId: "com.mattdunn.flex"
+      ios:
+        bundleId: "com.mattdunn.flex"
