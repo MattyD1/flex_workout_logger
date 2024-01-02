@@ -1,28 +1,23 @@
+/// Application flavors for various environments
 enum Flavor {
-  local,
+  /// Development environment flavor
   development,
+
+  /// Staging environment flavor
   staging,
+
+  ///Production environment flavor
   production,
 }
 
+/// Class responsible for flavor configuration
 class F {
+  /// Describes the flavor that the app is currently using
   static Flavor? appFlavor;
 
-  static String get name => appFlavor?.name ?? '';
+  /// Adds flavor to the name of the app
+  static String get title => 'Example ${appFlavor?.name}';
 
-  static String get title {
-    switch (appFlavor) {
-      case Flavor.local:
-        return 'Flex';
-      case Flavor.development:
-        return 'Flex Development';
-      case Flavor.staging:
-        return 'Flex Staging';
-      case Flavor.production:
-        return 'Flex Production';
-      default:
-        return 'title';
-    }
-  }
-
+  /// Defines the environment variables filename for each flavor
+  static String get envFileName => '${appFlavor?.name}.config.json';
 }
