@@ -16,12 +16,16 @@ class ExampleList extends ConsumerWidget {
     final cars = realm.all<Car>();
 
     return Scaffold(
+      backgroundColor: context.colorScheme.background,
       body: Column(
         children: [
           const SizedBox(height: 100),
           Text(context.tr.appName),
           ...cars.map(
-            (car) => Text(car.make),
+            (car) => Text(
+              car.make,
+              style: context.textTheme.exampleLargeTitle,
+            ),
           ),
         ],
       ),
