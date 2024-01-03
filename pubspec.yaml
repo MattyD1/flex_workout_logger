@@ -9,11 +9,50 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_riverpod: ^2.4.9
+  realm: ^1.6.1
+  riverpod_annotation: ^2.3.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_flavorizr: ^2.2.1
+  very_good_analysis: ^5.1.0
+  riverpod_generator: ^2.3.9
+  build_runner: ^2.4.7
+  custom_lint: ^0.5.7
+  riverpod_lint: ^2.3.7
 
 flutter:
   uses-material-design: true
+
+
+flavorizr:
+  flavors:
+    development:
+      app:
+        name: "Flex Development"
+
+      android:
+        applicationId: "com.mattdunn.flex.dev"
+      ios:
+        bundleId: "com.mattdunn.flex.dev"
+
+    staging:
+      app:
+        name: "Flex Staging"
+
+      android:
+        applicationId: "com.mattdunn.flex.staging"
+      ios:
+        bundleId: "com.mattdunn.flex.staging"
+
+    production:
+      app:
+        name: "Flex Production"
+
+      android:
+        applicationId: "com.mattdunn.flex"
+      ios:
+        bundleId: "com.mattdunn.flex"
