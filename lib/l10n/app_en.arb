@@ -1,0 +1,18 @@
+{
+    "@@locale": "en",
+
+    "appName": "Flex",
+
+    "cancel": "Cancel",
+
+    "create": "Create",
+
+    "delete": "Delete",
+
+    "description": "Description",
+
+    "or": "or",
+
+    "somethingWentWrong": "Something went wrong",
+    "@somethingWentWrong": {}
+}
