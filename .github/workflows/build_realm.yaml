@@ -10,7 +10,7 @@ jobs:
 
     # SET THE ENVIRONMENT VARIABLES FOR USE LATER ON
     - name: "Store current time in variable"
-      run: echo "CURRENT_TIME=$(date + '%Y-%m-%d_%s')" >> $GITHUB_ENV
+      run: echo "CURRENT_TIME=$(date + '%Y-%m-%d-%s')" >> $GITHUB_ENV
 
     - name: "Is this a push to the Main branch?"
       if: ${{ github.ref == 'refs/heads/main' }}
@@ -28,21 +28,23 @@ jobs:
         branch=$(echo "${ref##*/}")
         echo "FEATURE_BRANCH=$branch" >> $GITHUB_ENV
 
-        # Check if a Realm app already exists for this feature branch
-        # Note: This requires the IP addres of the Github Actions vm to be in the Altas access list
-        output=*null
-        
-        if [[ $output == *null ]]; then
-          echo "No Realm app found for this branch.  A new app will be pushed later in this workflow"
-        else
-          echo "A Realm app was found for this branch. Updates will be pushed to the existing app later"
-          app_id=$(echo $output | sed 's/^.*realm_app_id" : "\([^"]*\).*/\1/')
-          echo "REALM_APP_ID=$app_id" >> $GITHUB_ENV
-        fi
+        # Assuming the JSON file is simple and the update is straightforward
+        # For more complex updates, consider a separate script file
+        json_file="development.config.json"
 
-        # Update the realmAppId in the development.config.json environment file
-        # Set the appId to contain the branch name to ensure its unique
-        printf '{\n "realmAppId": "flexsync-%s"\n}' "$branch" > development.config.json
+        # Read JSON file and modify it using jq (for example, add a new field)
+        jq '. + {"newBranch": "${{ github.ref_name }}"}' "$json_file" > temp.json && mv temp.json "$json_file"
+
+        # Check if there are any changes. If so, commit and push them.
+        if [ -n "$(git status --porcelain)" ]; then
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add "$json_file"
+          git commit -m "Update JSON file for new branch"
+          git push
+        else
+          echo "No changes to commit"
+        fi
 
     - name: "Set environment variables for all other runs"
       if: ${{ github.event_name == 'pull_request' }}
