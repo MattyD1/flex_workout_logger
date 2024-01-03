@@ -10,7 +10,7 @@ jobs:
 
     # SET THE ENVIRONMENT VARIABLES FOR USE LATER ON
     - name: "Store current time in variable"
-      run: echo "CURRENT_TIME=$(date + '%Y-%m-%d_%s')" >> $GITHUB_ENV"
+      run: echo "CURRENT_TIME=$(date + '%Y-%m-%d_%s')" >> $GITHUB_ENV
 
     - name: "Is this a push to the Main branch?"
       if: ${{ github.ref == 'refs/heads/main' }}
