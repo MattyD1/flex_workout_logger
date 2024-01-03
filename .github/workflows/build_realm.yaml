@@ -17,7 +17,7 @@ jobs:
       run: echo "REALM_APP_ID=flexsync" >> $GITHUB_ENV
 
     - name: "Is this a push to the Production branch"
-      if: ${{ githug.ref == 'refs/heads/prod' }}
+      if: ${{ github.ref == 'refs/heads/prod' }}
       run: echo "REALM_APP_ID=flexsync-prod" >> $GITHUB_ENV
 
     - name: "IS this a push to a feature branch?"
