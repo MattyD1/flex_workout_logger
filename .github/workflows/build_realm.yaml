@@ -50,3 +50,7 @@ jobs:
         # Create a new environment variable named IS_DYNAMICALLY_GENERATED_APP to indicate this is
         # a dynamically generated app that should be deleted later in this workflow
         echo "IS_DYNAMICALLY_GENERATED_APP=true" >> $GITHUB_ENV
+
+    - name: "Test environment variable outputs"
+      run: |
+        echo "REALM_APP_ID: ${{ env.REALM_APP_ID }}"
