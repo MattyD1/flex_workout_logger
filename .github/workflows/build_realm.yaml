@@ -1,6 +1,6 @@
 name: Build MongoDB Realm
 
-on: [push, pull_request]
+on: [push, pull_request, create]
 
 jobs: 
   build: 
@@ -20,8 +20,8 @@ jobs:
       if: ${{ github.ref == 'refs/heads/prod' }}
       run: echo "REALM_APP_ID=flexsync-prod" >> $GITHUB_ENV
 
-    - name: "IS this a push to a feature branch?"
-      if: ${{ !env.REALM_APP_ID && github.event_name == 'push' }}
+    - name: "Is this a new feature branch?"
+      if: ${{ !env.REALM_APP_ID && github.event_name == 'create' }}
       run: |
         # Create a new environment variable to store the name of the feature branch
         ref=$(echo ${{ github.ref }})
