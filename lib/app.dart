@@ -1,8 +1,6 @@
-import 'package:flex_workout_logger/features/common/ui/screen/test_realm_screen.dart';
-import 'package:flex_workout_logger/features/common/ui/widgets/flavor_banner.dart';
+import 'package:flex_workout_logger/config/router.dart';
 import 'package:flex_workout_logger/flavors.dart';
 import 'package:flex_workout_logger/l10n/app_localizations.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// The main application widget.
@@ -12,15 +10,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: F.title,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      home: const FlavorBanner(
-        show: kDebugMode,
-        child: Scaffold(
-          body: Center(child: ExampleList()),
-        ),
-      ),
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }

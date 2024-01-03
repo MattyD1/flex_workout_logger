@@ -1,6 +1,6 @@
 import 'package:flex_workout_logger/config/providers.dart';
 import 'package:flex_workout_logger/features/common/infrastructure/schemas/test_realm_model.dart';
-import 'package:flex_workout_logger/features/common/ui/util/ui_extensions.dart';
+import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,14 +15,16 @@ class ExampleList extends ConsumerWidget {
 
     final cars = realm.all<Car>();
 
-    return Column(
-      children: [
-        const SizedBox(height: 100),
-        Text(context.tr.appName),
-        ...cars.map(
-          (car) => Text(car.make),
-        ),
-      ],
+    return Scaffold(
+      body: Column(
+        children: [
+          const SizedBox(height: 100),
+          Text(context.tr.appName),
+          ...cars.map(
+            (car) => Text(car.make),
+          ),
+        ],
+      ),
     );
   }
 }
