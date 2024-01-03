@@ -18,6 +18,9 @@ class F {
   /// Adds flavor to the name of the app
   static String get title => 'Example ${appFlavor?.name}';
 
+  /// Flavor
+  static String get flavor => appFlavor?.name ?? 'No flavor';
+
   /// Defines the environment variables filename for each flavor
   static String get envFileName => '${appFlavor?.name}.config.json';
 }

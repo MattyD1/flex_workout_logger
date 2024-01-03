@@ -1,43 +1,24 @@
+import 'package:flex_workout_logger/features/common/ui/screen/test_realm_screen.dart';
+import 'package:flex_workout_logger/features/common/ui/widgets/flavor_banner.dart';
+import 'package:flex_workout_logger/flavors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'flavors.dart';
-
+/// The main application widget.
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  /// Creates a new [App].
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: F.title,
-      home: _flavorBanner(
-        child: const Scaffold(
-          body: Center(
-            child: Text('Hello World!'),
-          ),
-        ),
+      home: const FlavorBanner(
         show: kDebugMode,
+        child: Scaffold(
+          body: Center(child: ExampleList()),
+        ),
       ),
     );
   }
-
-  Widget _flavorBanner({
-    required Widget child,
-    bool show = true,
-  }) =>
-      show
-          ? Banner(
-              location: BannerLocation.topStart,
-              message: F.title,
-              color: Colors.green.withOpacity(0.6),
-              textStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12.0,
-                  letterSpacing: 1.0),
-              textDirection: TextDirection.ltr,
-              child: child,
-            )
-          : Container(
-              child: child,
-            );
 }
