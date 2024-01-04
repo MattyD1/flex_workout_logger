@@ -1,3 +1,5 @@
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'exercise_entity.freezed.dart';
@@ -10,8 +12,8 @@ class ExerciseEntity with _$ExerciseEntity {
     // Required Parameters (Needed for Quick Add Feature)
     required String id,
     required String name,
-
-    // TODO: Add Movement Pattern and Muscle Group
+    required MovementPatternEntity movementPattern,
+    required List<MuscleGroupEntity> muscleGroups,
 
     // Defaulted Parameters
     required int engagement,
