@@ -5,16 +5,16 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2.3.4
-        - uses: subosito/flutter-action@v1.5.3
-        
-        - name: "Install packages"
-          run: flutter pub get
-        
-        - name: "Build all generated files" 
-          run: dart run build_runner build
-        
-        - name: "Run test"
-          run: flutter test test
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: subosito/flutter-action@v1.5.3
+      
+      - name: "Install packages"
+        run: flutter pub get
+      
+      - name: "Build all generated files" 
+        run: dart run build_runner build
+      
+      - name: "Run test"
+        run: flutter test test
     
