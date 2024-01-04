@@ -13,8 +13,8 @@ jobs:
           run: flutter pub get
         
         - name: "Build all generated files" 
-        run: dart run build_runner build
+          run: dart run build_runner build
         
         - name: "Run test"
-        run: flutter test test
+          run: flutter test test
     
