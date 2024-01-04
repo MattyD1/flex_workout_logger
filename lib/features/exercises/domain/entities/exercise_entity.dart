@@ -24,6 +24,7 @@ class ExerciseEntity with _$ExerciseEntity {
     // Optional Parameters
     String? description,
     List<String>? coachingCues,
+    ExerciseEntity? parentExercise,
 
     // Embedded Extensions
     BaseLoad? baseWeight,
