@@ -1,6 +1,6 @@
 name: Testing
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   ios: 
@@ -37,4 +37,35 @@ jobs:
 
       - name: "Run Tests"
         run: flutter test
+
+  andriod:
+    strategy:
+      matrix:
+        api-level:
+          - 33
+      fail-fast: true
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          # instead of "channel: stable", you could be more precise by specifying the exact version of Flutter you're using:
+          # flutter-version: '<FLUTTER_VERSION>'
+      - name: "Install Flutter dependencies"
+        run: flutter pub get
+
+      - name: "Build all generated files" 
+        run: dart run build_runner build
+      
+      - name: "Run Tests"
+        # more info on https://github.com/ReactiveCircus/android-emulator-runner
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          script: flutter test
+
     
