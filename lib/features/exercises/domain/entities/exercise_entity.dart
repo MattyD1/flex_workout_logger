@@ -16,6 +16,7 @@ class ExerciseEntity with _$ExerciseEntity {
     required List<MuscleGroupEntity> muscleGroups,
 
     // Defaulted Parameters
+    required List<String> coachingCues,
     required Engagement engagement,
     required Style style,
     required DateTime createdAt,
@@ -23,7 +24,6 @@ class ExerciseEntity with _$ExerciseEntity {
 
     // Optional Parameters
     String? description,
-    List<String>? coachingCues,
     ExerciseEntity? parentExercise,
 
     // Embedded Extensions
