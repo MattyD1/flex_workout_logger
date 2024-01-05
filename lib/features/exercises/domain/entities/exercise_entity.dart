@@ -16,8 +16,8 @@ class ExerciseEntity with _$ExerciseEntity {
     required List<MuscleGroupEntity> muscleGroups,
 
     // Defaulted Parameters
-    required int engagement,
-    required int style,
+    required Engagement engagement,
+    required Style style,
     required DateTime createdAt,
     required DateTime updatedAt,
 
@@ -50,6 +50,54 @@ class Load with _$Load {
   /// [Load] factory constructor
   const factory Load({
     required double weight,
-    required int unit,
+    required Unit unit,
   }) = _Load;
+}
+
+/// [Unit] Enum
+enum Unit {
+  /// Pounds
+  lbs,
+
+  /// Kilograms
+  kg;
+
+  factory Unit.parse(String input) => tryParse(input)!;
+  static final _nameMap = values.asNameMap();
+
+  /// Returns the name of this enum constant, as contained in the declaration.
+  static Unit? tryParse(String input) => _nameMap[input];
+}
+
+/// [Style] Enum
+enum Style {
+  /// Repititons
+  reps,
+
+  /// Timed
+  timed;
+
+  factory Style.parse(String input) => tryParse(input)!;
+  static final _nameMap = values.asNameMap();
+
+  /// Returns the name of this enum constant, as contained in the declaration.
+  static Style? tryParse(String input) => _nameMap[input];
+}
+
+/// [Engagement] Enum
+enum Engagement {
+  /// Pounds
+  bilateral,
+
+  /// Kilograms
+  unilateral,
+
+  /// Bilateral with seperate weights;
+  bilateralSeperate;
+
+  factory Engagement.parse(String input) => tryParse(input)!;
+  static final _nameMap = values.asNameMap();
+
+  /// Returns the name of this enum constant, as contained in the declaration.
+  static Engagement? tryParse(String input) => _nameMap[input];
 }
