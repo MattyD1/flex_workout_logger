@@ -3,15 +3,15 @@ import 'package:flex_workout_logger/features/common/domain/validations/validatio
 import 'package:fpdart/fpdart.dart';
 
 /// Department Name value
-class DepartmentName extends Validation<String> {
+class ExerciseName extends Validation<String> {
   ///
-  factory DepartmentName(String input) {
-    return DepartmentName._(
+  factory ExerciseName(String input) {
+    return ExerciseName._(
       _validate(input),
     );
   }
 
-  const DepartmentName._(this._value);
+  const ExerciseName._(this._value);
   @override
   Either<Failure, String> get value => _value;
 
