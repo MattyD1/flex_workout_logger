@@ -20,6 +20,7 @@ dependencies:
   go_router: ^13.0.0
   flutter_launcher_icons: ^0.13.1
   intl: ^0.18.1
+  faker: ^2.1.0
 
 dev_dependencies:
   flutter_test:

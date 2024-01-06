@@ -8,25 +8,25 @@ import 'package:fpdart/fpdart.dart';
 /// Exercise Repository Interface
 abstract class IExerciseRepository {
   /// Get Exercise list
-  FutureOr<Either<Failure, List<ExerciseEntity>>> getDepartments();
+  FutureOr<Either<Failure, List<ExerciseEntity>>> getExercises();
 
   /// Get Exericse by id
-  FutureOr<Either<Failure, ExerciseEntity>> getDepartmentById(String id);
+  FutureOr<Either<Failure, ExerciseEntity>> getExerciseById(String id);
 
   /// Create Exercise
-  FutureOr<Either<Failure, ExerciseEntity>> createDepartment(
+  FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
   );
 
   /// Update Exercise
-  FutureOr<Either<Failure, ExerciseEntity>> updateDepartment(
+  FutureOr<Either<Failure, ExerciseEntity>> updateExercise(
     String id,
     ExerciseName name,
   );
 
   /// Delete Exercise by id
-  FutureOr<Either<Failure, bool>> deleteDepartment(String id);
+  FutureOr<Either<Failure, bool>> deleteExercise(String id);
 
   /// Delete many Exercises by id
-  FutureOr<Either<Failure, bool>> deleteMultipleDepartments(List<String> ids);
+  FutureOr<Either<Failure, bool>> deleteMultipleExercises(List<String> ids);
 }

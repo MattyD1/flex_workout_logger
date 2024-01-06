@@ -18,7 +18,7 @@ class ExerciseRepository implements IExerciseRepository {
   final Realm realm;
 
   @override
-  FutureOr<Either<Failure, ExerciseEntity>> createDepartment(
+  FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
   ) {
     try {
@@ -39,40 +39,40 @@ class ExerciseRepository implements IExerciseRepository {
     } catch (e) {
       return left(
         Failure.internalServerError(
-          message: 'An internal server error has occured: $e',
+          message: e.toString(),
         ),
       );
     }
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteDepartment(String id) {
-    // TODO: implement deleteDepartment
+  FutureOr<Either<Failure, bool>> deleteExercise(String id) {
+    // TODO: implement deleteExercise
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteMultipleDepartments(List<String> ids) {
-    // TODO: implement deleteMultipleDepartments
+  FutureOr<Either<Failure, bool>> deleteMultipleExercises(List<String> ids) {
+    // TODO: implement deleteMultipleExercises
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, ExerciseEntity>> getDepartmentById(String id) {
-    // TODO: implement getDepartmentById
+  FutureOr<Either<Failure, ExerciseEntity>> getExerciseById(String id) {
+    // TODO: implement getExerciseById
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, List<ExerciseEntity>>> getDepartments() {
-    // TODO: implement getDepartments
+  FutureOr<Either<Failure, List<ExerciseEntity>>> getExercises() {
+    // TODO: implement getExercises
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, ExerciseEntity>> updateDepartment(
+  FutureOr<Either<Failure, ExerciseEntity>> updateExercise(
       String id, ExerciseName name) {
-    // TODO: implement updateDepartment
+    // TODO: implement updateExercise
     throw UnimplementedError();
   }
 }
