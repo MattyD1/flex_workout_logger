@@ -22,6 +22,10 @@ class Failure implements Exception {
   /// Represents 400 error
   const factory Failure.badRequest() = _BadRequestFailure;
 
+  /// Represents 500 error
+  const factory Failure.internalServerError({String? message}) =
+      _InternalServerErrorFailure;
+
   /// Get the error message for specified failure
   String get error => this is _UnprocessableEntityFailure
       ? (this as _UnprocessableEntityFailure).message
