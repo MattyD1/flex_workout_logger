@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/exercise_repository.dart';
