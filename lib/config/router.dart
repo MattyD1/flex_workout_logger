@@ -1,6 +1,6 @@
 import 'package:flex_workout_logger/features/common/ui/screens/error_screen.dart';
-import 'package:flex_workout_logger/features/common/ui/screens/test_realm_screen.dart';
 import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/library_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,9 +8,9 @@ import 'package:go_router/go_router.dart';
 final router = GoRouter(
   routes: [
     GoRoute(
-      path: '/',
-      name: 'home',
-      builder: (context, state) => const ExampleList(),
+      path: LibraryScreen.routePath,
+      name: LibraryScreen.routeName,
+      builder: (context, state) => const LibraryScreen(),
     ),
   ],
   observers: [

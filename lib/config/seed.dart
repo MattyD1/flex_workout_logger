@@ -1,9 +1,38 @@
-import 'package:flex_workout_logger/features/common/infrastructure/schemas/test_realm_model.dart';
+import 'package:flex_workout_logger/features/common/ui/utils/date_time_extensions.dart';
+import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:realm/realm.dart';
 
 /// Seeds the realm with data on first load
 void realmSeed(Realm realm) {
-  realm.add(
-    Car(ObjectId(), 'Ford'),
+  final initialExerciseNames = <String>[
+    'Bench Press',
+    'Squat',
+    'Deadlift',
+    'Overhead Press',
+    'Barbell Row',
+    'Pull Up',
+    'Chin Up',
+    'Dip',
+    'Push Up',
+    'Sit Up',
+    'Crunch',
+    'Plank',
+    'Lunge',
+    'Calf Raise',
+    'Leg Press',
+    'Leg Curl',
+    'Leg Extension',
+    'Leg Raise',
+  ];
+
+  late final initialExercises = initialExerciseNames.map(
+    (e) => Exercise(
+      ObjectId(),
+      e,
+      DateTimeX.current.toUtc(),
+      DateTimeX.current.toUtc(),
+    ),
   );
+
+  realm.addAll(initialExercises);
 }
