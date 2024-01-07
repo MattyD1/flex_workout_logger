@@ -1,4 +1,6 @@
+import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercises_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Library screen
@@ -14,8 +16,22 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: ExercisesList(),
+    return Scaffold(
+      backgroundColor: context.colorScheme.background,
+      body: CustomScrollView(
+        scrollBehavior: const CupertinoScrollBehavior(),
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+            largeTitle: Text(
+              'Library',
+              style: TextStyle(color: context.colorScheme.foreground),
+            ),
+            backgroundColor: context.colorScheme.offBackground,
+            border: null,
+          ),
+          const ExercisesList(),
+        ],
+      ),
     );
   }
 }
