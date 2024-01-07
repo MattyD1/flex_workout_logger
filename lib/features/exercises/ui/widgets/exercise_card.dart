@@ -1,6 +1,8 @@
 import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_view_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 /// A selectable card with [Exercise Title]
 class ExercisesCard extends StatelessWidget {
@@ -24,6 +26,12 @@ class ExercisesCard extends StatelessWidget {
           color: context.colorScheme.foreground,
           fontWeight: FontWeight.w600,
         ),
+      ),
+      onTap: () => context.goNamed(
+        ExercisesViewScreen.routeName,
+        pathParameters: {
+          'eid': exercise.id,
+        },
       ),
       leading: const Icon(CupertinoIcons.square),
       padding: const EdgeInsets.fromLTRB(
