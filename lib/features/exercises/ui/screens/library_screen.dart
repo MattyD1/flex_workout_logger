@@ -29,7 +29,7 @@ class LibraryScreen extends StatelessWidget {
             backgroundColor: context.colorScheme.offBackground,
             border: null,
           ),
-          const ExercisesList(),
+          const SliverToBoxAdapter(child: ExercisesList()),
         ],
       ),
     );

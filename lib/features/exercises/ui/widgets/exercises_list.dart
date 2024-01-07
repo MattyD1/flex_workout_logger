@@ -13,32 +13,26 @@ class ExercisesList extends ConsumerWidget {
     final exercises = ref.watch(exercisesListControllerProvider);
     return exercises.when(
       data: (items) => items.isEmpty
-          ? const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Center(
-                  child: Text('No items found'),
-                ),
+          ? const Padding(
+              padding: EdgeInsets.all(8),
+              child: Center(
+                child: Text('No items found'),
               ),
             )
-          : SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(items[index].name),
+          : Column(
+              children: [
+                ...items.map(
+                  (e) => ListTile(
+                    title: Text(e.name),
                     onTap: () {/* Handle item tap */},
-                  );
-                },
-                childCount: items.length, // Replace with your items count
-              ),
+                  ),
+                ),
+              ],
             ),
-      error: (o, e) => SliverToBoxAdapter(
-        child: AppError(
-          title: o.toString(),
-        ),
+      error: (o, e) => AppError(
+        title: o.toString(),
       ),
-      loading: () =>
-          const SliverToBoxAdapter(child: CircularProgressIndicator()),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 }
