@@ -20,7 +20,7 @@ class ExerciseRepository implements IExerciseRepository {
   @override
   FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
-  ) {
+  ) async {
     try {
       final currentDateTime = DateTimeX.current;
 
@@ -46,33 +46,127 @@ class ExerciseRepository implements IExerciseRepository {
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteExercise(String id) {
-    // TODO: implement deleteExercise
-    throw UnimplementedError();
+  FutureOr<Either<Failure, bool>> deleteExercise(String id) async {
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<Exercise>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      realm.write(() {
+        realm.delete(res);
+      });
+
+      return right(true);
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteMultipleExercises(List<String> ids) {
-    // TODO: implement deleteMultipleExercises
-    throw UnimplementedError();
+  FutureOr<Either<Failure, int>> deleteMultipleExercises(
+    List<String> ids,
+  ) async {
+    try {
+      final objectIds = ids.map(ObjectId.fromHexString).toList();
+
+      final res = realm.query<Exercise>('id IN \$0', [objectIds]);
+
+      if (res.isEmpty) {
+        return left(const Failure.empty());
+      }
+
+      final numberToDelete = res.length;
+
+      realm.write(() {
+        realm.deleteMany(res);
+      });
+
+      return right(numberToDelete);
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
-  FutureOr<Either<Failure, ExerciseEntity>> getExerciseById(String id) {
-    // TODO: implement getExerciseById
-    throw UnimplementedError();
+  FutureOr<Either<Failure, ExerciseEntity>> getExerciseById(String id) async {
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<Exercise>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      return right(res.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
-  FutureOr<Either<Failure, List<ExerciseEntity>>> getExercises() {
-    // TODO: implement getExercises
-    throw UnimplementedError();
+  FutureOr<Either<Failure, List<ExerciseEntity>>> getExercises() async {
+    try {
+      final res = realm.all<Exercise>();
+
+      return right(res.map((e) => e.toEntity()).toList());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
   FutureOr<Either<Failure, ExerciseEntity>> updateExercise(
-      String id, ExerciseName name) {
-    // TODO: implement updateExercise
-    throw UnimplementedError();
+    String id,
+    ExerciseName name,
+  ) async {
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<Exercise>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      final updatedExercise = Exercise(
+        objectId,
+        name.value.getOrElse((l) => 'No name provided'),
+        res.createdAt,
+        DateTimeX.current,
+      );
+
+      realm.write(() {
+        realm.add(updatedExercise, update: true);
+      });
+
+      return right(updatedExercise.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 }

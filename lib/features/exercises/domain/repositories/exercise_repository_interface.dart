@@ -28,5 +28,5 @@ abstract class IExerciseRepository {
   FutureOr<Either<Failure, bool>> deleteExercise(String id);
 
   /// Delete many Exercises by id
-  FutureOr<Either<Failure, bool>> deleteMultipleExercises(List<String> ids);
+  FutureOr<Either<Failure, int>> deleteMultipleExercises(List<String> ids);
 }
