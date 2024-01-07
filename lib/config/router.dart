@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 final router = GoRouter(
   routes: [
     GoRoute(
-      path: LibraryScreen.routePath,
+      path: '/',
       name: LibraryScreen.routeName,
       builder: (context, state) => const LibraryScreen(),
     ),

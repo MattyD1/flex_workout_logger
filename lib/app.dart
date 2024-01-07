@@ -1,6 +1,5 @@
 import 'package:flex_workout_logger/config/router.dart';
 import 'package:flex_workout_logger/config/theme/theme.dart';
-import 'package:flex_workout_logger/flavors.dart';
 import 'package:flex_workout_logger/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: F.title,
+      title: 'Flex Workout Logger',
 
       // Themeing
       theme: AppTheme.light,
