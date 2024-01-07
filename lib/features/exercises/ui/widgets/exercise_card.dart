@@ -34,6 +34,7 @@ class ExercisesCard extends StatelessWidget {
         },
       ),
       leading: const Icon(CupertinoIcons.square),
+      trailing: const Icon(CupertinoIcons.info_circle, size: 20),
       padding: const EdgeInsets.fromLTRB(
         20,
         14,
