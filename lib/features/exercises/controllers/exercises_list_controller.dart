@@ -1,5 +1,6 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/providers.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'exercises_list_controller.g.dart';
@@ -36,6 +37,16 @@ class ExercisesListController extends _$ExercisesListController {
         ..insert(i, entity);
     }
 
+    state = AsyncValue.data(items);
+  }
+
+  /// Delete an entity in the list
+  void deleteExercise(ExerciseEntity entity) {
+    final items = state.valueOrNull ?? [];
+
+    state = const AsyncValue.loading();
+    
+    items.remove(entity);
     state = AsyncValue.data(items);
   }
 }
