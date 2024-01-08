@@ -22,4 +22,20 @@ class ExercisesListController extends _$ExercisesListController {
     items.add(entity);
     state = AsyncValue.data(items);
   }
+
+  /// Update an entity in the list
+  void editExercise(ExerciseEntity entity) {
+    final items = state.valueOrNull ?? [];
+
+    state = const AsyncValue.loading();
+
+    final i = items.indexWhere((element) => element.id == entity.id);
+    if (i != -1) {
+      items
+        ..removeAt(i)
+        ..insert(i, entity);
+    }
+
+    state = AsyncValue.data(items);
+  }
 }

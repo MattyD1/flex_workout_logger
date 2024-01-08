@@ -1,7 +1,9 @@
 import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_edit_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_view_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// A selectable card with [Exercise Title]
@@ -34,7 +36,18 @@ class ExercisesCard extends StatelessWidget {
         },
       ),
       leading: const Icon(CupertinoIcons.square),
-      trailing: const Icon(CupertinoIcons.info_circle, size: 20),
+      trailing: IconButton(
+        onPressed: () => context.goNamed(
+          ExercisesEditScreen.routeName,
+          pathParameters: {
+            'eid': exercise.id,
+          },
+        ),
+        icon: const Icon(
+          CupertinoIcons.pencil,
+        ),
+        iconSize: 20,
+      ),
       padding: const EdgeInsets.fromLTRB(
         20,
         14,
