@@ -22,7 +22,7 @@ class ExercisesCard extends StatelessWidget {
 
         // TODO make this into a text style
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           color: context.colorScheme.foreground,
           fontWeight: FontWeight.w600,
         ),

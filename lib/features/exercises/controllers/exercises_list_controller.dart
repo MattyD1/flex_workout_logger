@@ -12,4 +12,14 @@ class ExercisesListController extends _$ExercisesListController {
     final res = await ref.watch(exerciseRepositoryProvider).getExercises();
     return res.fold((l) => throw l, (r) => r);
   }
+
+  /// Add an entity to list
+  void addExercise(ExerciseEntity entity) {
+    final items = state.valueOrNull ?? [];
+
+    state = const AsyncValue.loading();
+
+    items.add(entity);
+    state = AsyncValue.data(items);
+  }
 }
