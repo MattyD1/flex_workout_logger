@@ -5,7 +5,6 @@ import 'package:flex_workout_logger/features/exercises/controllers/exercises_lis
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,9 +22,28 @@ class ExerciseEditForm extends ConsumerStatefulWidget {
 }
 
 class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
+  final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   ExerciseName? _name;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    ref.listenManual(exercisesEditControllerProvider(widget.id), (
+      AsyncValue<ExerciseEntity>? prev,
+      AsyncValue<ExerciseEntity> next,
+    ) {
+      final v = next.asData!.value.name;
+      _nameController.text = v;
+      _name = ExerciseName(v);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +51,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
         exercisesEditControllerProvider(widget.id), (previous, next) {
       next.maybeWhen(
         data: (data) {
-          if (data == null) return;
+          if (previous?.value == null || data == null) return;
 
           ref.read(exercisesListControllerProvider.notifier).editExercise(data);
           context.pop();
@@ -63,6 +81,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
         children: [
           TextFormField(
             onChanged: (value) => _name = ExerciseName(value),
+            controller: _nameController,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: AppLayout.miniPadding,

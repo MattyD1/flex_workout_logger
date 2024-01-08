@@ -11,8 +11,10 @@ part 'exercises_edit_controller.g.dart';
 @riverpod
 class ExercisesEditController extends _$ExercisesEditController {
   @override
-  FutureOr<ExerciseEntity?> build(String id) {
-    return null;
+  FutureOr<ExerciseEntity> build(String id) async {
+    final res = await ref.watch(exerciseRepositoryProvider).getExerciseById(id);
+
+    return res.fold((l) => throw l, (r) => r);
   }
 
   ///
