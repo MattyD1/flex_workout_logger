@@ -44,7 +44,10 @@ class ExercisesCreateScreen extends ConsumerWidget {
           const SizedBox.expand(
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppLayout.defaultPadding,
+                vertical: AppLayout.extraLargePadding,
+              ),
               child: ExerciseCreateForm(),
             ),
           ),

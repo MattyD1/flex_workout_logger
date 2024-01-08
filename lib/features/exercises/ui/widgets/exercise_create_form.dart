@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
@@ -52,41 +53,53 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Padding(
-        padding: const EdgeInsets.all(AppLayout.miniPadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              onChanged: (value) => _name = ExerciseName(value),
-              decoration: InputDecoration(
-                hintText: 'Exercise name',
-                errorText: errorText,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            onChanged: (value) => _name = ExerciseName(value),
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppLayout.miniPadding,
               ),
-              validator: (value) => _name?.validate,
-              readOnly: isLoading,
+              hoverColor: context.colorScheme.foreground,
+              border: const OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: context
+                      .colorScheme.foreground, // Color for Focused Border
+                ),
+              ),
+              hintText: 'Exercise name',
+              hintStyle: const TextStyle(
+                fontSize: 14,
+              ),
+              focusColor: context.colorScheme.foreground,
+              errorText: errorText,
             ),
-            const SizedBox(height: AppLayout.defaultPadding),
-            ElevatedButton(
-              onPressed: isLoading
-                  ? null
-                  : () {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
+            validator: (value) => _name?.validate,
+            readOnly: isLoading,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          ElevatedButton(
+            onPressed: isLoading
+                ? null
+                : () {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
 
-                      if (_name == null) return;
+                    if (_name == null) return;
 
-                      ref
-                          .read(exercisesCreateControllerProvider.notifier)
-                          .handle(_name!);
-                    },
-              child: isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text('Create'),
-            ),
-          ],
-        ),
+                    ref
+                        .read(exercisesCreateControllerProvider.notifier)
+                        .handle(_name!);
+                  },
+            child: isLoading
+                ? const CircularProgressIndicator()
+                : const Text('Create'),
+          ),
+        ],
       ),
     );
   }
