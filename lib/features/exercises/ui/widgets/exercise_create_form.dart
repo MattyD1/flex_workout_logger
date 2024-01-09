@@ -25,6 +25,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
   ExerciseName? _name;
   ExerciseDescription? _description;
+  Engagement? _engagement = Engagement.bilateral;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +81,38 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             readOnly: isLoading,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          const Text('Engagement'),
+          RadioListTile<Engagement>(
+            title: const Text('Biliateral'),
+            value: Engagement.bilateral, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            }
+          ),
+          RadioListTile<Engagement>(
+            title: const Text('Biliateral Exercises With Separate Weights'),
+            value: Engagement.bilateralSeparate, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            }
+          ),
+          RadioListTile<Engagement>(
+            title: const Text('Unilateral'),
+            value: Engagement.unilateral, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            }
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
                 ? null
@@ -92,7 +125,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     ref
                         .read(exercisesCreateControllerProvider.notifier)
-                        .handle(_name!, _description, ExerciseEngagement(Engagement.bilateral)); // FIX: engagement should not be hardcoded
+                        .handle(_name!, _description, ExerciseEngagement(_engagement ?? Engagement.bilateral)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

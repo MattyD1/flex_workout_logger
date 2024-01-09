@@ -30,6 +30,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   final _formKey = GlobalKey<FormState>();
   ExerciseName? _name;
   ExerciseDescription? _description;
+  Engagement? _engagement;
 
   @override
   void dispose() {
@@ -52,6 +53,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       final d = next.asData?.value.description ?? 'No description found';
       _descriptionController.text = d;
       _description = ExerciseDescription(d);
+
+      // Initalize engagement
+      _engagement = next.asData?.value.engagement ?? Engagement.bilateral;
     });
     super.initState();
   }
@@ -113,6 +117,38 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             readOnly: isLoading,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          const Text('Engagement'),
+          RadioListTile<Engagement>(
+            title: const Text('Biliateral'),
+            value: Engagement.bilateral, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            },
+          ),
+          RadioListTile<Engagement>(
+            title: const Text('Biliateral Exercises With Separate Weights'),
+            value: Engagement.bilateralSeparate, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            },
+          ),
+          RadioListTile<Engagement>(
+            title: const Text('Unilateral'),
+            value: Engagement.unilateral, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            },
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
                 ? null
@@ -127,7 +163,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                         .read(
                           exercisesEditControllerProvider(widget.id).notifier,
                         )
-                        .handle(_name!, _description!, ExerciseEngagement(Engagement.bilateral)); // FIX: engagement should not be hardcoded
+                        .handle(_name!, _description!, ExerciseEngagement(_engagement ?? Engagement.bilateral)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()
