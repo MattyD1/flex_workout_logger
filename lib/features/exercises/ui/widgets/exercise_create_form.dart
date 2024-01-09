@@ -72,7 +72,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             onChanged: (value) => _description = ExerciseDescription(value),
             decoration: InputDecoration(
               hoverColor: context.colorScheme.foreground,
-              hintText: 'Exercise name',
+              hintText: 'Exercise Description',
               errorText: errorText,
             ),
             validator: (value) => _description?.validate,
@@ -91,7 +91,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     ref
                         .read(exercisesCreateControllerProvider.notifier)
-                        .handle(_name!, _description!);
+                        .handle(_name!, _description);
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

@@ -21,15 +21,17 @@ class ExerciseRepository implements IExerciseRepository {
   @override
   FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
-    ExerciseDescription description,
+    ExerciseDescription? description,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
+      final name_ = name.value.getOrElse((l) => 'No name provided');
+      final description_ = description?.value.getOrElse((l) => '');
 
       final exerciseToAdd = Exercise(
         ObjectId(),
-        name.value.getOrElse((l) => 'No name provided'),
-        description.value.getOrElse((l) => ''),
+        name_,
+        description_ ?? '',
         currentDateTime,
         currentDateTime,
       );

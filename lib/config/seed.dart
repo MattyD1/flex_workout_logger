@@ -29,6 +29,7 @@ void realmSeed(Realm realm) {
     (e) => Exercise(
       ObjectId(),
       e,
+      '',
       DateTimeX.current.toUtc(),
       DateTimeX.current.toUtc(),
     ),

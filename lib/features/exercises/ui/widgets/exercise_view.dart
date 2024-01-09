@@ -14,6 +14,7 @@ class ExerciseView extends StatelessWidget {
     return Column(
       children: [
         Text(exercise.name),
+        Text(exercise.description),
         Text(exercise.createdAt.toIso8601String()),
         Text(exercise.updatedAt.toIso8601String()),
       ],

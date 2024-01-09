@@ -17,7 +17,7 @@ class ExercisesCreateController extends _$ExercisesCreateController {
   ///
   Future<void> handle(
     ExerciseName name,
-    ExerciseDescription description,
+    ExerciseDescription? description,
   ) async {
     state = const AsyncLoading();
     final res = await ref
