@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
@@ -18,6 +19,7 @@ abstract class IExerciseRepository {
   FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
     ExerciseDescription description,
+    ExerciseEngagement engagement,
   );
 
   /// Update Exercise
@@ -25,6 +27,7 @@ abstract class IExerciseRepository {
     String id,
     ExerciseName name,
     ExerciseDescription description,
+    ExerciseEngagement engagement,
   );
 
   /// Delete Exercise by id

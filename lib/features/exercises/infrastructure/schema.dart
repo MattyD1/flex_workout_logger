@@ -11,6 +11,11 @@ class _Exercise {
   late String name;
   late String description;
 
+  @MapTo('engagement')
+  late int engagementAsInt;
+  Engagement get engagement => Engagement.values[engagementAsInt];
+  set engagement(Engagement value) => engagementAsInt = value.index;
+
   late DateTime createdAt;
   late DateTime updatedAt;
 }
@@ -23,6 +28,7 @@ extension Convert on _Exercise {
       id: id.hexString,
       name: name,
       description: description,
+      engagement: engagement,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

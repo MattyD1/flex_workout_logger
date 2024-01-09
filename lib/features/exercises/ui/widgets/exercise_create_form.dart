@@ -3,6 +3,7 @@ import 'package:flex_workout_logger/features/exercises/controllers/exercises_cre
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
   ExerciseName? _name;
   ExerciseDescription? _description;
+  Engagement? _engagement = Engagement.bilateral;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +81,38 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             readOnly: isLoading,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          const Text('Engagement'),
+          RadioListTile<Engagement>(
+            title: const Text('Biliateral'),
+            value: Engagement.bilateral, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            }
+          ),
+          RadioListTile<Engagement>(
+            title: const Text('Biliateral Exercises With Separate Weights'),
+            value: Engagement.bilateralSeparate, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            }
+          ),
+          RadioListTile<Engagement>(
+            title: const Text('Unilateral'),
+            value: Engagement.unilateral, 
+            groupValue: _engagement, 
+            onChanged: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            }
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
                 ? null
@@ -91,7 +125,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     ref
                         .read(exercisesCreateControllerProvider.notifier)
-                        .handle(_name!, _description);
+                        .handle(_name!, _description, ExerciseEngagement(_engagement ?? Engagement.bilateral)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

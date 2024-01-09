@@ -1,5 +1,7 @@
 import 'package:faker/faker.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/exercise_repository.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
@@ -30,6 +32,7 @@ void main() {
       final res = await repository.createExercise(
         ExerciseName('Test exercise'),
         ExerciseDescription('New Description'),
+        ExerciseEngagement(Engagement.bilateral),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
@@ -127,6 +130,7 @@ void main() {
         itemToUpdate.id.hexString,
         ExerciseName('Updated exercise'),
         ExerciseDescription('New Description'),
+        ExerciseEngagement(Engagement.bilateral),
       );
 
       final exercise = res.fold((l) => throw l, (r) => r);
