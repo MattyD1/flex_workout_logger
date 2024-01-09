@@ -9,6 +9,7 @@ class ExerciseEntity with _$ExerciseEntity {
   const factory ExerciseEntity({
     required String id,
     required String name,
+    required String description,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _ExerciseEntity;

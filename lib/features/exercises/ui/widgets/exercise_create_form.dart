@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   final _formKey = GlobalKey<FormState>();
 
   ExerciseName? _name;
+  ExerciseDescription? _description;
 
   @override
   Widget build(BuildContext context) {
@@ -59,25 +61,21 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           TextFormField(
             onChanged: (value) => _name = ExerciseName(value),
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppLayout.miniPadding,
-              ),
               hoverColor: context.colorScheme.foreground,
-              border: const OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: context
-                      .colorScheme.foreground, // Color for Focused Border
-                ),
-              ),
               hintText: 'Exercise name',
-              hintStyle: const TextStyle(
-                fontSize: 14,
-              ),
-              focusColor: context.colorScheme.foreground,
               errorText: errorText,
             ),
             validator: (value) => _name?.validate,
+            readOnly: isLoading,
+          ),
+          TextFormField(
+            onChanged: (value) => _description = ExerciseDescription(value),
+            decoration: InputDecoration(
+              hoverColor: context.colorScheme.foreground,
+              hintText: 'Exercise name',
+              errorText: errorText,
+            ),
+            validator: (value) => _description?.validate,
             readOnly: isLoading,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
@@ -93,7 +91,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     ref
                         .read(exercisesCreateControllerProvider.notifier)
-                        .handle(_name!);
+                        .handle(_name!, _description!);
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

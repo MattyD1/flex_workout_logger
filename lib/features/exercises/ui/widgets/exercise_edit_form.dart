@@ -115,11 +115,11 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
                     if (_name == null) return;
 
-                    ref
-                        .read(
-                          exercisesEditControllerProvider(widget.id).notifier,
-                        )
-                        .handle(_name!);
+                    // ref
+                    //     .read(
+                    //       exercisesEditControllerProvider(widget.id).notifier,
+                    //     )
+                    //     .handle(_name!);
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

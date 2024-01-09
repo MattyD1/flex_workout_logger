@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/exercise_repository_interface.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
@@ -20,6 +21,7 @@ class ExerciseRepository implements IExerciseRepository {
   @override
   FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
+    ExerciseDescription description,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
@@ -27,6 +29,7 @@ class ExerciseRepository implements IExerciseRepository {
       final exerciseToAdd = Exercise(
         ObjectId(),
         name.value.getOrElse((l) => 'No name provided'),
+        description.value.getOrElse((l) => ''),
         currentDateTime,
         currentDateTime,
       );
@@ -139,6 +142,7 @@ class ExerciseRepository implements IExerciseRepository {
   FutureOr<Either<Failure, ExerciseEntity>> updateExercise(
     String id,
     ExerciseName name,
+    ExerciseDescription description,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -152,6 +156,7 @@ class ExerciseRepository implements IExerciseRepository {
       final updatedExercise = Exercise(
         objectId,
         name.value.getOrElse((l) => 'No name provided'),
+        description.value.getOrElse((l) => ''),
         res.createdAt,
         DateTimeX.current,
       );

@@ -9,6 +9,7 @@ class _Exercise {
   late ObjectId id;
 
   late String name;
+  late String description;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -21,6 +22,7 @@ extension Convert on _Exercise {
     return ExerciseEntity(
       id: id.hexString,
       name: name,
+      description: description,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
