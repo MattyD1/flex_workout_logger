@@ -105,7 +105,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             controller: _descriptionController,
             decoration: InputDecoration(
               hoverColor: context.colorScheme.foreground,
-              hintText: 'Exercise name',
+              hintText: 'Exercise description',
               errorText: errorText,
             ),
             validator: (value) => _description?.validate,
