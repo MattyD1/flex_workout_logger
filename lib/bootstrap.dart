@@ -1,5 +1,4 @@
 import 'package:flex_workout_logger/config/providers.dart' as providers;
-import 'package:flex_workout_logger/flavors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,7 +8,7 @@ Future<ProviderContainer> bootstrap() async {
 
   final container = ProviderContainer(
     overrides: [],
-    observers: [if (F.appFlavor == Flavor.development) _Logger()],
+    observers: [_Logger()],
   );
 
   await providers.initializeProviders(container);

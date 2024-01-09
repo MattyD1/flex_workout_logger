@@ -1,5 +1,5 @@
 name: flex_workout_logger
-description: "A new Flutter project."
+description: "Flex Workout Logger."
 publish_to: 'none'
 version: 0.1.0
 
@@ -19,11 +19,13 @@ dependencies:
   fpdart: ^1.1.0
   go_router: ^13.0.0
   flutter_launcher_icons: ^0.13.1
+  intl: ^0.18.1
+  faker: ^2.1.0
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_flavorizr: ^2.2.1
   very_good_analysis: ^5.1.0
   riverpod_generator: ^2.3.9
   build_runner: ^2.4.7
@@ -42,32 +44,3 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path_ios: "assets/images/app-icon.png"
   image_path_android: "assets/images/app-icon.png"
-
-flavorizr:
-  flavors:
-    development:
-      app:
-        name: "Flex Development"
-
-      android:
-        applicationId: "com.mattdunn.flex.dev"
-      ios:
-        bundleId: "com.mattdunn.flex.dev"
-
-    staging:
-      app:
-        name: "Flex Staging"
-
-      android:
-        applicationId: "com.mattdunn.flex.staging"
-      ios:
-        bundleId: "com.mattdunn.flex.staging"
-
-    production:
-      app:
-        name: "Flex Production"
-
-      android:
-        applicationId: "com.mattdunn.flex"
-      ios:
-        bundleId: "com.mattdunn.flex"
