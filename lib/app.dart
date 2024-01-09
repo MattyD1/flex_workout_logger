@@ -1,4 +1,4 @@
-import 'package:flex_workout_logger/config/router.dart';
+import 'package:flex_workout_logger/config/routing/router.dart';
 import 'package:flex_workout_logger/config/theme/theme.dart';
 import 'package:flex_workout_logger/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';

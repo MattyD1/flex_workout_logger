@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flex_workout_logger/features/common/domain/errors/failure.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
+import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Exercise Repository Interface

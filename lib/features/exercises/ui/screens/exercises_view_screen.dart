@@ -1,7 +1,7 @@
-import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
-import 'package:flex_workout_logger/features/common/ui/widgets/app_error.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_view_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_view.dart';
+import 'package:flex_workout_logger/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/widgets/app_error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

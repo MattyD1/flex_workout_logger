@@ -1,5 +1,5 @@
-import 'package:flex_workout_logger/features/common/ui/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
+import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:realm/realm.dart';
 
 /// Seeds the realm with data on first load

@@ -1,9 +1,9 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
-import 'package:flex_workout_logger/features/common/ui/widgets/app_error.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_create_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
+import 'package:flex_workout_logger/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/widgets/app_error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

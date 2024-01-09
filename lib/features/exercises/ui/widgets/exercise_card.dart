@@ -1,9 +1,9 @@
-import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_edit_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_view_screen.dart';
+import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,7 +56,7 @@ class ExercisesCard extends ConsumerWidget {
           IconButton(
             onPressed: () => {
               showDialog<void>(
-                context: context, 
+                context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text('Are you sure about that?'),
@@ -64,18 +64,22 @@ class ExercisesCard extends ConsumerWidget {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();            
+                          Navigator.of(context).pop();
                         },
                         child: const Text('Cancel'),
                       ),
                       TextButton(
                         onPressed: () {
                           ref
-                            .read(exercisesDeleteControllerProvider(exercise.id).notifier).handle();
+                              .read(
+                                  exercisesDeleteControllerProvider(exercise.id)
+                                      .notifier)
+                              .handle();
 
                           ref
-                            .read(exercisesListControllerProvider.notifier).deleteExercise(exercise);
-                            
+                              .read(exercisesListControllerProvider.notifier)
+                              .deleteExercise(exercise);
+
                           Navigator.of(context).pop();
                         },
                         child: const Text('Confirm'),
@@ -84,7 +88,7 @@ class ExercisesCard extends ConsumerWidget {
                   );
                 },
               ),
-            }, 
+            },
             icon: const Icon(
               CupertinoIcons.trash,
             ),

@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:flex_workout_logger/features/common/domain/errors/failure.dart';
-import 'package:flex_workout_logger/features/common/ui/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/exercise_repository_interface.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
+import 'package:flex_workout_logger/utils/date_time_extensions.dart';
+import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:realm/realm.dart';
 

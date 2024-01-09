@@ -1,5 +1,5 @@
-import 'package:flex_workout_logger/features/common/domain/errors/failure.dart';
-import 'package:flex_workout_logger/features/common/domain/validations/validation_abstract.dart';
+import 'package:flex_workout_logger/utils/failure.dart';
+import 'package:flex_workout_logger/utils/validation_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Department Name value

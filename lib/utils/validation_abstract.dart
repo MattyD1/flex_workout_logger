@@ -1,4 +1,4 @@
-import 'package:flex_workout_logger/features/common/domain/errors/failure.dart';
+import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Provides specifications for value objects.

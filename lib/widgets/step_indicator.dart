@@ -1,4 +1,4 @@
-import 'package:flex_workout_logger/features/common/ui/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// A step indicator
