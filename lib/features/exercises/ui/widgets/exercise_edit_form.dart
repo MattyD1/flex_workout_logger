@@ -3,6 +3,7 @@ import 'package:flex_workout_logger/features/exercises/controllers/exercises_edi
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
@@ -43,12 +44,12 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       AsyncValue<ExerciseEntity> next,
     ) {
       // Initialize name
-      final v = next.asData!.value.name;
+      final v = next.asData?.value.name ?? 'No name found';
       _nameController.text = v;
       _name = ExerciseName(v);
 
       // Initialize description
-      final d = next.asData!.value.description;
+      final d = next.asData?.value.description ?? 'No description found';
       _descriptionController.text = d;
       _description = ExerciseDescription(d);
     });
@@ -126,7 +127,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                         .read(
                           exercisesEditControllerProvider(widget.id).notifier,
                         )
-                        .handle(_name!, _description!);
+                        .handle(_name!, _description!, ExerciseEngagement(Engagement.bilateral)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

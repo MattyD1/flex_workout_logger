@@ -10,7 +10,20 @@ class ExerciseEntity with _$ExerciseEntity {
     required String id,
     required String name,
     required String description,
+    required Engagement engagement,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _ExerciseEntity;
+}
+
+/// Engagement enum
+enum Engagement {
+  /// Bilateral
+  bilateral,
+
+  /// Bilateral separate
+  bilateralSeparate,
+
+  /// Unilateral
+  unilateral;
 }

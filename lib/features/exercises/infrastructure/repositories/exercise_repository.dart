@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/exercise_repository_interface.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
@@ -22,16 +23,19 @@ class ExerciseRepository implements IExerciseRepository {
   FutureOr<Either<Failure, ExerciseEntity>> createExercise(
     ExerciseName name,
     ExerciseDescription? description,
+    ExerciseEngagement engagement,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
       final name_ = name.value.getOrElse((l) => 'No name provided');
       final description_ = description?.value.getOrElse((l) => '');
+      final engagement_ = engagement.value.getOrElse((l) => Engagement.bilateral);
 
       final exerciseToAdd = Exercise(
         ObjectId(),
         name_,
         description_ ?? '',
+        engagement_.index,
         currentDateTime,
         currentDateTime,
       );
@@ -145,6 +149,7 @@ class ExerciseRepository implements IExerciseRepository {
     String id,
     ExerciseName name,
     ExerciseDescription description,
+    ExerciseEngagement engagement,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -156,12 +161,14 @@ class ExerciseRepository implements IExerciseRepository {
       }
 
       final name_ = name.value.getOrElse((l) => 'No name provided');
-      final description_ = description.value.getOrElse((l) => '');
+      final description_ = description.value.getOrElse((l) => res.description);
+      final engagement_ = engagement.value.getOrElse((l) => res.engagement);
 
       final updatedExercise = Exercise(
         objectId,
         name_,
         description_,
+        engagement_.index,
         res.createdAt,
         DateTimeX.current,
       );
