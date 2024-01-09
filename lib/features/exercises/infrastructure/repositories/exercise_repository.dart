@@ -155,10 +155,13 @@ class ExerciseRepository implements IExerciseRepository {
         return left(const Failure.empty());
       }
 
+      final name_ = name.value.getOrElse((l) => 'No name provided');
+      final description_ = description.value.getOrElse((l) => '');
+
       final updatedExercise = Exercise(
         objectId,
-        name.value.getOrElse((l) => 'No name provided'),
-        description.value.getOrElse((l) => ''),
+        name_,
+        description_,
         res.createdAt,
         DateTimeX.current,
       );

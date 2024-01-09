@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,11 @@ class ExerciseEditForm extends ConsumerStatefulWidget {
 
 class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   ExerciseName? _name;
+  ExerciseDescription? _description;
 
   @override
   void dispose() {
@@ -38,9 +42,15 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       AsyncValue<ExerciseEntity>? prev,
       AsyncValue<ExerciseEntity> next,
     ) {
+      // Initialize name
       final v = next.asData!.value.name;
       _nameController.text = v;
       _name = ExerciseName(v);
+
+      // Initialize description
+      final d = next.asData!.value.description;
+      _descriptionController.text = d;
+      _description = ExerciseDescription(d);
     });
     super.initState();
   }
@@ -83,25 +93,22 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             onChanged: (value) => _name = ExerciseName(value),
             controller: _nameController,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppLayout.miniPadding,
-              ),
               hoverColor: context.colorScheme.foreground,
-              border: const OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: context
-                      .colorScheme.foreground, // Color for Focused Border
-                ),
-              ),
               hintText: 'Exercise name',
-              hintStyle: const TextStyle(
-                fontSize: 14,
-              ),
-              focusColor: context.colorScheme.foreground,
               errorText: errorText,
             ),
             validator: (value) => _name?.validate,
+            readOnly: isLoading,
+          ),
+          TextFormField(
+            onChanged: (value) => _description = ExerciseDescription(value),
+            controller: _descriptionController,
+            decoration: InputDecoration(
+              hoverColor: context.colorScheme.foreground,
+              hintText: 'Exercise name',
+              errorText: errorText,
+            ),
+            validator: (value) => _description?.validate,
             readOnly: isLoading,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
@@ -115,11 +122,11 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
                     if (_name == null) return;
 
-                    // ref
-                    //     .read(
-                    //       exercisesEditControllerProvider(widget.id).notifier,
-                    //     )
-                    //     .handle(_name!);
+                    ref
+                        .read(
+                          exercisesEditControllerProvider(widget.id).notifier,
+                        )
+                        .handle(_name!, _description!);
                   },
             child: isLoading
                 ? const CircularProgressIndicator()
