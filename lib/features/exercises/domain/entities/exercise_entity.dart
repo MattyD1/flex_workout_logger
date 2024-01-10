@@ -11,6 +11,7 @@ class ExerciseEntity with _$ExerciseEntity {
     required String name,
     required String description,
     required Engagement engagement,
+    required Style style,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _ExerciseEntity;
@@ -26,4 +27,13 @@ enum Engagement {
 
   /// Unilateral
   unilateral;
+}
+
+/// Style enum
+enum Style {
+  /// Reps
+  reps,
+
+  /// Timed
+  timed;
 }

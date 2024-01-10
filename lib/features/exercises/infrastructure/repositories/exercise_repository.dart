@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/repositories/exerc
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
@@ -24,18 +25,21 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseName name,
     ExerciseDescription? description,
     ExerciseEngagement engagement,
+    ExerciseStyle style,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
       final name_ = name.value.getOrElse((l) => 'No name provided');
       final description_ = description?.value.getOrElse((l) => '');
       final engagement_ = engagement.value.getOrElse((l) => Engagement.bilateral);
+      final style_ = style.value.getOrElse((l) => Style.reps);
 
       final exerciseToAdd = Exercise(
         ObjectId(),
         name_,
         description_ ?? '',
         engagement_.index,
+        style_.index,
         currentDateTime,
         currentDateTime,
       );
@@ -150,6 +154,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseName name,
     ExerciseDescription description,
     ExerciseEngagement engagement,
+    ExerciseStyle style,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -163,12 +168,14 @@ class ExerciseRepository implements IExerciseRepository {
       final name_ = name.value.getOrElse((l) => 'No name provided');
       final description_ = description.value.getOrElse((l) => res.description);
       final engagement_ = engagement.value.getOrElse((l) => res.engagement);
+      final style_ = style.value.getOrElse((l) => res.style);
 
       final updatedExercise = Exercise(
         objectId,
         name_,
         description_,
         engagement_.index,
+        style_.index,
         res.createdAt,
         DateTimeX.current,
       );

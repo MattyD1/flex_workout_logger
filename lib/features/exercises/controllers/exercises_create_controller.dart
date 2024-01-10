@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,11 +21,12 @@ class ExercisesCreateController extends _$ExercisesCreateController {
     ExerciseName name,
     ExerciseDescription? description,
     ExerciseEngagement engagement,
+    ExerciseStyle style,
   ) async {
     state = const AsyncLoading();
     final res = await ref
         .read(exerciseRepositoryProvider)
-        .createExercise(name, description, engagement);
+        .createExercise(name, description, engagement, style);
     state = res.fold(
       (l) => AsyncValue.error(l.error, StackTrace.current),
       AsyncValue.data,

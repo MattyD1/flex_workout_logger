@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   ExerciseName? _name;
   ExerciseDescription? _description;
   Engagement? _engagement;
+  Style? _style;
 
   @override
   void dispose() {
@@ -56,6 +58,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
       // Initalize engagement
       _engagement = next.asData?.value.engagement ?? Engagement.bilateral;
+
+      // Initalize style
+      _style = next.asData?.value.style ?? Style.reps;
     });
     super.initState();
   }
@@ -149,6 +154,28 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             },
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          const Text('Style'),
+          RadioListTile<Style>(
+            title: const Text('Reps'),
+            value: Style.reps, 
+            groupValue: _style, 
+            onChanged: (Style? value) {
+              setState(() {
+                _style = value;
+              });
+            }
+          ),
+          RadioListTile<Style>(
+            title: const Text('Timed'),
+            value: Style.timed, 
+            groupValue: _style, 
+            onChanged: (Style? value) {
+              setState(() {
+                _style = value;
+              });
+            }
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
                 ? null
@@ -163,7 +190,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                         .read(
                           exercisesEditControllerProvider(widget.id).notifier,
                         )
-                        .handle(_name!, _description!, ExerciseEngagement(_engagement ?? Engagement.bilateral)); // FIX: engagement should not be hardcoded
+                        .handle(_name!, _description!, ExerciseEngagement(_engagement ?? Engagement.bilateral), ExerciseStyle(_style ?? Style.reps)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -20,6 +21,7 @@ abstract class IExerciseRepository {
     ExerciseName name,
     ExerciseDescription description,
     ExerciseEngagement engagement,
+    ExerciseStyle style,
   );
 
   /// Update Exercise
@@ -28,6 +30,7 @@ abstract class IExerciseRepository {
     ExerciseName name,
     ExerciseDescription description,
     ExerciseEngagement engagement,
+    ExerciseStyle style,
   );
 
   /// Delete Exercise by id
