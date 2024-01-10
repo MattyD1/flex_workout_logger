@@ -16,6 +16,7 @@ class ExerciseView extends StatelessWidget {
         Text(exercise.name),
         Text(exercise.description),
         Text(exercise.engagement.toString()),
+        Text(exercise.style.toString()),
         Text(exercise.createdAt.toIso8601String()),
         Text(exercise.updatedAt.toIso8601String()),
       ],

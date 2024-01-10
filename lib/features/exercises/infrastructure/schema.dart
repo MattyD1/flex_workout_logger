@@ -17,9 +17,9 @@ class _Exercise {
   set engagement(Engagement value) => engagementAsInt = value.index;
 
   @MapTo('style')
-  late int stlyeAsInt;
-  Style get style => Style.values[stlyeAsInt];
-  set style(Style value) => stlyeAsInt = value.index;
+  late int styleAsInt;
+  Style get style => Style.values[styleAsInt];
+  set style(Style value) => styleAsInt = value.index;
 
 
   late DateTime createdAt;

@@ -115,6 +115,28 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             }
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          const Text('Style'),
+          RadioListTile<Style>(
+            title: const Text('Reps'),
+            value: Style.reps, 
+            groupValue: _style, 
+            onChanged: (Style? value) {
+              setState(() {
+                _style = value;
+              });
+            }
+          ),
+          RadioListTile<Style>(
+            title: const Text('Timed'),
+            value: Style.timed, 
+            groupValue: _style, 
+            onChanged: (Style? value) {
+              setState(() {
+                _style = value;
+              });
+            }
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
                 ? null

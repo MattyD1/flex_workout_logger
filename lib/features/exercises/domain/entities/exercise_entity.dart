@@ -31,9 +31,9 @@ enum Engagement {
 
 /// Style enum
 enum Style {
-  /// reps
+  /// Reps
   reps,
 
-  /// timed
+  /// Timed
   timed;
 }
