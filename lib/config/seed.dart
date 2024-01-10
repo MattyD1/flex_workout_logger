@@ -31,6 +31,7 @@ void realmSeed(Realm realm) {
       e,
       '',
       1,
+      0,
       DateTimeX.current.toUtc(),
       DateTimeX.current.toUtc(),
     ),

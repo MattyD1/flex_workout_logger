@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   ExerciseName? _name;
   ExerciseDescription? _description;
   Engagement? _engagement = Engagement.bilateral;
+  Style? _style = Style.reps;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +127,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     ref
                         .read(exercisesCreateControllerProvider.notifier)
-                        .handle(_name!, _description, ExerciseEngagement(_engagement ?? Engagement.bilateral)); // FIX: engagement should not be hardcoded
+                        .handle(_name!, _description, ExerciseEngagement(_engagement ?? Engagement.bilateral), ExerciseStyle(_style ?? Style.reps)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

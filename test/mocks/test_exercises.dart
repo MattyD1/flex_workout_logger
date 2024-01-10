@@ -15,6 +15,7 @@ class MockExercises {
         faker.randomGenerator.string(100, min: 2),
         faker.randomGenerator.string(500),
         faker.randomGenerator.integer(2),
+        faker.randomGenerator.integer(1),
         now,
         now,
       ),
@@ -30,6 +31,7 @@ class MockExercises {
       faker.randomGenerator.string(100, min: 2),
       faker.randomGenerator.string(500),
       faker.randomGenerator.integer(2),
+      faker.randomGenerator.integer(1),
       now,
       now,
     );

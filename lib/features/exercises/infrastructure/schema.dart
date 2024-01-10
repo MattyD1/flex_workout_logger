@@ -16,6 +16,12 @@ class _Exercise {
   Engagement get engagement => Engagement.values[engagementAsInt];
   set engagement(Engagement value) => engagementAsInt = value.index;
 
+  @MapTo('style')
+  late int stlyeAsInt;
+  Style get style => Style.values[stlyeAsInt];
+  set style(Style value) => stlyeAsInt = value.index;
+
+
   late DateTime createdAt;
   late DateTime updatedAt;
 }
@@ -29,6 +35,7 @@ extension Convert on _Exercise {
       name: name,
       description: description,
       engagement: engagement,
+      style: style,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
