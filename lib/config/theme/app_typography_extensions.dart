@@ -4,19 +4,24 @@ import 'package:flutter/material.dart';
 class AppTextThemeExtension extends ThemeExtension<AppTextThemeExtension> {
   /// Default constructor for the [AppTextThemeExtension]
   const AppTextThemeExtension({
-    required this.exampleLargeTitle,
+    required this.listTitle,
+    required this.listSubtitle,
   });
 
-  /// Navigation Large Title
-  final TextStyle exampleLargeTitle;
+  /// List Title
+  final TextStyle listTitle;
+
+  /// Navigation Title
+  final TextStyle listSubtitle;
 
   @override
   ThemeExtension<AppTextThemeExtension> copyWith({
-    TextStyle? navTitle,
-    TextStyle? navLargeTitle,
+    TextStyle? listTitle,
+    TextStyle? listSubtitle,
   }) {
     return AppTextThemeExtension(
-      exampleLargeTitle: navLargeTitle ?? exampleLargeTitle,
+      listTitle: listTitle ?? this.listTitle,
+      listSubtitle: listSubtitle ?? this.listSubtitle,
     );
   }
 
@@ -30,8 +35,8 @@ class AppTextThemeExtension extends ThemeExtension<AppTextThemeExtension> {
     }
 
     return AppTextThemeExtension(
-      exampleLargeTitle:
-          TextStyle.lerp(exampleLargeTitle, other.exampleLargeTitle, t)!,
+      listTitle: TextStyle.lerp(listTitle, other.listTitle, t)!,
+      listSubtitle: TextStyle.lerp(listSubtitle, other.listSubtitle, t)!,
     );
   }
 }

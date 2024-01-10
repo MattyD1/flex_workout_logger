@@ -18,7 +18,8 @@ class AppTheme with ChangeNotifier {
   }
 
   static const _textTheme = AppTextThemeExtension(
-    exampleLargeTitle: AppTypography.exampleLargeTitle,
+    listTitle: AppTypography.listTitle,
+    listSubtitle: AppTypography.listSubtitle,
   );
 
   /// Light Mode Theme Data

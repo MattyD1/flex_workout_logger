@@ -1,3 +1,4 @@
+import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
@@ -24,13 +25,32 @@ class ExercisesCard extends ConsumerWidget {
         exercise.name,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-
-        // TODO make this into a text style
-        style: TextStyle(
-          fontSize: 14,
+        style: context.textTheme.listTitle.copyWith(
           color: context.colorScheme.foreground,
-          fontWeight: FontWeight.w600,
         ),
+      ),
+      subtitle: Row(
+        children: <Widget>[
+          Text(
+            'Movement Pattern',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.listSubtitle.copyWith(
+              color: context.colorScheme.offForeground,
+            ),
+          ),
+          const SizedBox(width: AppLayout.defaultPadding),
+          Expanded(
+            child: Text(
+              'List of Muscle Groups jlikjdaldjaflfijealjkj',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.listSubtitle.copyWith(
+                color: context.colorScheme.offForeground,
+              ),
+            ),
+          ),
+        ],
       ),
       onTap: () => context.goNamed(
         ExercisesViewScreen.routeName,
@@ -39,69 +59,77 @@ class ExercisesCard extends ConsumerWidget {
         },
       ),
       leading: const Icon(CupertinoIcons.square),
-      trailing: Row(
-        children: [
-          IconButton(
-            onPressed: () => context.goNamed(
-              ExercisesEditScreen.routeName,
-              pathParameters: {
-                'eid': exercise.id,
-              },
-            ),
-            icon: const Icon(
-              CupertinoIcons.pencil,
-            ),
-            iconSize: 20,
-          ),
-          IconButton(
-            onPressed: () => {
-              showDialog<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Are you sure about that?'),
-                    content: const Text('This will delete the exercise'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          ref
-                              .read(
-                                  exercisesDeleteControllerProvider(exercise.id)
-                                      .notifier)
-                              .handle();
-
-                          ref
-                              .read(exercisesListControllerProvider.notifier)
-                              .deleteExercise(exercise);
-
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Confirm'),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            },
-            icon: const Icon(
-              CupertinoIcons.trash,
-            ),
-            iconSize: 20,
-          ),
-        ],
+      trailing: const Padding(
+        padding: EdgeInsets.only(left: AppLayout.miniPadding),
+        child: Icon(
+          CupertinoIcons.info_circle,
+          size: 16,
+        ),
       ),
       padding: const EdgeInsets.fromLTRB(
         20,
+        16,
         14,
-        14,
-        14,
+        16,
       ),
     );
   }
 }
+
+// trailing: Row(
+//         children: [
+//           IconButton(
+//             onPressed: () => context.goNamed(
+//               ExercisesEditScreen.routeName,
+//               pathParameters: {
+//                 'eid': exercise.id,
+//               },
+//             ),
+//             icon: const Icon(
+//               CupertinoIcons.pencil,
+//             ),
+//             iconSize: 20,
+//           ),
+//           IconButton(
+//             onPressed: () => {
+//               showDialog<void>(
+//                 context: context,
+//                 builder: (BuildContext context) {
+//                   return AlertDialog(
+//                     title: const Text('Are you sure about that?'),
+//                     content: const Text('This will delete the exercise'),
+//                     actions: [
+//                       TextButton(
+//                         onPressed: () {
+//                           Navigator.of(context).pop();
+//                         },
+//                         child: const Text('Cancel'),
+//                       ),
+//                       TextButton(
+//                         onPressed: () {
+//                           ref
+//                               .read(
+//                                   exercisesDeleteControllerProvider(exercise.id)
+//                                       .notifier)
+//                               .handle();
+
+//                           ref
+//                               .read(exercisesListControllerProvider.notifier)
+//                               .deleteExercise(exercise);
+
+//                           Navigator.of(context).pop();
+//                         },
+//                         child: const Text('Confirm'),
+//                       ),
+//                     ],
+//                   );
+//                 },
+//               ),
+//             },
+//             icon: const Icon(
+//               CupertinoIcons.trash,
+//             ),
+//             iconSize: 20,
+//           ),
+//         ],
+     
