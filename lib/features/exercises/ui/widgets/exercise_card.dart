@@ -58,7 +58,7 @@ class ExercisesCard extends ConsumerWidget {
           'eid': exercise.id,
         },
       ),
-      leading: const Icon(CupertinoIcons.square),
+      leading: const Icon(Icons.fitness_center),
       trailing: const Padding(
         padding: EdgeInsets.only(left: AppLayout.miniPadding),
         child: Icon(
