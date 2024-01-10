@@ -7,6 +7,7 @@ import 'package:flex_workout_logger/widgets/app_error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 /// Exercises list on library screen
@@ -25,65 +26,67 @@ class ExercisesList extends ConsumerWidget {
                 child: Text('No items found'),
               ),
             )
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppLayout.defaultPadding,
-                    vertical: AppLayout.smallPadding,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.foreground,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppLayout.defaultPadding,
-                          vertical: AppLayout.smallPadding,
-                        ),
-                        child: Text(
-                          'Exercises',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: context.colorScheme.background,
-                            fontWeight: FontWeight.w600,
+          : SlidableAutoCloseBehavior(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppLayout.defaultPadding,
+                      vertical: AppLayout.smallPadding,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.foreground,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                            vertical: AppLayout.smallPadding,
+                          ),
+                          child: Text(
+                            'Exercises',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: context.colorScheme.background,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: AppLayout.miniPadding),
-                      IconButton.filled(
-                        iconSize: 20,
-                        style: IconButton.styleFrom(
-                          backgroundColor: context.colorScheme.muted,
-                          foregroundColor: context.colorScheme.foreground,
-                        ),
-                        onPressed: () => {
-                          context.goNamed(
-                            ExercisesCreateScreen.routeName,
+                        const SizedBox(width: AppLayout.miniPadding),
+                        IconButton.filled(
+                          iconSize: 20,
+                          style: IconButton.styleFrom(
+                            backgroundColor: context.colorScheme.muted,
+                            foregroundColor: context.colorScheme.foreground,
                           ),
-                        },
-                        icon: const Icon(CupertinoIcons.add),
-                      ),
-                    ],
+                          onPressed: () => {
+                            context.goNamed(
+                              ExercisesCreateScreen.routeName,
+                            ),
+                          },
+                          icon: const Icon(CupertinoIcons.add),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                ...items.map(
-                  (e) => Column(
-                    children: [
-                      ExercisesCard(
-                        exercise: e,
-                      ),
-                      Divider(
-                        color: context.colorScheme.divider,
-                        height: 1,
-                        indent: 64,
-                      ),
-                    ],
+                  ...items.map(
+                    (e) => Column(
+                      children: [
+                        ExercisesCard(
+                          exercise: e,
+                        ),
+                        Divider(
+                          color: context.colorScheme.divider,
+                          height: 1,
+                          indent: 64,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
       error: (o, e) => AppError(
         title: o.toString(),
