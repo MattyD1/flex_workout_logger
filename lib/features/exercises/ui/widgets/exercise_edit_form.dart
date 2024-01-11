@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
@@ -188,20 +189,29 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
                     if (_name == null) return;
 
-                    ref
-                        .read(
-                          exercisesEditControllerProvider(widget.id).notifier,
-                        )
-                        .handle(
-                          _name!,
-                          _description!,
-                          ExerciseEngagement(
-                            _engagement ?? Engagement.bilateral,
-                          ),
-                          ExerciseStyle(
-                            _style ?? Style.reps,
-                          ),
-                        ); // FIX: engagement should not be hardcoded
+                    final exercise = ref.read(exercisesListControllerProvider);
+
+                    final _base = exercise.maybeWhen(
+                      data: (data) => ref
+                          .read(
+                            exercisesEditControllerProvider(widget.id).notifier,
+                          )
+                          .handle(
+                            _name!,
+                            _description!,
+                            ExerciseEngagement(
+                              _engagement ?? Engagement.bilateral,
+                            ),
+                            ExerciseStyle(
+                              _style ?? Style.reps,
+                            ),
+                            ExerciseBaseExercise(
+                              null,
+                              data[2],
+                            ),
+                          ), // FIX: engagement should not be hardcoded
+                      orElse: () => null,
+                    );
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

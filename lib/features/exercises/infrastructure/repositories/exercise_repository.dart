@@ -172,6 +172,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseDescription description,
     ExerciseEngagement engagement,
     ExerciseStyle style,
+    ExerciseBaseExercise? baseExercise,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -186,6 +187,19 @@ class ExerciseRepository implements IExerciseRepository {
       final description_ = description.value.getOrElse((l) => res.description);
       final engagement_ = engagement.value.getOrElse((l) => res.engagement);
       final style_ = style.value.getOrElse((l) => res.style);
+      final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
+
+      late Exercise? baseExerciseRes_;
+
+      if (baseExercise_ != null) {
+        final objectId = ObjectId.fromHexString(baseExercise_.id);
+
+        baseExerciseRes_ = realm.find<Exercise>(objectId);
+
+        if (baseExerciseRes_ == null) {
+          return left(const Failure.empty());
+        }
+      }
 
       final updatedExercise = Exercise(
         objectId,
@@ -195,7 +209,7 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         res.createdAt,
         DateTimeX.current,
-      );
+      )..baseExercise = baseExerciseRes_ ?? res.baseExercise;
 
       realm.write(() {
         realm.add(updatedExercise, update: true);

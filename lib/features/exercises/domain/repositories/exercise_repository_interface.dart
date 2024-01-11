@@ -33,6 +33,7 @@ abstract class IExerciseRepository {
     ExerciseDescription description,
     ExerciseEngagement engagement,
     ExerciseStyle style,
+    ExerciseBaseExercise? baseExercise,
   );
 
   /// Delete Exercise by id
