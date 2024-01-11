@@ -65,8 +65,9 @@ class ExercisesCard extends ConsumerWidget {
                         onPressed: () {
                           ref
                               .read(
-                                  exercisesDeleteControllerProvider(exercise.id)
-                                      .notifier)
+                                exercisesDeleteControllerProvider(exercise.id)
+                                    .notifier,
+                              )
                               .handle();
 
                           ref

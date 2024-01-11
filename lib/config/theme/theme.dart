@@ -18,6 +18,12 @@ class AppTheme with ChangeNotifier {
   }
 
   static const _textTheme = AppTextThemeExtension(
+    bodySmall: AppTypography.bodySmall,
+    bodyMedium: AppTypography.bodyMedium,
+    headlineLarge: AppTypography.headlineLarge,
+    headlineSmall: AppTypography.headlineSmall,
+    titleLarge: AppTypography.titleLarge,
+    titleSmall: AppTypography.titleSmall,
     listTitle: AppTypography.listTitle,
     listSubtitle: AppTypography.listSubtitle,
   );
