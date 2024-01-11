@@ -7,6 +7,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -99,34 +100,34 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextFormField(
+          MyTextField(
+            label: 'Exercise Name',
+            hintText: 'Bench Press, Squat, etc.',
+            errorText: errorText,
             onChanged: (value) => _name = ExerciseName(value),
-            controller: _nameController,
-            decoration: InputDecoration(
-              hoverColor: context.colorScheme.foreground,
-              hintText: 'Exercise name',
-              errorText: errorText,
-            ),
             validator: (value) => _name?.validate,
+            controller: _nameController,
             readOnly: isLoading,
+            isRequired: true,
           ),
-          TextFormField(
+          const SizedBox(height: AppLayout.defaultPadding),
+          MyTextField(
+            label: 'Description',
+            hintText:
+                'Describe the exercise, including any additional setup that is required.',
+            errorText: errorText,
             onChanged: (value) => _description = ExerciseDescription(value),
-            controller: _descriptionController,
-            decoration: InputDecoration(
-              hoverColor: context.colorScheme.foreground,
-              hintText: 'Exercise description',
-              errorText: errorText,
-            ),
             validator: (value) => _description?.validate,
+            controller: _descriptionController,
             readOnly: isLoading,
+            isTextArea: true,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           const Text('Engagement'),
           RadioListTile<Engagement>(
             title: const Text('Biliateral'),
-            value: Engagement.bilateral, 
-            groupValue: _engagement, 
+            value: Engagement.bilateral,
+            groupValue: _engagement,
             onChanged: (Engagement? value) {
               setState(() {
                 _engagement = value;
@@ -135,8 +136,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
           ),
           RadioListTile<Engagement>(
             title: const Text('Biliateral Exercises With Separate Weights'),
-            value: Engagement.bilateralSeparate, 
-            groupValue: _engagement, 
+            value: Engagement.bilateralSeparate,
+            groupValue: _engagement,
             onChanged: (Engagement? value) {
               setState(() {
                 _engagement = value;
@@ -145,8 +146,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
           ),
           RadioListTile<Engagement>(
             title: const Text('Unilateral'),
-            value: Engagement.unilateral, 
-            groupValue: _engagement, 
+            value: Engagement.unilateral,
+            groupValue: _engagement,
             onChanged: (Engagement? value) {
               setState(() {
                 _engagement = value;
@@ -156,25 +157,23 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
           const SizedBox(height: AppLayout.defaultPadding),
           const Text('Style'),
           RadioListTile<Style>(
-            title: const Text('Reps'),
-            value: Style.reps, 
-            groupValue: _style, 
-            onChanged: (Style? value) {
-              setState(() {
-                _style = value;
-              });
-            }
-          ),
+              title: const Text('Reps'),
+              value: Style.reps,
+              groupValue: _style,
+              onChanged: (Style? value) {
+                setState(() {
+                  _style = value;
+                });
+              }),
           RadioListTile<Style>(
-            title: const Text('Timed'),
-            value: Style.timed, 
-            groupValue: _style, 
-            onChanged: (Style? value) {
-              setState(() {
-                _style = value;
-              });
-            }
-          ),
+              title: const Text('Timed'),
+              value: Style.timed,
+              groupValue: _style,
+              onChanged: (Style? value) {
+                setState(() {
+                  _style = value;
+                });
+              }),
           const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
@@ -190,7 +189,14 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                         .read(
                           exercisesEditControllerProvider(widget.id).notifier,
                         )
-                        .handle(_name!, _description!, ExerciseEngagement(_engagement ?? Engagement.bilateral), ExerciseStyle(_style ?? Style.reps)); // FIX: engagement should not be hardcoded
+                        .handle(
+                            _name!,
+                            _description!,
+                            ExerciseEngagement(
+                                _engagement ?? Engagement.bilateral),
+                            ExerciseStyle(_style ??
+                                Style
+                                    .reps)); // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

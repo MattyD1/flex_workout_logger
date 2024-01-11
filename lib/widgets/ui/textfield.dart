@@ -67,6 +67,7 @@ class MyTextField extends StatelessWidget {
           height: 4,
         ),
         TextFormField(
+          controller: controller,
           onChanged: onChanged,
           validator: validator,
           readOnly: readOnly,
