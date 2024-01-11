@@ -36,7 +36,7 @@ class ExercisesEditScreen extends StatelessWidget {
           iconSize: 24,
         ),
         middle: Text(
-          'Edit Exercise $id',
+          'Edit Exercise',
           style: TextStyle(color: context.colorScheme.foreground),
         ),
       ),
