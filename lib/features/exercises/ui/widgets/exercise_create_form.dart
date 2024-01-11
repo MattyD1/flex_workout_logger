@@ -8,6 +8,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
 import 'package:flex_workout_logger/widgets/ui/textfield.dart';
@@ -32,6 +33,14 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   ExerciseDescription? _description;
   Engagement? _engagement = Engagement.bilateral;
   Style? _style = Style.reps;
+
+  int _selectedVariation = 1;
+
+  void _onVariationChanged(int index) {
+    setState(() {
+      _selectedVariation = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +75,21 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
       child: Column(
         // mainAxisSize: MainAxisSize.min,
         children: [
+          Text(
+            'Is this a new exercise or a variation on an existing one?',
+            style: context.textTheme.headlineLarge,
+          ),
+          const SizedBox(height: AppLayout.smallPadding),
+          VariationSegementedController(
+            selectedValue: _selectedVariation,
+            onValueChanged: _onVariationChanged,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           MyTextField(
-            label: 'Exercise Name',
-            hintText: 'Bench Press, Squat, etc.',
+            label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
+            hintText: _selectedVariation == 1
+                ? 'Bench Press, Squat, etc.'
+                : 'Paused, 3” Bands, Alternating, etc...',
             errorText: errorText,
             onChanged: (value) => _name = ExerciseName(value),
             validator: (value) => _name?.validate,
@@ -79,8 +100,9 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           const SizedBox(height: AppLayout.defaultPadding),
           MyTextField(
             label: 'Description',
-            hintText:
-                'Describe the exercise, including any additional setup that is required.',
+            hintText: _selectedVariation == 1
+                ? 'Describe the exercise, including any additional setup that is required.'
+                : 'Describe of the variation including the main differences between itself and its base exercise.',
             errorText: errorText,
             onChanged: (value) => _description = ExerciseDescription(value),
             validator: (value) => _description?.validate,
@@ -88,62 +110,62 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             readOnly: isLoading,
             isTextArea: true,
           ),
-          const SizedBox(height: AppLayout.defaultPadding),
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Engagement',
-                  style: context.textTheme.label,
-                ),
-                const Text(
-                  'How the body engages with the lift during the movement.',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppLayout.smallPadding),
-          RadioList<Engagement>(
-            selectedValue: Engagement.bilateral,
-            onSelected: (Engagement? value) {
-              setState(() {
-                _engagement = value;
-              });
-            },
-            values: Engagement.values.toList(),
-            groupValue: _engagement,
-          ),
-          const SizedBox(height: AppLayout.defaultPadding),
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Style',
-                  style: context.textTheme.label,
-                ),
-                const Text(
-                  'What is the style of the exercise.',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppLayout.smallPadding),
-          RadioList<Style>(
-            selectedValue: Style.reps,
-            onSelected: (Style? value) {
-              setState(() {
-                _style = value;
-              });
-            },
-            values: Style.values.toList(),
-            groupValue: _style,
-          ),
+          // const SizedBox(height: AppLayout.defaultPadding),
+          // SizedBox(
+          //   width: double.infinity,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         'Engagement',
+          //         style: context.textTheme.label,
+          //       ),
+          //       const Text(
+          //         'How the body engages with the lift during the movement.',
+          //         style: TextStyle(fontSize: 12),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(height: AppLayout.smallPadding),
+          // RadioList<Engagement>(
+          //   selectedValue: Engagement.bilateral,
+          //   onSelected: (Engagement? value) {
+          //     setState(() {
+          //       _engagement = value;
+          //     });
+          //   },
+          //   values: Engagement.values.toList(),
+          //   groupValue: _engagement,
+          // ),
+          // const SizedBox(height: AppLayout.defaultPadding),
+          // SizedBox(
+          //   width: double.infinity,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         'Style',
+          //         style: context.textTheme.label,
+          //       ),
+          //       const Text(
+          //         'What is the style of the exercise.',
+          //         style: TextStyle(fontSize: 12),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(height: AppLayout.smallPadding),
+          // RadioList<Style>(
+          //   selectedValue: Style.reps,
+          //   onSelected: (Style? value) {
+          //     setState(() {
+          //       _style = value;
+          //     });
+          //   },
+          //   values: Style.values.toList(),
+          //   groupValue: _style,
+          // ),
           const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
