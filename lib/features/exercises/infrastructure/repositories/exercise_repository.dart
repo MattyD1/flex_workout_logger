@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/exercise_repository_interface.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
@@ -26,13 +27,28 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseDescription? description,
     ExerciseEngagement engagement,
     ExerciseStyle style,
+    ExerciseBaseExercise? baseExercise,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
       final name_ = name.value.getOrElse((l) => 'No name provided');
       final description_ = description?.value.getOrElse((l) => '');
-      final engagement_ = engagement.value.getOrElse((l) => Engagement.bilateral);
+      final engagement_ =
+          engagement.value.getOrElse((l) => Engagement.bilateral);
       final style_ = style.value.getOrElse((l) => Style.reps);
+
+      final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
+      late Exercise? baseExerciseRes_;
+
+      if (baseExercise_ != null) {
+        final objectId = ObjectId.fromHexString(baseExercise_.id);
+
+        baseExerciseRes_ = realm.find<Exercise>(objectId);
+
+        if (baseExerciseRes_ == null) {
+          return left(const Failure.empty());
+        }
+      }
 
       final exerciseToAdd = Exercise(
         ObjectId(),
@@ -42,7 +58,8 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         currentDateTime,
         currentDateTime,
-      );
+      )..baseExercise =
+          baseExerciseRes_; // Note this may not work, baseExercise might not be found
 
       final res = realm.write<Exercise>(() {
         return realm.add(exerciseToAdd);

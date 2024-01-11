@@ -15,6 +15,7 @@ class ExerciseEntity with _$ExerciseEntity {
     required Style style,
     required DateTime createdAt,
     required DateTime updatedAt,
+    ExerciseEntity? baseExercise,
   }) = _ExerciseEntity;
 }
 

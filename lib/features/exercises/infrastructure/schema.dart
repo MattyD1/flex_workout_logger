@@ -21,6 +21,7 @@ class _Exercise {
   Style get style => Style.values[styleAsInt];
   set style(Style value) => styleAsInt = value.index;
 
+  late _Exercise? baseExercise;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -36,8 +37,25 @@ extension Convert on _Exercise {
       description: description,
       engagement: engagement,
       style: style,
+      baseExercise: baseExercise?.toEntity(),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
+  }
+}
+
+/// Exercise Entity extension
+extension CovertSchema on ExerciseEntity {
+  /// Covert [ExerciseEntity] to [_Exercise]
+  Exercise toSchema() {
+    return Exercise(
+      ObjectId.fromHexString(id),
+      name,
+      description,
+      engagement.index,
+      style.index,
+      createdAt,
+      updatedAt,
+    )..baseExercise = baseExercise?.toSchema();
   }
 }

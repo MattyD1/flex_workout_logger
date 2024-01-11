@@ -1,7 +1,9 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_view_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
@@ -153,16 +155,26 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     if (_name == null) return;
 
-                    ref.read(exercisesCreateControllerProvider.notifier).handle(
-                          _name!,
-                          _description,
-                          ExerciseEngagement(
-                            _engagement ?? Engagement.bilateral,
+                    final exercise = ref.read(exercisesListControllerProvider);
+
+                    final _base = exercise.maybeWhen(
+                      data: (data) => ref
+                          .read(exercisesCreateControllerProvider.notifier)
+                          .handle(
+                            _name!,
+                            _description,
+                            ExerciseEngagement(
+                              _engagement ?? Engagement.bilateral,
+                            ),
+                            ExerciseStyle(
+                              _style ?? Style.reps,
+                            ),
+                            ExerciseBaseExercise(null, data[0]),
                           ),
-                          ExerciseStyle(
-                            _style ?? Style.reps,
-                          ),
-                        ); // FIX: engagement should not be hardcoded
+                      orElse: () => null,
+                    );
+
+                    // FIX: engagement should not be hardcoded
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
@@ -22,11 +23,12 @@ class ExercisesCreateController extends _$ExercisesCreateController {
     ExerciseDescription? description,
     ExerciseEngagement engagement,
     ExerciseStyle style,
+    ExerciseBaseExercise? baseExercise,
   ) async {
     state = const AsyncLoading();
     final res = await ref
         .read(exerciseRepositoryProvider)
-        .createExercise(name, description, engagement, style);
+        .createExercise(name, description, engagement, style, baseExercise);
     state = res.fold(
       (l) => AsyncValue.error(l.error, StackTrace.current),
       AsyncValue.data,
