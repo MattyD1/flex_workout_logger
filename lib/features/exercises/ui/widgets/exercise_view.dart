@@ -1,14 +1,17 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
-import 'package:flex_workout_logger/main.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_edit_screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/icon_text_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// The detail view of an exercise
-class ExerciseView extends StatelessWidget {
+class ExerciseView extends ConsumerWidget {
   ///
   const ExerciseView({required this.exercise, super.key});
 
@@ -16,7 +19,7 @@ class ExerciseView extends StatelessWidget {
   final ExerciseEntity exercise;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         /// Row holds summary
@@ -99,7 +102,12 @@ class ExerciseView extends StatelessWidget {
             IconTextButton(
               icon: CupertinoIcons.pencil,
               text: 'Edit',
-              onPressed: () {},
+              onPressed: () => context.goNamed(
+                ExercisesEditScreen.routeName,
+                pathParameters: {
+                  'eid': exercise.id,
+                },
+              ),
             ),
             const SizedBox(width: 16),
             IconTextButton(
@@ -117,7 +125,43 @@ class ExerciseView extends StatelessWidget {
             IconTextButton(
               icon: CupertinoIcons.trash,
               text: 'Delete',
-              onPressed: () {},
+              onPressed: () => {
+                showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Are you sure about that?'),
+                      content: const Text('This will delete the exercise'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            ref
+                                .read(
+                                  exercisesDeleteControllerProvider(exercise.id)
+                                      .notifier,
+                                )
+                                .handle();
+
+                            ref
+                                .read(exercisesListControllerProvider.notifier)
+                                .deleteExercise(exercise);
+
+                            Navigator.of(context).pop(); // Pop the dialog
+                            context.pop(); // Pop the screen
+                          },
+                          child: const Text('Confirm'),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              },
             ),
           ],
         ),
@@ -149,50 +193,11 @@ class ExerciseView extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    color: context.colorScheme.muted,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.miniPadding,
-                    ),
-                    child: Text(
-                      'Horizontal Push',
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
+                _bubble(context, 'Horizontal Push'),
                 const SizedBox(width: 8),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    color: context.colorScheme.muted,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.miniPadding,
-                    ),
-                    child: Text(
-                      'Bilateral',
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
+                _bubble(context, 'Bilateral'),
                 const SizedBox(width: 8),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    color: context.colorScheme.muted,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.miniPadding,
-                    ),
-                    child: Text(
-                      'Reps',
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
+                _bubble(context, 'Reps'),
               ],
             ),
             const SizedBox(height: 16),
@@ -203,64 +208,40 @@ class ExerciseView extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    color: context.colorScheme.foreground,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.miniPadding,
-                    ),
-                    child: Text(
-                      'Chest',
-                      style: context.textTheme.bodyMedium.copyWith(
-                        color: context.colorScheme.background,
-                      ),
-                    ),
-                  ),
-                ),
+                _bubble(context, 'Chest', isPrimary: true),
                 const SizedBox(width: 8),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    color: context.colorScheme.muted,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.miniPadding,
-                    ),
-                    child: Text(
-                      'Deltoids',
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
+                _bubble(context, 'Deltoids'),
                 const SizedBox(width: 8),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    color: context.colorScheme.muted,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.miniPadding,
-                    ),
-                    child: Text(
-                      'Triceps',
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
+                _bubble(context, 'Triceps'),
               ],
             ),
           ],
         ),
         // TODO: Progress graph
-        // Text(exercise.name),
-        // Text(exercise.description),
-        // Text(exercise.engagement.toString()),
-        // Text(exercise.style.toString()),
-        // Text(exercise.createdAt.toIso8601String()),
-        // Text(exercise.updatedAt.toIso8601String()),
       ],
+    );
+  }
+
+  Widget _bubble(BuildContext context, String text, {bool isPrimary = false}) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      child: Container(
+        color: isPrimary
+            ? context.colorScheme.foreground
+            : context.colorScheme.muted,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppLayout.defaultPadding,
+          vertical: AppLayout.miniPadding,
+        ),
+        child: Text(
+          text,
+          style: context.textTheme.bodyMedium.copyWith(
+            color: isPrimary
+                ? context.colorScheme.background
+                : context.colorScheme.foreground,
+          ),
+        ),
+      ),
     );
   }
 }
