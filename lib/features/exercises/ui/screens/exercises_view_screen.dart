@@ -1,3 +1,4 @@
+import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_view_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_view.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -26,7 +27,7 @@ class ExercisesViewScreen extends ConsumerWidget {
     final exercise = ref.watch(exercisesViewControllerProvider(id));
 
     return Scaffold(
-      backgroundColor: context.colorScheme.background,
+      backgroundColor: context.colorScheme.offBackground,
       appBar: CupertinoNavigationBar(
         padding: EdgeInsetsDirectional.zero,
         backgroundColor: context.colorScheme.offBackground,
@@ -40,18 +41,40 @@ class ExercisesViewScreen extends ConsumerWidget {
         middle: exercise.when(
           data: (data) => Text(
             data.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(color: context.colorScheme.foreground),
           ),
           error: (error, stackTrace) => const Text('Error'),
           loading: () => const Text(''),
         ),
       ),
-      body: exercise.when(
-        data: (data) => ExerciseView(exercise: data),
-        error: (o, e) => AppError(
-          title: o.toString(),
+      body: Padding(
+        padding: const EdgeInsets.only(
+          left: AppLayout.defaultPadding,
+          right: AppLayout.defaultPadding,
+          top: AppLayout.defaultPadding,
         ),
-        loading: () => const CircularProgressIndicator(),
+        child: CustomScrollView(
+          scrollBehavior: const CupertinoScrollBehavior(),
+          slivers: <Widget>[
+            exercise.when(
+              data: (data) => SliverToBoxAdapter(
+                child: ExerciseView(exercise: data),
+              ),
+              error: (o, e) => SliverToBoxAdapter(
+                child: AppError(
+                  title: o.toString(),
+                ),
+              ),
+              loading: () => const SliverToBoxAdapter(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
