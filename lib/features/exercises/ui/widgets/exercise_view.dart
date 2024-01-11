@@ -110,16 +110,16 @@ class ExerciseView extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 16),
-            IconTextButton(
+            const IconTextButton(
               icon: CupertinoIcons.share,
               text: 'Share',
-              onPressed: () {},
+              onPressed: null,
             ),
             const SizedBox(width: 16),
-            IconTextButton(
+            const IconTextButton(
               icon: CupertinoIcons.square_on_square,
               text: 'Copy',
-              onPressed: () {},
+              onPressed: null,
             ),
             const SizedBox(width: 16),
             IconTextButton(

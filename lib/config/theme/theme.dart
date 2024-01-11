@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/config/theme/app_colors.dart';
 import 'package:flex_workout_logger/config/theme/app_colors_extension.dart';
 import 'package:flex_workout_logger/config/theme/app_typography.dart';
 import 'package:flex_workout_logger/config/theme/app_typography_extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// App Theme
@@ -24,12 +25,21 @@ class AppTheme with ChangeNotifier {
     headlineSmall: AppTypography.headlineSmall,
     titleLarge: AppTypography.titleLarge,
     titleSmall: AppTypography.titleSmall,
+    label: AppTypography.label,
     listTitle: AppTypography.listTitle,
     listSubtitle: AppTypography.listSubtitle,
   );
 
   /// Light Mode Theme Data
   static final light = ThemeData.light().copyWith(
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: AppColors.surfaceLight.foreground,
+      selectionColor: AppColors.surfaceLight.foreground.withOpacity(0.3),
+      selectionHandleColor: AppColors.surfaceLight.foreground,
+    ),
+    cupertinoOverrideTheme: CupertinoThemeData(
+      primaryColor: AppColors.surfaceLight.foreground,
+    ),
     extensions: [
       _lightAppColors,
       _textTheme,
@@ -48,6 +58,14 @@ class AppTheme with ChangeNotifier {
 
   /// Dark Mode Theme Data
   static final dark = ThemeData.dark().copyWith(
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: AppColors.surfaceDark.foreground,
+      selectionColor: AppColors.surfaceDark.foreground.withOpacity(0.3),
+      selectionHandleColor: AppColors.surfaceDark.foreground,
+    ),
+    cupertinoOverrideTheme: CupertinoThemeData(
+      primaryColor: AppColors.surfaceDark.foreground,
+    ),
     extensions: [
       _darkAppColors,
       _textTheme,

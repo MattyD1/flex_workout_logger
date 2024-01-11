@@ -19,10 +19,10 @@ class ExerciseName extends Validation<String> {
 }
 
 Either<Failure, String> _validate(String input) {
-  if (input.length < 2) {
+  if (input.isEmpty) {
     return left(
       const Failure.unprocessableEntity(
-        message: 'The name must be at least 2 characters in length',
+        message: 'The exercise must have a name',
       ),
     );
   } else if (input.length > 100) {

@@ -38,6 +38,12 @@ abstract class AppTypography {
     fontWeight: FontWeight.w400,
   );
 
+  /// Label
+  static const label = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
+
   /// List Title
   static const listTitle = TextStyle(
     fontSize: 14,
