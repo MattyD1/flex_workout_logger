@@ -9,8 +9,8 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/base_exercise_selection.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
-import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
+import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,9 +37,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   ExerciseDescription? _description;
   Engagement? _engagement;
   Style? _style;
+  ExerciseBaseExercise? _baseExercise;
 
   ExerciseEntity? _currentBaseExercise;
-  ExerciseBaseExercise? _baseExercise;
 
   @override
   void dispose() {
@@ -91,7 +91,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       );
     });
 
-    final exercises = ref.watch(exercisesListControllerProvider);
+    final variationExercises = ref
+        .read(exercisesListControllerProvider.notifier)
+        .getBaseExerciseList();
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
     final errorText = res.maybeWhen(
@@ -113,13 +115,13 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
         children: [
           if (_currentBaseExercise != null)
             BaseExerciseSelection(
-              exercises: exercises.asData?.value ?? [],
+              exercises: variationExercises.asData?.value ?? [],
               selectedValue: ExerciseBaseExercise(null, _currentBaseExercise),
-              currentExerciseId: widget.id,
               currentBaseExercise: _currentBaseExercise,
               onSelected: (value) {
                 setState(() {
-                  _baseExercise = ExerciseBaseExercise(_currentBaseExercise, value);
+                  _baseExercise =
+                      ExerciseBaseExercise(_currentBaseExercise, value);
                   _currentBaseExercise = value;
 
                   debugPrint('Base exercise selected');
@@ -214,29 +216,24 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
                     if (_name == null) return;
 
-                    final exercise = ref.read(exercisesListControllerProvider);
-
-                    final _base = exercise.maybeWhen(
-                      data: (data) => ref
-                          .read(
-                            exercisesEditControllerProvider(widget.id).notifier,
-                          )
-                          .handle(
-                            _name!,
-                            _description!,
-                            ExerciseEngagement(
-                              _engagement ?? Engagement.bilateral,
-                            ),
-                            ExerciseStyle(
-                              _style ?? Style.reps,
-                            ),
-                            ExerciseBaseExercise(
-                              null,
-                              _currentBaseExercise,
-                            ),
+                    ref
+                        .read(
+                          exercisesEditControllerProvider(widget.id).notifier,
+                        )
+                        .handle(
+                          _name!,
+                          _description!,
+                          ExerciseEngagement(
+                            _engagement ?? Engagement.bilateral,
                           ),
-                      orElse: () => null,
-                    );
+                          ExerciseStyle(
+                            _style ?? Style.reps,
+                          ),
+                          ExerciseBaseExercise(
+                            null,
+                            _currentBaseExercise,
+                          ),
+                        );
                   },
             child: isLoading
                 ? const CircularProgressIndicator()

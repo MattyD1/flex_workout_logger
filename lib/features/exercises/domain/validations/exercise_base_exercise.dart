@@ -34,6 +34,14 @@ Either<Failure, ExerciseEntity?> _validate(
     return right(null);
   }
 
+  if (baseExercise.baseExercise == null) {
+    return left(
+      const Failure.unprocessableEntity(
+        message: 'The base exercise can not be a variation',
+      ),
+    );
+  }
+
   if (currentExercise.id == baseExercise.id) {
     return left(
       const Failure.unprocessableEntity(

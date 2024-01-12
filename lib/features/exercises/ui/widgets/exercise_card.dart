@@ -145,7 +145,9 @@ class ExerciseListTile extends StatelessWidget {
       subtitle: Row(
         children: <Widget>[
           Text(
-            'Movement Pattern',
+            exercise.baseExercise != null
+                ? '${exercise.baseExercise!.name} Variation'
+                : 'Movement Pattern',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.listSubtitle.copyWith(

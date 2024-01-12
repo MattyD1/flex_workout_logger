@@ -62,7 +62,11 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
         orElse: () {},
       );
     });
-    final exercises = ref.watch(exercisesListControllerProvider);
+
+    final variationExercises = ref
+        .read(exercisesListControllerProvider.notifier)
+        .getBaseExerciseList();
+
     final res = ref.watch(exercisesCreateControllerProvider);
     final errorText = res.maybeWhen(
       error: (error, stackTrace) => error.toString(),
@@ -93,7 +97,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           const SizedBox(height: AppLayout.defaultPadding),
           if (_selectedVariation == 2)
             BaseExerciseSelection(
-              exercises: exercises.asData?.value ?? [],
+              exercises: variationExercises.asData?.value ?? [],
               selectedValue: _baseExercise,
               onSelected: (value) {
                 setState(() {
