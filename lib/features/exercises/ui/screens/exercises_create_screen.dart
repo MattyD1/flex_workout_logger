@@ -62,7 +62,7 @@ class ExercisesCreateScreen extends ConsumerWidget {
                 top: AppLayout.miniPadding,
               ),
               color: context.colorScheme.offBackground,
-              child: const StepIndicator(currentStep: 1, totalSteps: 1),
+              child: const StepIndicator(currentStep: 1, totalSteps: 3),
             ),
           ),
         ],

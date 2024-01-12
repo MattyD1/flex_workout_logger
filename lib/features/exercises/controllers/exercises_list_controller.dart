@@ -13,6 +13,23 @@ class ExercisesListController extends _$ExercisesListController {
     return res.fold((l) => throw l, (r) => r);
   }
 
+  /// Filters the list to only get items that are not the base exercise
+  /// or are not a variation
+  AsyncValue<List<ExerciseEntity>> getBaseExerciseList({
+    String? baseExerciseId,
+  }) {
+    final items = state.valueOrNull ?? [];
+
+    final filteredList = items
+        .where(
+          (element) =>
+              element.id != baseExerciseId && element.baseExercise == null,
+        )
+        .toList();
+
+    return AsyncValue.data(filteredList);
+  }
+
   /// Add an entity to list
   void addExercise(ExerciseEntity entity) {
     final items = state.valueOrNull ?? [];

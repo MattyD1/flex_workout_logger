@@ -1,5 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
@@ -35,6 +36,7 @@ void main() {
         ExerciseDescription('New Description'),
         ExerciseEngagement(Engagement.bilateral),
         ExerciseStyle(Style.reps),
+        ExerciseBaseExercise(null, null),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
@@ -134,6 +136,7 @@ void main() {
         ExerciseDescription('New Description'),
         ExerciseEngagement(Engagement.bilateral),
         ExerciseStyle(Style.reps),
+        ExerciseBaseExercise(null, itemToUpdate.baseExercise?.toEntity()),
       );
 
       final exercise = res.fold((l) => throw l, (r) => r);

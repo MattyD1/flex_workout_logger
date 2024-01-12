@@ -21,6 +21,7 @@ class _Exercise {
   Style get style => Style.values[styleAsInt];
   set style(Style value) => styleAsInt = value.index;
 
+  late _Exercise? baseExercise;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -36,6 +37,7 @@ extension Convert on _Exercise {
       description: description,
       engagement: engagement,
       style: style,
+      baseExercise: baseExercise?.toEntity(),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

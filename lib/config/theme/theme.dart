@@ -31,7 +31,7 @@ class AppTheme with ChangeNotifier {
   );
 
   /// Light Mode Theme Data
-  static final light = ThemeData.light().copyWith(
+  static final light = ThemeData.light(useMaterial3: true).copyWith(
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: AppColors.surfaceLight.foreground,
       selectionColor: AppColors.surfaceLight.foreground.withOpacity(0.3),
@@ -57,7 +57,7 @@ class AppTheme with ChangeNotifier {
   );
 
   /// Dark Mode Theme Data
-  static final dark = ThemeData.dark().copyWith(
+  static final dark = ThemeData.dark(useMaterial3: true).copyWith(
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: AppColors.surfaceDark.foreground,
       selectionColor: AppColors.surfaceDark.foreground.withOpacity(0.3),

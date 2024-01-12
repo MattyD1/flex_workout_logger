@@ -191,6 +191,8 @@ class ExerciseView extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: 16),
+            Text(exercise.baseExercise?.name ?? 'No Base Exercise'),
+            const SizedBox(height: 16),
             Row(
               children: [
                 _bubble(context, 'Horizontal Push'),

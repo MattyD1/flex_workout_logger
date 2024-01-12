@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/exercise_repository_interface.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
@@ -26,13 +27,30 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseDescription? description,
     ExerciseEngagement engagement,
     ExerciseStyle style,
+    ExerciseBaseExercise? baseExercise,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
       final name_ = name.value.getOrElse((l) => 'No name provided');
       final description_ = description?.value.getOrElse((l) => '');
-      final engagement_ = engagement.value.getOrElse((l) => Engagement.bilateral);
+      final engagement_ =
+          engagement.value.getOrElse((l) => Engagement.bilateral);
       final style_ = style.value.getOrElse((l) => Style.reps);
+
+      final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
+      // ignore: avoid_init_to_null
+      late Exercise? baseExerciseRes_ =
+          null; // Init to null to avoid initialization error
+
+      if (baseExercise_ != null) {
+        final objectId = ObjectId.fromHexString(baseExercise_.id);
+
+        baseExerciseRes_ = realm.find<Exercise>(objectId);
+
+        if (baseExerciseRes_ == null) {
+          return left(const Failure.empty());
+        }
+      }
 
       final exerciseToAdd = Exercise(
         ObjectId(),
@@ -42,7 +60,8 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         currentDateTime,
         currentDateTime,
-      );
+      )..baseExercise =
+          baseExerciseRes_; // Note this may not work, baseExercise might not be found
 
       final res = realm.write<Exercise>(() {
         return realm.add(exerciseToAdd);
@@ -155,6 +174,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseDescription description,
     ExerciseEngagement engagement,
     ExerciseStyle style,
+    ExerciseBaseExercise? baseExercise,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -169,6 +189,21 @@ class ExerciseRepository implements IExerciseRepository {
       final description_ = description.value.getOrElse((l) => res.description);
       final engagement_ = engagement.value.getOrElse((l) => res.engagement);
       final style_ = style.value.getOrElse((l) => res.style);
+      final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
+
+      // ignore: avoid_init_to_null
+      late Exercise? baseExerciseRes_ =
+          null; // Init to null to avoid initialization error
+
+      if (baseExercise_ != null) {
+        final objectId = ObjectId.fromHexString(baseExercise_.id);
+
+        baseExerciseRes_ = realm.find<Exercise>(objectId);
+
+        if (baseExerciseRes_ == null) {
+          return left(const Failure.empty());
+        }
+      }
 
       final updatedExercise = Exercise(
         objectId,
@@ -178,7 +213,7 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         res.createdAt,
         DateTimeX.current,
-      );
+      )..baseExercise = baseExerciseRes_ ?? res.baseExercise;
 
       realm.write(() {
         realm.add(updatedExercise, update: true);

@@ -2,13 +2,15 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
-import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
+import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
+import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,14 +29,17 @@ class ExerciseEditForm extends ConsumerStatefulWidget {
 }
 
 class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
+  final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  ExerciseEntity? _currentBaseExercise;
 
-  final _formKey = GlobalKey<FormState>();
   ExerciseName? _name;
   ExerciseDescription? _description;
   Engagement? _engagement;
   Style? _style;
+  ExerciseBaseExercise? _baseExercise;
 
   @override
   void dispose() {
@@ -63,6 +68,11 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
       // Initalize style
       _style = next.asData?.value.style ?? Style.reps;
+
+      // Initalize base exercises
+      final e = next.asData?.value.baseExercise;
+      _currentBaseExercise = e;
+      _baseExercise = ExerciseBaseExercise(widget.id, e);
     });
     super.initState();
   }
@@ -81,6 +91,10 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
         orElse: () {},
       );
     });
+
+    final variationExercises = ref
+        .read(exercisesListControllerProvider.notifier)
+        .getBaseExerciseList(baseExerciseId: widget.id);
 
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
@@ -101,6 +115,22 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (_currentBaseExercise != null)
+            SelectionSheet<ExerciseEntity>(
+              validator: (value) => _baseExercise?.validate,
+              initialValue: _currentBaseExercise,
+              hintText: 'Select a base exercise',
+              labelText: 'Base Exercise',
+              onChanged: (value) {
+                _baseExercise = ExerciseBaseExercise(widget.id, value);
+              },
+              items: variationExercises.asData?.value
+                      .map(
+                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                      )
+                      .toList() ??
+                  [],
+            ),
           MyTextField(
             label: 'Exercise Name',
             hintText: 'Bench Press, Squat, etc.',
@@ -201,7 +231,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                           ExerciseStyle(
                             _style ?? Style.reps,
                           ),
-                        ); // FIX: engagement should not be hardcoded
+                          _baseExercise,
+                        );
                   },
             child: isLoading
                 ? const CircularProgressIndicator()
