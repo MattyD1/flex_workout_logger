@@ -26,15 +26,11 @@ Either<Failure, ExerciseEntity?> _validate(
   ExerciseEntity? currentExercise,
   ExerciseEntity? baseExercise,
 ) {
-  if (currentExercise == null) {
-    return right(baseExercise);
-  }
-
   if (baseExercise == null) {
     return right(null);
   }
 
-  if (baseExercise.baseExercise == null) {
+  if (baseExercise.baseExercise != null) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The base exercise can not be a variation',
@@ -42,7 +38,7 @@ Either<Failure, ExerciseEntity?> _validate(
     );
   }
 
-  if (currentExercise.id == baseExercise.id) {
+  if (currentExercise?.id == baseExercise.id) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The base exercise can not be the same as the parent exercise',

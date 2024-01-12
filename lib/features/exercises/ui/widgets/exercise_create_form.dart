@@ -9,6 +9,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/base_exercise_selection.dart';
+import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
@@ -63,9 +64,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
       );
     });
 
-    final variationExercises = ref
-        .read(exercisesListControllerProvider.notifier)
-        .getBaseExerciseList();
+    final variationExercises = ref.read(exercisesListControllerProvider);
 
     final res = ref.watch(exercisesCreateControllerProvider);
     final errorText = res.maybeWhen(
@@ -96,19 +95,19 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           if (_selectedVariation == 2)
-            BaseExerciseSelection(
-              exercises: variationExercises.asData?.value ?? [],
-              selectedValue: _baseExercise,
-              onSelected: (value) {
-                setState(() {
-                  _baseExercise = ExerciseBaseExercise(null, value);
-
-                  debugPrint('Base exercise selected');
-                  debugPrint(value.name);
-                });
-              },
+            SelectionSheet<ExerciseEntity>(
+              validator: (value) => _baseExercise?.validate,
+              hintText: 'Select a base exercise',
+              labelText: 'Base Exercise',
+              onChanged: (value) =>
+                  _baseExercise = ExerciseBaseExercise(null, value),
+              items: variationExercises.asData?.value
+                      .map(
+                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                      )
+                      .toList() ??
+                  [],
             ),
-
           MyTextField(
             label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
             hintText: _selectedVariation == 1
@@ -200,7 +199,6 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                     }
 
                     if (_name == null) return;
-
                     ref.read(exercisesCreateControllerProvider.notifier).handle(
                           _name!,
                           _description,

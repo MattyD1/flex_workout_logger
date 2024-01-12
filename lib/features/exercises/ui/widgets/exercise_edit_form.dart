@@ -91,9 +91,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       );
     });
 
-    final variationExercises = ref
-        .read(exercisesListControllerProvider.notifier)
-        .getBaseExerciseList();
+    final variationExercises = ref.read(exercisesListControllerProvider);
+
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
     final errorText = res.maybeWhen(
