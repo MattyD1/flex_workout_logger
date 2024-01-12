@@ -2,7 +2,7 @@ import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:flex_workout_logger/utils/validation_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 
-/// Department Name value
+/// Movement Pattern Description value
 class MovementPatternDescription extends Validation<String> {
   ///
   factory MovementPatternDescription(String input) {

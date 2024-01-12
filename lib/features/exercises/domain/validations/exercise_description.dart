@@ -2,7 +2,7 @@ import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:flex_workout_logger/utils/validation_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 
-/// Department Name value
+/// Exercise Description value
 class ExerciseDescription extends Validation<String> {
   ///
   factory ExerciseDescription(String input) {

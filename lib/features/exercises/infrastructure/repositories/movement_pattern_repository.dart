@@ -21,27 +21,61 @@ class MovementPatternRepository implements IMovementPatternRepository {
   FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern(
     MovementPatternName name,
     MovementPatternDescription description,
-  ) {
-    // TODO: implement createMovementPattern
+  ) async {
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteMovementPattern(String id) {
-    // TODO: implement deleteMovementPattern
-    throw UnimplementedError();
+  FutureOr<Either<Failure, bool>> deleteMovementPattern(String id) async {
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<MovementPattern>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      realm.write(() {
+        realm.delete(res);
+      });
+
+      return right(true);
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
   FutureOr<Either<Failure, MovementPatternEntity>> getMovementPatternById(
     String id,
-  ) {
-    // TODO: implement getMovementPatternById
-    throw UnimplementedError();
+  ) async {
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<MovementPattern>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      return right(res.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
-  FutureOr<Either<Failure, List<MovementPatternEntity>>> getMovementPatterns() {
+  FutureOr<Either<Failure, List<MovementPatternEntity>>>
+      getMovementPatterns() async {
     try {
       final res = realm.all<MovementPattern>();
 
@@ -60,8 +94,7 @@ class MovementPatternRepository implements IMovementPatternRepository {
     String id,
     MovementPatternName name,
     MovementPatternDescription description,
-  ) {
-    // TODO: implement updateMovementPattern
+  ) async {
     throw UnimplementedError();
   }
 }

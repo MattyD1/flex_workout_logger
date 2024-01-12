@@ -3,7 +3,7 @@ import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:flex_workout_logger/utils/validation_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 
-/// Base exercise value
+/// Base Exercise value
 class ExerciseBaseExercise extends Validation<ExerciseEntity?> {
   ///
   factory ExerciseBaseExercise(
