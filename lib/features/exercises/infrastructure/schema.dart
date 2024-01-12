@@ -43,19 +43,3 @@ extension Convert on _Exercise {
     );
   }
 }
-
-/// Exercise Entity extension
-extension CovertSchema on ExerciseEntity {
-  /// Covert [ExerciseEntity] to [_Exercise]
-  Exercise toSchema() {
-    return Exercise(
-      ObjectId.fromHexString(id),
-      name,
-      description,
-      engagement.index,
-      style.index,
-      createdAt,
-      updatedAt,
-    )..baseExercise = baseExercise?.toSchema();
-  }
-}
