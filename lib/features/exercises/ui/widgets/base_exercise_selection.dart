@@ -13,6 +13,8 @@ class BaseExerciseSelection extends StatefulWidget {
     required this.exercises,
     required this.selectedValue,
     required this.onSelected,
+    this.currentExerciseId,
+    this.currentBaseExercise,
     super.key,
   });
 
@@ -24,6 +26,12 @@ class BaseExerciseSelection extends StatefulWidget {
 
   /// The callback when a value is selected
   final ValueChanged<ExerciseEntity> onSelected;
+
+  // Current exercise id - exercise can't be equal to itself as a base exercise
+  final String? currentExerciseId;
+
+  /// The current base exercise
+  final ExerciseEntity? currentBaseExercise;
 
   @override
   State<BaseExerciseSelection> createState() => _BaseExerciseSelectionState();
@@ -43,34 +51,42 @@ class _BaseExerciseSelectionState extends State<BaseExerciseSelection> {
       ),
       builder: (context) => ListView.builder(
         itemCount: widget.exercises.length,
-        itemBuilder: (context, index) => Column(
-          children: [
-            ExerciseListTile(
-              exercise: widget.exercises[index],
-              trailingIcon: CupertinoIcons.add_circled,
-              onTap: () {
-                widget.onSelected(widget.exercises[index]);
+        itemBuilder: (context, index) {
+          // TODO: Fix: a variant exercise can't be equal to any of its variations
+          if (widget.currentExerciseId == widget.exercises[index].id) {
+            return Container();
+          }
+          return Column(
+            children: [
+              ExerciseListTile(
+                exercise: widget.exercises[index],
+                trailingIcon: CupertinoIcons.add_circled,
+                onTap: () {
+                  widget.onSelected(widget.exercises[index]);
 
-                setState(() {
-                  _selectedExercise = widget.exercises[index];
-                });
+                  setState(() {
+                    _selectedExercise = widget.exercises[index];
+                  });
 
-                Navigator.of(context).pop();
-              },
-            ),
-            Divider(
-              color: context.colorScheme.divider,
-              height: 1,
-              indent: 64,
-            ),
-          ],
-        ),
+                  Navigator.of(context).pop();
+                },
+              ),
+              Divider(
+                color: context.colorScheme.divider,
+                height: 1,
+                indent: 64,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    if(widget.currentBaseExercise != null) _selectedExercise = widget.currentBaseExercise;
+
     return Column(
       children: [
         Row(

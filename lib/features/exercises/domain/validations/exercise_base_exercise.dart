@@ -34,7 +34,7 @@ Either<Failure, ExerciseEntity?> _validate(
     return right(null);
   }
 
-  if (currentExercise.id != baseExercise.id) {
+  if (currentExercise.id == baseExercise.id) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The base exercise can not be the same as the parent exercise',

@@ -7,6 +7,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/base_exercise_selection.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
@@ -37,6 +38,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   Engagement? _engagement;
   Style? _style;
 
+  ExerciseEntity? _currentBaseExercise;
+  ExerciseBaseExercise? _baseExercise;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -64,6 +68,10 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
       // Initalize style
       _style = next.asData?.value.style ?? Style.reps;
+
+      // Initalize base exercises
+      _currentBaseExercise = next.asData?.value.baseExercise;
+      _baseExercise = null;
     });
     super.initState();
   }
@@ -83,6 +91,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       );
     });
 
+    final exercises = ref.watch(exercisesListControllerProvider);
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
     final errorText = res.maybeWhen(
@@ -102,6 +111,22 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (_currentBaseExercise != null)
+            BaseExerciseSelection(
+              exercises: exercises.asData?.value ?? [],
+              selectedValue: ExerciseBaseExercise(null, _currentBaseExercise),
+              currentExerciseId: widget.id,
+              currentBaseExercise: _currentBaseExercise,
+              onSelected: (value) {
+                setState(() {
+                  _baseExercise = ExerciseBaseExercise(_currentBaseExercise, value);
+                  _currentBaseExercise = value;
+
+                  debugPrint('Base exercise selected');
+                  debugPrint(value.name);
+                });
+              },
+            ),
           MyTextField(
             label: 'Exercise Name',
             hintText: 'Bench Press, Squat, etc.',
@@ -207,9 +232,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                             ),
                             ExerciseBaseExercise(
                               null,
-                              data[2],
+                              _currentBaseExercise,
                             ),
-                          ), // FIX: engagement should not be hardcoded
+                          ),
                       orElse: () => null,
                     );
                   },
