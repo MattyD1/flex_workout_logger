@@ -1,5 +1,8 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/widgets/app_error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +12,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 ///
 class BaseExerciseSelection extends ConsumerStatefulWidget {
   ///
-  const BaseExerciseSelection({super.key});
+  const BaseExerciseSelection({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -18,34 +23,73 @@ class BaseExerciseSelection extends ConsumerStatefulWidget {
 
 class _BaseExerciseSelectionState extends ConsumerState<BaseExerciseSelection> {
   void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet<Widget>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.colorScheme.offBackground,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-      ),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) => SafeArea(
-          child: ListView.builder(
-            controller: scrollController,
-            itemCount: 100,
-            itemBuilder: (context, index) => ListTile(
-              title: Text(index.toString()),
-              onTap: () => Navigator.of(context).pop(index),
+    final exercises = ref.watch(exercisesListControllerProvider);
+
+    return exercises.when(
+      data: (items) => items.isEmpty
+        ? showModalBottomSheet<Widget>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: context.colorScheme.offBackground,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          ),
+          builder: (context) => const Padding(
+            padding: EdgeInsets.all(AppLayout.miniPadding),
+            child: Center(
+              child: Text('No items found'),
             ),
           ),
+        )
+        : showModalBottomSheet<Widget>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: context.colorScheme.offBackground,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          ),
+          builder: (context) => DraggableScrollableSheet(
+            initialChildSize: 0.9,
+            minChildSize: 0.5,
+            maxChildSize: 0.9,
+            expand: false,
+            builder: (context, scrollController) => SafeArea(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: items.length,
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    CupertinoListTile(
+                        title: Text(
+                          items[index].name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.listTitle.copyWith(
+                            color: context.colorScheme.foreground,
+                          ),
+                        ),
+                        onTap: () => {},
+                      ),
+                      Divider(
+                        color: context.colorScheme.divider,
+                        height: 1,
+                      ),
+                  ]
+                ),
+              )
+            )
+          )
         ),
+      error: (o, e) => AppError(
+        title: o.toString(),
       ),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         Row(
@@ -59,20 +103,6 @@ class _BaseExerciseSelectionState extends ConsumerState<BaseExerciseSelection> {
         TextButton(
           onPressed: () {
             _showBottomSheet(context);
-            // showModalBottomSheet(
-            //   context: context,
-            //   // showDragHandle: true,
-            //   // isScrollControlled: true,
-            //   backgroundColor: context.colorScheme.offBackground,
-            //   builder: (BuildContext context) {
-            //     return FractionallySizedBox(
-            //         heightFactor: 0.8,
-            //         widthFactor: double.infinity,
-            //         child: Container(
-            //           child: const Text('testing'),
-            //         ));
-            //   },
-            // );
           },
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
@@ -92,8 +122,7 @@ class _BaseExerciseSelectionState extends ConsumerState<BaseExerciseSelection> {
             ),
             child: Row(
               children: [
-                Text(
-                  'Select Base Exercise',
+                Text('Select Base Exercise',
                   style: context.textTheme.bodyMedium
                       .copyWith(color: context.colorScheme.mutedForeground),
                 ),
