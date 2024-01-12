@@ -1,95 +1,76 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
-import 'package:flex_workout_logger/widgets/app_error.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 ///
-class BaseExerciseSelection extends ConsumerStatefulWidget {
+class BaseExerciseSelection extends StatefulWidget {
   ///
   const BaseExerciseSelection({
+    required this.exercises,
+    required this.selectedValue,
+    required this.onSelected,
     super.key,
   });
 
+  /// The values to display
+  final List<ExerciseEntity> exercises;
+
+  /// The currently selected value
+  final ExerciseBaseExercise? selectedValue;
+
+  /// The callback when a value is selected
+  final ValueChanged<ExerciseEntity> onSelected;
+
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _BaseExerciseSelectionState();
+  State<BaseExerciseSelection> createState() => _BaseExerciseSelectionState();
 }
 
-class _BaseExerciseSelectionState extends ConsumerState<BaseExerciseSelection> {
-  void _showBottomSheet(BuildContext context) {
-    final exercises = ref.watch(exercisesListControllerProvider);
+class _BaseExerciseSelectionState extends State<BaseExerciseSelection> {
+  ExerciseEntity? _selectedExercise;
 
-    return exercises.when(
-      data: (items) => items.isEmpty
-        ? showModalBottomSheet<Widget>(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: context.colorScheme.offBackground,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-          ),
-          builder: (context) => const Padding(
-            padding: EdgeInsets.all(AppLayout.miniPadding),
-            child: Center(
-              child: Text('No items found'),
-            ),
-          ),
-        )
-        : showModalBottomSheet<Widget>(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: context.colorScheme.offBackground,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-          ),
-          builder: (context) => DraggableScrollableSheet(
-            initialChildSize: 0.9,
-            minChildSize: 0.5,
-            maxChildSize: 0.9,
-            expand: false,
-            builder: (context, scrollController) => SafeArea(
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: items.length,
-                itemBuilder: (context, index) => Column(
-                  children: [
-                    CupertinoListTile(
-                        title: Text(
-                          items[index].name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textTheme.listTitle.copyWith(
-                            color: context.colorScheme.foreground,
-                          ),
-                        ),
-                        onTap: () => {},
-                      ),
-                      Divider(
-                        color: context.colorScheme.divider,
-                        height: 1,
-                      ),
-                  ]
-                ),
-              )
-            )
-          )
-        ),
-      error: (o, e) => AppError(
-        title: o.toString(),
+  Future<Widget?> _showBottomSheet(BuildContext context) {
+    return showModalBottomSheet<Widget>(
+      context: context,
+      showDragHandle: true,
+      scrollControlDisabledMaxHeightRatio: 0.9,
+      backgroundColor: context.colorScheme.offBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
-      loading: () => const CircularProgressIndicator(),
+      builder: (context) => ListView.builder(
+        itemCount: widget.exercises.length,
+        itemBuilder: (context, index) => Column(
+          children: [
+            ExerciseListTile(
+              exercise: widget.exercises[index],
+              trailingIcon: CupertinoIcons.add_circled,
+              onTap: () {
+                widget.onSelected(widget.exercises[index]);
+
+                setState(() {
+                  _selectedExercise = widget.exercises[index];
+                });
+
+                Navigator.of(context).pop();
+              },
+            ),
+            Divider(
+              color: context.colorScheme.divider,
+              height: 1,
+              indent: 64,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Row(
@@ -122,9 +103,13 @@ class _BaseExerciseSelectionState extends ConsumerState<BaseExerciseSelection> {
             ),
             child: Row(
               children: [
-                Text('Select Base Exercise',
-                  style: context.textTheme.bodyMedium
-                      .copyWith(color: context.colorScheme.mutedForeground),
+                Text(
+                  _selectedExercise?.name ?? 'Select Base Exercise',
+                  style: context.textTheme.bodyMedium.copyWith(
+                    color: _selectedExercise == null
+                        ? context.colorScheme.mutedForeground
+                        : context.colorScheme.foreground,
+                  ),
                 ),
                 const Spacer(),
                 Icon(

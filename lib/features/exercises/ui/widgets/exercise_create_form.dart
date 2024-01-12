@@ -35,10 +35,15 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   Engagement? _engagement = Engagement.bilateral;
   Style? _style = Style.reps;
 
+  ExerciseBaseExercise? _baseExercise;
+
   int _selectedVariation = 1;
 
   void _onVariationChanged(int index) {
     setState(() {
+      if (index == 1) {
+        _baseExercise = ExerciseBaseExercise(null, null);
+      }
       _selectedVariation = index;
     });
   }
@@ -57,7 +62,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
         orElse: () {},
       );
     });
-
+    final exercises = ref.watch(exercisesListControllerProvider);
     final res = ref.watch(exercisesCreateControllerProvider);
     final errorText = res.maybeWhen(
       error: (error, stackTrace) => error.toString(),
@@ -86,7 +91,19 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             onValueChanged: _onVariationChanged,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
-          if (_selectedVariation == 2) const BaseExerciseSelection(),
+          if (_selectedVariation == 2)
+            BaseExerciseSelection(
+              exercises: exercises.asData?.value ?? [],
+              selectedValue: _baseExercise,
+              onSelected: (value) {
+                setState(() {
+                  _baseExercise = ExerciseBaseExercise(null, value);
+
+                  debugPrint('Base exercise selected');
+                  debugPrint(value.name);
+                });
+              },
+            ),
 
           MyTextField(
             label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
@@ -180,24 +197,17 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     if (_name == null) return;
 
-                    final exercise = ref.read(exercisesListControllerProvider);
-
-                    final _base = exercise.maybeWhen(
-                      data: (data) => ref
-                          .read(exercisesCreateControllerProvider.notifier)
-                          .handle(
-                            _name!,
-                            _description,
-                            ExerciseEngagement(
-                              _engagement ?? Engagement.bilateral,
-                            ),
-                            ExerciseStyle(
-                              _style ?? Style.reps,
-                            ),
-                            ExerciseBaseExercise(null, data[0]),
+                    ref.read(exercisesCreateControllerProvider.notifier).handle(
+                          _name!,
+                          _description,
+                          ExerciseEngagement(
+                            _engagement ?? Engagement.bilateral,
                           ),
-                      orElse: () => null,
-                    );
+                          ExerciseStyle(
+                            _style ?? Style.reps,
+                          ),
+                          _baseExercise,
+                        );
 
                     // FIX: engagement should not be hardcoded
                   },

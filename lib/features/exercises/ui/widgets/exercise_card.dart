@@ -98,7 +98,16 @@ class ExercisesCard extends ConsumerWidget {
           ),
         ],
       ),
-      child: ExerciseListTile(exercise: exercise),
+      child: ExerciseListTile(
+        exercise: exercise,
+        trailingIcon: CupertinoIcons.info_circle,
+        onTap: () => context.goNamed(
+          ExercisesViewScreen.routeName,
+          pathParameters: {
+            'eid': exercise.id,
+          },
+        ),
+      ),
     );
   }
 }
@@ -106,10 +115,21 @@ class ExercisesCard extends ConsumerWidget {
 /// A selectable card
 class ExerciseListTile extends StatelessWidget {
   ///
-  const ExerciseListTile({required this.exercise, super.key});
+  const ExerciseListTile({
+    required this.exercise,
+    this.onTap,
+    this.trailingIcon,
+    super.key,
+  });
 
   /// exercise the card represents
   final ExerciseEntity exercise;
+
+  /// On tap callback
+  final void Function()? onTap;
+
+  /// Trailing Icon
+  final IconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -145,20 +165,17 @@ class ExerciseListTile extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () => context.goNamed(
-        ExercisesViewScreen.routeName,
-        pathParameters: {
-          'eid': exercise.id,
-        },
-      ),
+      onTap: onTap,
       leading: const Icon(Icons.fitness_center),
-      trailing: const Padding(
-        padding: EdgeInsets.only(left: AppLayout.miniPadding),
-        child: Icon(
-          CupertinoIcons.info_circle,
-          size: 16,
-        ),
-      ),
+      trailing: (trailingIcon != null)
+          ? Padding(
+              padding: const EdgeInsets.only(left: AppLayout.miniPadding),
+              child: Icon(
+                trailingIcon,
+                size: 16,
+              ),
+            )
+          : null,
       padding: const EdgeInsets.fromLTRB(
         20,
         16,
