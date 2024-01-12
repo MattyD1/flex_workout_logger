@@ -38,6 +38,7 @@ Either<Failure, ExerciseEntity?> _validate(
     );
   }
 
+  // TODO: Fix: doesnt work as intended
   if (currentExercise?.id == baseExercise.id) {
     return left(
       const Failure.unprocessableEntity(

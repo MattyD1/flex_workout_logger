@@ -8,6 +8,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/base_exercise_selection.dart';
+import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
 import 'package:flex_workout_logger/widgets/ui/textfield.dart';
@@ -71,7 +72,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
       // Initalize base exercises
       _currentBaseExercise = next.asData?.value.baseExercise;
-      _baseExercise = null;
+      _baseExercise = ExerciseBaseExercise(null, _currentBaseExercise);
     });
     super.initState();
   }
@@ -113,20 +114,19 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (_currentBaseExercise != null)
-            BaseExerciseSelection(
-              exercises: variationExercises.asData?.value ?? [],
-              selectedValue: ExerciseBaseExercise(null, _currentBaseExercise),
-              currentBaseExercise: _currentBaseExercise,
-              onSelected: (value) {
-                setState(() {
-                  _baseExercise =
-                      ExerciseBaseExercise(_currentBaseExercise, value);
-                  _currentBaseExercise = value;
-
-                  debugPrint('Base exercise selected');
-                  debugPrint(value.name);
-                });
+            SelectionSheet<ExerciseEntity>(
+              validator: (value) => _baseExercise?.validate,
+              hintText: _currentBaseExercise?.name,
+              labelText: 'Base Exercise',
+              onChanged: (value) {
+                _baseExercise = ExerciseBaseExercise(_currentBaseExercise, value);
+                _currentBaseExercise = value;
               },
+              items: variationExercises.asData?.value
+                .map(
+                  (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                )
+                .toList() ?? [],
             ),
           MyTextField(
             label: 'Exercise Name',
@@ -228,10 +228,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                           ExerciseStyle(
                             _style ?? Style.reps,
                           ),
-                          ExerciseBaseExercise(
-                            null,
-                            _currentBaseExercise,
-                          ),
+                          _baseExercise,
                         );
                   },
             child: isLoading
