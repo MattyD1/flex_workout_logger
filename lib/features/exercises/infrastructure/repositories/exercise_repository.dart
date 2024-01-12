@@ -38,7 +38,9 @@ class ExerciseRepository implements IExerciseRepository {
       final style_ = style.value.getOrElse((l) => Style.reps);
 
       final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
-      late Exercise? baseExerciseRes_;
+      // ignore: avoid_init_to_null
+      late Exercise? baseExerciseRes_ =
+          null; // Init to null to avoid initialization error
 
       if (baseExercise_ != null) {
         final objectId = ObjectId.fromHexString(baseExercise_.id);
