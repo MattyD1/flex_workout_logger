@@ -7,10 +7,9 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/base_exercise_selection.dart';
-import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
+import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,17 +29,17 @@ class ExerciseEditForm extends ConsumerStatefulWidget {
 }
 
 class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
+  final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  ExerciseEntity? _currentBaseExercise;
 
-  final _formKey = GlobalKey<FormState>();
   ExerciseName? _name;
   ExerciseDescription? _description;
   Engagement? _engagement;
   Style? _style;
   ExerciseBaseExercise? _baseExercise;
-
-  ExerciseEntity? _currentBaseExercise;
 
   @override
   void dispose() {
@@ -71,8 +70,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       _style = next.asData?.value.style ?? Style.reps;
 
       // Initalize base exercises
-      _currentBaseExercise = next.asData?.value.baseExercise;
-      _baseExercise = ExerciseBaseExercise(null, _currentBaseExercise);
+      final e = next.asData?.value.baseExercise;
+      _currentBaseExercise = e;
+      _baseExercise = ExerciseBaseExercise(widget.id, e);
     });
     super.initState();
   }
@@ -92,7 +92,9 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       );
     });
 
-    final variationExercises = ref.read(exercisesListControllerProvider);
+    final variationExercises = ref
+        .read(exercisesListControllerProvider.notifier)
+        .getBaseExerciseList(baseExerciseId: widget.id);
 
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
@@ -116,17 +118,18 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
           if (_currentBaseExercise != null)
             SelectionSheet<ExerciseEntity>(
               validator: (value) => _baseExercise?.validate,
-              hintText: _currentBaseExercise?.name,
+              initialValue: _currentBaseExercise,
+              hintText: 'Select a base exercise',
               labelText: 'Base Exercise',
               onChanged: (value) {
-                _baseExercise = ExerciseBaseExercise(_currentBaseExercise, value);
-                _currentBaseExercise = value;
+                _baseExercise = ExerciseBaseExercise(widget.id, value);
               },
               items: variationExercises.asData?.value
-                .map(
-                  (e) => DropdownMenuItem(value: e, child: Text(e.name)),
-                )
-                .toList() ?? [],
+                      .map(
+                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                      )
+                      .toList() ??
+                  [],
             ),
           MyTextField(
             label: 'Exercise Name',

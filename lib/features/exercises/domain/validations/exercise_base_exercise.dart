@@ -7,11 +7,11 @@ import 'package:fpdart/fpdart.dart';
 class ExerciseBaseExercise extends Validation<ExerciseEntity?> {
   ///
   factory ExerciseBaseExercise(
-    ExerciseEntity? currentExercise,
+    String? currentExerciseId,
     ExerciseEntity? baseExercise,
   ) {
     return ExerciseBaseExercise._(
-      _validate(currentExercise, baseExercise),
+      _validate(currentExerciseId, baseExercise),
     );
   }
 
@@ -23,7 +23,7 @@ class ExerciseBaseExercise extends Validation<ExerciseEntity?> {
 }
 
 Either<Failure, ExerciseEntity?> _validate(
-  ExerciseEntity? currentExercise,
+  String? currentExerciseId,
   ExerciseEntity? baseExercise,
 ) {
   if (baseExercise == null) {
@@ -38,8 +38,7 @@ Either<Failure, ExerciseEntity?> _validate(
     );
   }
 
-  // TODO: Fix: doesnt work as intended
-  if (currentExercise?.id == baseExercise.id) {
+  if (currentExerciseId == baseExercise.id) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The base exercise can not be the same as the parent exercise',

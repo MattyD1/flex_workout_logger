@@ -1,6 +1,5 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
-import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,11 +14,13 @@ class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
     required ValueChanged<T> onChanged,
     String? hintText,
     String? labelText,
+    T? initialValue,
     Key? key,
     FormFieldValidator<T>? validator,
   }) : super(
           key: key,
           validator: validator,
+          initialValue: initialValue,
           builder: (state) {
             final selectedItem =
                 items.where((element) => element.value == state.value).toList();

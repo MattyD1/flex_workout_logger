@@ -1,18 +1,16 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
-import 'package:flex_workout_logger/features/exercises/controllers/exercises_view_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/base_exercise_selection.dart';
-import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
+import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,7 +62,9 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
       );
     });
 
-    final variationExercises = ref.read(exercisesListControllerProvider);
+    final variationExercises = ref
+        .read(exercisesListControllerProvider.notifier)
+        .getBaseExerciseList();
 
     final res = ref.watch(exercisesCreateControllerProvider);
     final errorText = res.maybeWhen(
@@ -133,62 +133,62 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             readOnly: isLoading,
             isTextArea: true,
           ),
-          // const SizedBox(height: AppLayout.defaultPadding),
-          // SizedBox(
-          //   width: double.infinity,
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Text(
-          //         'Engagement',
-          //         style: context.textTheme.label,
-          //       ),
-          //       const Text(
-          //         'How the body engages with the lift during the movement.',
-          //         style: TextStyle(fontSize: 12),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // const SizedBox(height: AppLayout.smallPadding),
-          // RadioList<Engagement>(
-          //   selectedValue: Engagement.bilateral,
-          //   onSelected: (Engagement? value) {
-          //     setState(() {
-          //       _engagement = value;
-          //     });
-          //   },
-          //   values: Engagement.values.toList(),
-          //   groupValue: _engagement,
-          // ),
-          // const SizedBox(height: AppLayout.defaultPadding),
-          // SizedBox(
-          //   width: double.infinity,
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Text(
-          //         'Style',
-          //         style: context.textTheme.label,
-          //       ),
-          //       const Text(
-          //         'What is the style of the exercise.',
-          //         style: TextStyle(fontSize: 12),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // const SizedBox(height: AppLayout.smallPadding),
-          // RadioList<Style>(
-          //   selectedValue: Style.reps,
-          //   onSelected: (Style? value) {
-          //     setState(() {
-          //       _style = value;
-          //     });
-          //   },
-          //   values: Style.values.toList(),
-          //   groupValue: _style,
-          // ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Engagement',
+                  style: context.textTheme.label,
+                ),
+                const Text(
+                  'How the body engages with the lift during the movement.',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppLayout.smallPadding),
+          RadioList<Engagement>(
+            selectedValue: Engagement.bilateral,
+            onSelected: (Engagement? value) {
+              setState(() {
+                _engagement = value;
+              });
+            },
+            values: Engagement.values.toList(),
+            groupValue: _engagement,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Style',
+                  style: context.textTheme.label,
+                ),
+                const Text(
+                  'What is the style of the exercise.',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppLayout.smallPadding),
+          RadioList<Style>(
+            selectedValue: Style.reps,
+            onSelected: (Style? value) {
+              setState(() {
+                _style = value;
+              });
+            },
+            values: Style.values.toList(),
+            groupValue: _style,
+          ),
           const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
