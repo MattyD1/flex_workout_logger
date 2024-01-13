@@ -1,3 +1,4 @@
+import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,52 +31,47 @@ class MainNavigationBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         elevation: 0,
         child: Container(
-          height: 60,
-          // width: double.infinity,
           decoration: BoxDecoration(
             border: Border(
               top: BorderSide(color: context.colorScheme.divider), // Top border
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                navigationBarItems(
-                  context,
-                  0,
-                  'Dashboard',
-                  Icons.dashboard_outlined,
-                  Icons.dashboard,
-                ),
-                navigationBarItems(
-                  context,
-                  1,
-                  'History',
-                  CupertinoIcons.clock,
-                  CupertinoIcons.clock_fill,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: showToolbar(context),
-                ),
-                navigationBarItems(
-                  context,
-                  2,
-                  'Library',
-                  CupertinoIcons.book,
-                  CupertinoIcons.book_fill,
-                ), //TODO: Replace with better icon
-                navigationBarItems(
-                  context,
-                  3,
-                  'More',
-                  CupertinoIcons.ellipsis_circle,
-                  CupertinoIcons.ellipsis_circle_fill,
-                ),
-              ],
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              navigationBarItems(
+                context,
+                0,
+                'Dashboard',
+                Icons.dashboard_outlined,
+                Icons.dashboard,
+              ),
+              navigationBarItems(
+                context,
+                1,
+                'History',
+                CupertinoIcons.clock,
+                CupertinoIcons.clock_fill,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: showToolbar(context),
+              ),
+              navigationBarItems(
+                context,
+                2,
+                'Library',
+                CupertinoIcons.book,
+                CupertinoIcons.book_fill,
+              ), //TODO: Replace with better icon
+              navigationBarItems(
+                context,
+                3,
+                'More',
+                CupertinoIcons.ellipsis_circle,
+                CupertinoIcons.ellipsis_circle_fill,
+              ),
+            ],
           ),
         ),
       ),
@@ -86,7 +82,7 @@ class MainNavigationBar extends StatelessWidget {
   Widget showToolbar(BuildContext context) {
     return IconButton.filled(
       icon: const Icon(CupertinoIcons.plus),
-      iconSize: 24,
+      iconSize: 20,
       // ignore: unnecessary_lambdas, avoid_dynamic_calls
       onPressed: () => showToolbarModalBottomSheet(),
       style: IconButton.styleFrom(
@@ -110,44 +106,51 @@ class MainNavigationBar extends StatelessWidget {
       return selectedIndex == index;
     }
 
-    return TextButton(
-      onPressed: () => onItemTapped(index),
-      style: TextButton.styleFrom(
-        // minimumSize: const Size(48, 48), // Set a minimum size
-        shape: const CircleBorder(),
-        // splashFactory:
-      ).copyWith(
-        // Define the splash color
-        overlayColor: MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) {
-              return context.colorScheme.muted;
-            }
-            return null;
-          },
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            size: 29,
-            isSelected(index) ? selectedIcon : icon,
-            color: isSelected(index)
-                ? context.colorScheme.offForeground
-                : context.colorScheme.mutedForeground,
+    return Expanded(
+      child: TextButton(
+        onPressed: () => onItemTapped(index),
+        style: TextButton.styleFrom(
+          tapTargetSize: MaterialTapTargetSize.padded,
+          padding: EdgeInsets.zero,
+          // maximumSize: const Size(48, 48), // Set a minimum size
+          shape: const CircleBorder(),
+          // splashFactory:
+        ).copyWith(
+          // Define the splash color
+          overlayColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) {
+                return context.colorScheme.offBackground;
+              }
+              return null;
+            },
           ),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              size: 29,
+              isSelected(index) ? selectedIcon : icon,
               color: isSelected(index)
                   ? context.colorScheme.offForeground
                   : context.colorScheme.mutedForeground,
             ),
-          ), // Reduced text size
-        ],
+            const SizedBox(height: 2),
+            Text(
+              label,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 12,
+                overflow: TextOverflow.visible,
+                color: isSelected(index)
+                    ? context.colorScheme.offForeground
+                    : context.colorScheme.mutedForeground,
+              ),
+            ), // Reduced text size
+          ],
+        ),
       ),
     );
   }
