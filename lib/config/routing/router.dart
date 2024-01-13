@@ -2,7 +2,7 @@ import 'package:flex_workout_logger/config/routing/error_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_create_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_edit_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_view_screen.dart';
-import 'package:flex_workout_logger/features/exercises/ui/screens/library_screen.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/movement_pattern_list_screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,8 +12,8 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      name: LibraryScreen.routeName,
-      builder: (context, state) => const LibraryScreen(),
+      name: MovementPatternListScreen.routeName,
+      builder: (context, state) => const MovementPatternListScreen(),
       routes: [
         GoRoute(
           path: ExercisesCreateScreen.routePath,

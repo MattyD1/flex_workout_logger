@@ -13,8 +13,10 @@ part 'providers.g.dart';
 /// Exposes [Realm] instance
 @riverpod
 Future<Realm> realm(RealmRef ref) async {
-  final config =
-      Configuration.local([Exercise.schema], initialDataCallback: realmSeed);
+  final config = Configuration.local(
+    [Exercise.schema, MovementPattern.schema],
+    initialDataCallback: realmSeed,
+  );
   return Realm(config);
 }
 

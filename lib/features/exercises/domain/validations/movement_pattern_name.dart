@@ -2,16 +2,16 @@ import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:flex_workout_logger/utils/validation_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 
-/// Exercise Name value
-class ExerciseName extends Validation<String> {
+/// Movement Pattern Name value
+class MovementPatternName extends Validation<String> {
   ///
-  factory ExerciseName(String input) {
-    return ExerciseName._(
+  factory MovementPatternName(String input) {
+    return MovementPatternName._(
       _validate(input),
     );
   }
 
-  const ExerciseName._(this._value);
+  const MovementPatternName._(this._value);
   @override
   Either<Failure, String> get value => _value;
 
@@ -22,13 +22,13 @@ Either<Failure, String> _validate(String input) {
   if (input.isEmpty) {
     return left(
       const Failure.unprocessableEntity(
-        message: 'The exercise must have a name',
+        message: 'The movement pattern must have a name',
       ),
     );
-  } else if (input.length > 100) {
+  } else if (input.length > 50) {
     return left(
       const Failure.unprocessableEntity(
-        message: 'The name must be less than 100 characters in length',
+        message: 'The name must be less than 50 characters in length',
       ),
     );
   }

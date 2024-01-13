@@ -1,3 +1,4 @@
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/utils/enum_abstract.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,6 +17,7 @@ class ExerciseEntity with _$ExerciseEntity {
     required DateTime createdAt,
     required DateTime updatedAt,
     ExerciseEntity? baseExercise,
+    MovementPatternEntity? movementPattern,
   }) = _ExerciseEntity;
 }
 
