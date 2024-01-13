@@ -35,6 +35,11 @@ final router = GoRouter(
             id: state.pathParameters['eid']!,
           ),
         ),
+        GoRoute(
+          path: MovementPatternListScreen.routePath,
+          name: MovementPatternListScreen.routeName,
+          builder: (context, state) => const MovementPatternListScreen(),
+        ),
       ],
     ),
   ],

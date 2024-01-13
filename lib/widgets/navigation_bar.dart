@@ -112,9 +112,7 @@ class MainNavigationBar extends StatelessWidget {
         style: TextButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.padded,
           padding: EdgeInsets.zero,
-          // maximumSize: const Size(48, 48), // Set a minimum size
           shape: const CircleBorder(),
-          // splashFactory:
         ).copyWith(
           // Define the splash color
           overlayColor: MaterialStateProperty.resolveWith<Color?>(

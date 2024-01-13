@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/features/exercises/ui/screens/library_screen.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/settings_screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +44,9 @@ class MainNavigationState extends State<MainNavigation> {
           Scaffold(
             backgroundColor: context.colorScheme.background,
           ),
-          const LibraryScreen(),
-          Scaffold(
-            backgroundColor: context.colorScheme.background,
-          ),
+          const Scaffold(),
+          // const LibraryScreen(),
+          const SettingsScreen(),
         ],
       ),
       bottomNavigationBar: MainNavigationBar(
