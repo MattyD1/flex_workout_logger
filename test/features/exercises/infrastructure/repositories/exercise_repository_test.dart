@@ -19,7 +19,11 @@ void main() {
 
   setUp(() {
     faker = Faker();
-    realm = Realm(Configuration.inMemory([Exercise.schema]));
+    realm = Realm(
+      Configuration.inMemory(
+        [Exercise.schema, MovementPattern.schema],
+      ),
+    );
   });
   tearDown(() {
     realm.close();
