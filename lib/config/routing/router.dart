@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/config/routing/error_screen.dart';
+import 'package:flex_workout_logger/config/routing/main_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_create_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_edit_screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercises_view_screen.dart';
@@ -12,8 +13,8 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      name: MovementPatternListScreen.routeName,
-      builder: (context, state) => const MovementPatternListScreen(),
+      name: 'home',
+      builder: (context, state) => const MainNavigation(),
       routes: [
         GoRoute(
           path: ExercisesCreateScreen.routePath,
