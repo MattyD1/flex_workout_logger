@@ -18,7 +18,7 @@ class MovementPatternListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.offBackground,
+      backgroundColor: context.colorScheme.background,
       appBar: CupertinoNavigationBar(
         padding: EdgeInsetsDirectional.zero,
         backgroundColor: context.colorScheme.offBackground,
@@ -36,7 +36,12 @@ class MovementPatternListScreen extends StatelessWidget {
           style: TextStyle(color: context.colorScheme.foreground),
         ),
       ),
-      body: const MovementPatternList(),
+      body: const CustomScrollView(
+        scrollBehavior: const CupertinoScrollBehavior(),
+        slivers: <Widget>[
+          SliverToBoxAdapter(child: MovementPatternList()),
+        ],
+      ),
     );
   }
 }
