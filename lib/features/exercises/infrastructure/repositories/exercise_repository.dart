@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/repositories/exerc
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
@@ -28,6 +29,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseEngagement engagement,
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
+    ExerciseMovementPattern? movementPattern,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
@@ -52,6 +54,20 @@ class ExerciseRepository implements IExerciseRepository {
         }
       }
 
+      final movementPattern_ = movementPattern?.value.getOrElse((l) => null);
+      // ignore: avoid_init_to_null
+      late MovementPattern? movementPatternRes_ = null;
+
+      if (movementPattern_ != null) {
+        final objectId = ObjectId.fromHexString(movementPattern_.id);
+
+        movementPatternRes_ = realm.find<MovementPattern>(objectId);
+
+        if (movementPatternRes_ == null) {
+          return left(const Failure.empty());
+        }
+      }
+
       final exerciseToAdd = Exercise(
         ObjectId(),
         name_,
@@ -60,8 +76,9 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         currentDateTime,
         currentDateTime,
-      )..baseExercise =
-          baseExerciseRes_; // Note this may not work, baseExercise might not be found
+      )
+        ..baseExercise = baseExerciseRes_
+        ..movementPattern = movementPatternRes_;
 
       final res = realm.write<Exercise>(() {
         return realm.add(exerciseToAdd);
@@ -175,6 +192,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseEngagement engagement,
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
+    ExerciseMovementPattern? movementPattern,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);

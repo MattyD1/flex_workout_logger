@@ -7,6 +7,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/movement_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_selection_sheet.dart';
@@ -39,7 +40,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
   ExerciseBaseExercise? _baseExercise;
 
-  MovementPatternEntity? _movementPattern;
+  ExerciseMovementPattern? _movementPattern;
 
   int _selectedVariation = 1;
 
@@ -102,10 +103,16 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           MovementPatternSelectionSheet<MovementPatternEntity>(
-            validator: (value) => null,
+            validator: (value) {
+              if (_movementPattern == null) {
+                return 'The exercise requires a movement pattern';
+              }
+              return _movementPattern!.validate;
+            },
             hintText: 'Select a movement pattern',
             labelText: 'Movement Pattern',
-            onChanged: (value) => {},
+            onChanged: (value) =>
+                _movementPattern = ExerciseMovementPattern(value),
             items: movementPatterns.asData?.value
                     .map(
                       (e) => DropdownMenuItem(value: e, child: Text(e.name)),
@@ -228,6 +235,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                             _style ?? Style.reps,
                           ),
                           _baseExercise,
+                          _movementPattern!,
                         );
 
                     // FIX: engagement should not be hardcoded

@@ -70,7 +70,7 @@ extension ConvertMovementPattern on _MovementPattern {
       id: id.hexString,
       name: name,
       description: description,
-      exercises: linkedExercises.map((e) => e.toEntity()).toList(),
+      exerciseIds: linkedExercises.map((e) => e.id.hexString).toList(),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

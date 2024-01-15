@@ -160,6 +160,9 @@ Future<T?> _showBottomSheet<T>(
                   color: context.colorScheme.foreground,
                 ),
               ),
+              onTap: () {
+                Navigator.of(context).pop(currentItem.value);
+              },
               leading: const Icon(Icons.fitness_center),
               padding: const EdgeInsets.fromLTRB(
                 20,

@@ -3,6 +3,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/exercise_repository.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:realm/realm.dart';
 
 import '../../../../mocks/test_exercises.dart';
+import '../../../../mocks/test_movement_pattern.dart';
 import '../../../../utils/initialize_database.dart';
 
 void main() {
@@ -41,6 +43,7 @@ void main() {
         ExerciseEngagement(Engagement.bilateral),
         ExerciseStyle(Style.reps),
         ExerciseBaseExercise(null, null),
+        ExerciseMovementPattern(MockMovementPattern.generateEntity()),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
@@ -141,6 +144,7 @@ void main() {
         ExerciseEngagement(Engagement.bilateral),
         ExerciseStyle(Style.reps),
         ExerciseBaseExercise(null, itemToUpdate.baseExercise?.toEntity()),
+        ExerciseMovementPattern(MockMovementPattern.generateEntity()),
       );
 
       final exercise = res.fold((l) => throw l, (r) => r);
