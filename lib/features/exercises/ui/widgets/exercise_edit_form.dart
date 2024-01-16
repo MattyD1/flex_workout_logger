@@ -234,7 +234,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                             _style ?? Style.reps,
                           ),
                           _baseExercise,
-                          _movementPattern!,
+                          _movementPattern,
                         );
                   },
             child: isLoading

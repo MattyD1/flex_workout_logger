@@ -1,6 +1,4 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,21 +8,18 @@ import 'package:go_router/go_router.dart';
 ///
 class SelectionSheet<T extends Selectable> extends FormField<T> {
   ///
-  // ignore: use_super_parameters
   SelectionSheet({
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T> onChanged,
-    bool canSearch = false,
     bool canCreate = false,
     bool isRequired = false,
     Widget? createForm,
     String? hintText,
     String? labelText,
-    T? initialValue,
-    Key? key,
+    super.initialValue,
+    super.key,
     FormFieldValidator<T>? validator,
   }) : super(
-          key: key,
           validator: (value) {
             if (isRequired && value == null) {
               return 'This field is required';
@@ -32,7 +27,6 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
 
             return validator?.call(value);
           },
-          initialValue: initialValue,
           builder: (state) {
             final selectedItem =
                 items.where((element) => element.value == state.value).toList();
@@ -45,6 +39,14 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
                       labelText ?? 'Select',
                       style: state.context.textTheme.label,
                     ),
+                    const Spacer(),
+                    if (isRequired)
+                      Text(
+                        'Required',
+                        style: state.context.textTheme.bodySmall.copyWith(
+                          color: state.context.colorScheme.mutedForeground,
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(
@@ -56,7 +58,6 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
                       state.context,
                       items,
                       selectedItem,
-                      canSearch: canSearch,
                       canCreate: canCreate,
                     );
 
@@ -69,8 +70,6 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
                     }
 
                     if (res == null) return;
-
-                    debugPrint('result: $res');
 
                     onChanged(res as T);
 
@@ -152,12 +151,9 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
 Future<T?> _showBottomSheet<T>(
   BuildContext context,
   List<DropdownMenuItem<T>> items,
-  T? selectedValue,
-  {
-    bool canSearch = false,
-    bool canCreate = false,
-  }
-) {
+  T? selectedValue, {
+  bool canCreate = false,
+}) {
   return showModalBottomSheet<T>(
     context: context,
     showDragHandle: true,
@@ -170,7 +166,9 @@ Future<T?> _showBottomSheet<T>(
     builder: (context) => Stack(
       children: [
         ListView.separated(
-          padding: canSearch || canCreate ? EdgeInsets.only(bottom: 110 + MediaQuery.of(context).viewInsets.bottom) : null,
+          padding: EdgeInsets.only(
+            bottom: canCreate ? 64 : AppLayout.largePadding,
+          ),
           itemCount: items.length,
           separatorBuilder: (context, index) => Divider(
             color: context.colorScheme.divider,
@@ -183,59 +181,55 @@ Future<T?> _showBottomSheet<T>(
             return currentItem.child;
           },
         ),
-        if (canSearch || canCreate)
-          Positioned(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            left: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    context.colorScheme.offBackground.withOpacity(0),
-                    context.colorScheme.offBackground,
-                  ],
-                  stops: const [
-                    0,
-                    0.65,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: AppLayout.defaultPadding,
-                  right: AppLayout.defaultPadding,
-                  bottom: 44,
-                  top: AppLayout.smallPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if(canSearch)
-                      // TODO: implement search bar
-                      //const SearchBar(),
-                    if (canCreate)
-                      IconButton.filled(
-                        onPressed: () {
-                          context.pop(false);
-                        },
-                        icon: const Icon(
-                          CupertinoIcons.add,
-                        ),
-                        style: IconButton.styleFrom(
-                          backgroundColor: context.colorScheme.foreground,
-                          foregroundColor: context.colorScheme.background,
-                        ),
-                      ),
-                  ],
-                ),
+        Positioned(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  context.colorScheme.offBackground.withOpacity(0),
+                  context.colorScheme.offBackground,
+                ],
+                stops: const [
+                  0,
+                  0.65,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
-          )
-      ]
-    )
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: AppLayout.defaultPadding,
+                right: AppLayout.defaultPadding,
+                bottom: 44,
+                top: AppLayout.smallPadding,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (canCreate)
+                    IconButton.filled(
+                      onPressed: () {
+                        context.pop(false);
+                      },
+                      icon: const Icon(
+                        CupertinoIcons.add,
+                      ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foreground,
+                        foregroundColor: context.colorScheme.background,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

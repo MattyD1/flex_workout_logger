@@ -10,19 +10,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 ///
-class MovementPatternQuickCreateForm extends ConsumerStatefulWidget {
+class MovementPatternCreateForm extends ConsumerStatefulWidget {
   ///
-  const MovementPatternQuickCreateForm({
+  const MovementPatternCreateForm({
     super.key,
   });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _MovementPatternQuickCreateFormState();
+      _MovementPatternCreateFormState();
 }
 
-class _MovementPatternQuickCreateFormState
-    extends ConsumerState<MovementPatternQuickCreateForm> {
+class _MovementPatternCreateFormState
+    extends ConsumerState<MovementPatternCreateForm> {
   final _formKey = GlobalKey<FormState>();
 
   MovementPatternName? _name;
@@ -58,7 +58,6 @@ class _MovementPatternQuickCreateFormState
 
     return Form(
       key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Padding(
         padding: EdgeInsets.only(
           left: AppLayout.defaultPadding,
@@ -112,8 +111,8 @@ class _MovementPatternQuickCreateFormState
 
                           if (_name == null) return;
 
-                          final res = await ref
-                              .watch(
+                          await ref
+                              .read(
                                 movementPatternCreateControllerProvider
                                     .notifier,
                               )
