@@ -35,7 +35,12 @@ void main() {
 
   group('ExerciseRepository', () {
     test('Create Exercise', () async {
+      final initialData = MockMovementPattern.generateList(10);
+      initializeDatabase(realm, initialData);
+
       final repository = makeRepository();
+
+      final movementPatternToAdd = faker.randomGenerator.element(initialData);
 
       final res = await repository.createExercise(
         ExerciseName('Test exercise'),
@@ -43,7 +48,7 @@ void main() {
         ExerciseEngagement(Engagement.bilateral),
         ExerciseStyle(Style.reps),
         ExerciseBaseExercise(null, null),
-        ExerciseMovementPattern(MockMovementPattern.generateEntity()),
+        ExerciseMovementPattern(movementPatternToAdd.toEntity()),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
@@ -144,7 +149,7 @@ void main() {
         ExerciseEngagement(Engagement.bilateral),
         ExerciseStyle(Style.reps),
         ExerciseBaseExercise(null, itemToUpdate.baseExercise?.toEntity()),
-        ExerciseMovementPattern(MockMovementPattern.generateEntity()),
+        ExerciseMovementPattern(null),
       );
 
       final exercise = res.fold((l) => throw l, (r) => r);

@@ -1,7 +1,5 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

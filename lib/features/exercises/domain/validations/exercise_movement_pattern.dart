@@ -1,7 +1,6 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:flex_workout_logger/utils/validation_abstract.dart';
-import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Exercise Movement Pattern value
