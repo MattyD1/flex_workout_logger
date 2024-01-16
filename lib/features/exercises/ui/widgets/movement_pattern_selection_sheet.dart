@@ -1,12 +1,7 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_create_controller.dart';
-import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_description.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_name.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_quick_add_form.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_quick_create_form.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
-import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +44,7 @@ class MovementPatternSelectionSheet<T extends MovementPatternEntity>
                     final result = await _showBottomSheet(
                       state.context,
                       items,
-                      selectedItem,
+                      onChanged,
                     );
 
                     if (result == null) return;
@@ -134,7 +129,7 @@ class MovementPatternSelectionSheet<T extends MovementPatternEntity>
 Future<T?> _showBottomSheet<T>(
   BuildContext context,
   List<DropdownMenuItem<T>> items,
-  T? selectedValue,
+  T? selectedItem,
 ) {
   return showModalBottomSheet<T>(
     context: context,
@@ -148,6 +143,7 @@ Future<T?> _showBottomSheet<T>(
     builder: (context) => Stack(
       children: [
         ListView.separated(
+          padding: EdgeInsets.only(bottom: 110),
           itemCount: items.length,
           separatorBuilder: (context, index) => Divider(
             color: context.colorScheme.divider,
@@ -214,7 +210,7 @@ Future<T?> _showBottomSheet<T>(
                   IconButton.filled(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      _showBottomAddSheet(context, selectedValue);
+                      _showBottomAddSheet(context, selectedItem);
                     },
                     icon: const Icon(
                       CupertinoIcons.add,
@@ -236,7 +232,7 @@ Future<T?> _showBottomSheet<T>(
 
 Future<T?> _showBottomAddSheet<T>(
   BuildContext context,
-  T? selectedValue,
+  T? selectedItem,
 ) {
   return showModalBottomSheet<T>(
     context: context,
@@ -245,6 +241,6 @@ Future<T?> _showBottomAddSheet<T>(
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
     ),
-    builder: (context) => const MovementPatternCreateQuickAddForm(),
+    builder: (context) => const MovementPatternQuickCreateForm(),
   );
 }
