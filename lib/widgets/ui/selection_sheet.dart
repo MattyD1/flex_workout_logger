@@ -1,17 +1,21 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
+import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 ///
-class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
+class SelectionSheet<T extends Selectable> extends FormField<T> {
   ///
   // ignore: use_super_parameters
   SelectionSheet({
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T> onChanged,
+    bool canCreate = false,
+    bool isRequired = false,
+    Widget? createForm,
     String? hintText,
     String? labelText,
     T? initialValue,
@@ -19,7 +23,13 @@ class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
     FormFieldValidator<T>? validator,
   }) : super(
           key: key,
-          validator: validator,
+          validator: (value) {
+            if (isRequired && value == null) {
+              return 'This field is required';
+            }
+
+            return validator?.call(value);
+          },
           initialValue: initialValue,
           builder: (state) {
             final selectedItem =
@@ -148,17 +158,7 @@ Future<T?> _showBottomSheet<T>(
       itemBuilder: (context, index) {
         final currentItem = items[index];
 
-        return Column(
-          children: [
-            ExerciseListTile(
-              exercise: currentItem.value! as ExerciseEntity,
-              trailingIcon: CupertinoIcons.add_circled,
-              onTap: () {
-                Navigator.of(context).pop(currentItem.value);
-              },
-            ),
-          ],
-        );
+        return currentItem.child;
       },
     ),
   );

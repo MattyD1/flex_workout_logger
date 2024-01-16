@@ -152,7 +152,7 @@ Future<dynamic> _showBottomSheet<T>(
     builder: (context) => Stack(
       children: [
         ListView.separated(
-          padding: EdgeInsets.only(bottom: 110),
+          padding: const EdgeInsets.only(bottom: 110),
           itemCount: items.length,
           separatorBuilder: (context, index) => Divider(
             color: context.colorScheme.divider,
