@@ -24,9 +24,9 @@ abstract class IMovementPatternRepository {
 
   /// Update MovementPattern
   FutureOr<Either<Failure, MovementPatternEntity>> updateMovementPattern(
-    String id,
-    MovementPatternName name,
-    MovementPatternDescription description,
+    String? id,
+    MovementPatternName? name,
+    MovementPatternDescription? description,
   );
 
   /// Delete MovementPattern by id

@@ -1,5 +1,6 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/main.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -133,45 +134,118 @@ Future<T?> _showBottomSheet<T>(
   return showModalBottomSheet<T>(
     context: context,
     showDragHandle: true,
+    elevation: 0,
     scrollControlDisabledMaxHeightRatio: 0.9,
     backgroundColor: context.colorScheme.offBackground,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
     ),
-    builder: (context) => ListView.separated(
-      itemCount: items.length,
-      separatorBuilder: (context, index) => Divider(
-        color: context.colorScheme.divider,
-        height: 1,
-        indent: 64,
-      ),
-      itemBuilder: (context, index) {
-        final currentItem = items[index];
+    builder: (context) => Stack(
+      children: [
+        ListView.separated(
+          itemCount: items.length,
+          separatorBuilder: (context, index) => Divider(
+            color: context.colorScheme.divider,
+            height: 1,
+            indent: 64,
+          ),
+          itemBuilder: (context, index) {
+            final currentItem = items[index];
 
-        return Column(
-          children: [
-            CupertinoListTile(
-              title: Text(
-                (currentItem.value! as MovementPatternEntity).name,
-                overflow: TextOverflow.ellipsis,
-                style: context.textTheme.listTitle.copyWith(
-                  color: context.colorScheme.foreground,
+            return Column(
+              children: [
+                CupertinoListTile(
+                  title: Text(
+                    (currentItem.value! as MovementPatternEntity).name,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.listTitle.copyWith(
+                      color: context.colorScheme.foreground,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop(currentItem.value);
+                  },
+                  leading: const Icon(Icons.fitness_center),
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    16,
+                    14,
+                    16,
+                  ),
                 ),
-              ),
-              onTap: () {
-                Navigator.of(context).pop(currentItem.value);
-              },
-              leading: const Icon(Icons.fitness_center),
-              padding: const EdgeInsets.fromLTRB(
-                20,
-                16,
-                14,
-                16,
+              ],
+            );
+          },
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  context.colorScheme.offBackground.withOpacity(0),
+                  context.colorScheme.offBackground,
+                ],
+                stops: const [
+                  0,
+                  0.65,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
-          ],
-        );
-      },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: AppLayout.defaultPadding,
+                right: AppLayout.defaultPadding,
+                bottom: 44,
+                top: AppLayout.smallPadding,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton.filled(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _showBottomAddSheet(context, selectedValue);
+                    },
+                    icon: const Icon(
+                      CupertinoIcons.add,
+                    ),
+                    style: IconButton.styleFrom(
+                      backgroundColor: context.colorScheme.foreground,
+                      foregroundColor: context.colorScheme.background,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<T?> _showBottomAddSheet<T>(
+  BuildContext context,
+  T? selectedValue,
+) {
+  return showModalBottomSheet<T>(
+    context: context,
+    elevation: 0,
+    backgroundColor: context.colorScheme.offBackground,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
+    builder: (context) => const Column(
+      children: [
+        // headings
+
+        // TextFields
+      ],
     ),
   );
 }
