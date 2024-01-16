@@ -19,7 +19,7 @@ abstract class IMovementPatternRepository {
   /// Create MovementPattern
   FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern(
     MovementPatternName name,
-    MovementPatternDescription description,
+    MovementPatternDescription? description,
   );
 
   /// Update MovementPattern

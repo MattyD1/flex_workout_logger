@@ -1,7 +1,12 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_create_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
-import 'package:flex_workout_logger/main.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_name.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_quick_add_form.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
+import 'package:flex_workout_logger/widgets/ui/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -240,12 +245,6 @@ Future<T?> _showBottomAddSheet<T>(
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
     ),
-    builder: (context) => const Column(
-      children: [
-        // headings
-
-        // TextFields
-      ],
-    ),
+    builder: (context) => const MovementPatternCreateQuickAddForm(),
   );
 }

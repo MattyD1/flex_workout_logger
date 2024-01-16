@@ -21,7 +21,7 @@ class MovementPatternRepository implements IMovementPatternRepository {
   @override
   FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern(
     MovementPatternName name,
-    MovementPatternDescription description,
+    MovementPatternDescription? description,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
