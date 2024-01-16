@@ -19,24 +19,29 @@ class MovementPatternQuickCreateForm extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MovementPatternQuickCreateFormState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MovementPatternQuickCreateFormState();
 }
 
-class _MovementPatternQuickCreateFormState extends ConsumerState<MovementPatternQuickCreateForm> {
+class _MovementPatternQuickCreateFormState
+    extends ConsumerState<MovementPatternQuickCreateForm> {
   final _formKey = GlobalKey<FormState>();
-  
+
   MovementPatternName? _name;
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<MovementPatternEntity?>>(movementPatternCreateControllerProvider,
-        (previous, next) {
+    ref.listen<AsyncValue<MovementPatternEntity?>>(
+        movementPatternCreateControllerProvider, (previous, next) {
       next.maybeWhen(
         data: (data) {
           if (data == null) return;
 
-          ref.read(movementPatternListControllerProvider.notifier).addMovementPattern(data);
-          context.pop();
+          ref
+              .read(movementPatternListControllerProvider.notifier)
+              .addMovementPattern(data);
+
+          context.pop(data);
         },
         orElse: () {},
       );
@@ -63,17 +68,18 @@ class _MovementPatternQuickCreateFormState extends ConsumerState<MovementPattern
           bottom: 44,
           top: AppLayout.smallPadding,
         ),
-        child: Column (
+        child: Column(
           children: [
             // headings
             Row(
               children: [
                 IconButton.filled(
                   onPressed: () {
+                    debugPrint('close');
                     Navigator.of(context).pop();
                   },
                   icon: const Icon(
-                    CupertinoIcons.xmark,
+                    Icons.close,
                   ),
                   style: IconButton.styleFrom(
                     backgroundColor: context.colorScheme.muted,
@@ -100,22 +106,23 @@ class _MovementPatternQuickCreateFormState extends ConsumerState<MovementPattern
                 const Spacer(),
                 IconButton.filled(
                   onPressed: isLoading
-                    ? null
-                    :() {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
+                      ? null
+                      : () async {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
 
-                      if (_name == null) return;
-                      ref.read(movementPatternCreateControllerProvider.notifier).handle(
-                        _name!,
-                        MovementPatternDescription(''),
-                      );
+                          if (_name == null) return;
 
-                      Navigator.of(context).pop();
-                    },
+                          final res = await ref
+                              .watch(
+                                movementPatternCreateControllerProvider
+                                    .notifier,
+                              )
+                              .handle(_name!, null);
+                        },
                   icon: const Icon(
-                    CupertinoIcons.check_mark,
+                    Icons.check,
                   ),
                   style: IconButton.styleFrom(
                     backgroundColor: context.colorScheme.foreground,

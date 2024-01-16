@@ -8,25 +8,29 @@ part 'movement_pattern_create_controller.g.dart';
 
 ///
 @riverpod
-class MovementPatternCreateController extends _$MovementPatternCreateController {
+class MovementPatternCreateController
+    extends _$MovementPatternCreateController {
   @override
   FutureOr<MovementPatternEntity?> build() {
     return null;
   }
 
   ///
-  Future<void> handle(
+  Future<MovementPatternEntity?> handle(
     MovementPatternName name,
     MovementPatternDescription? description,
   ) async {
     state = const AsyncLoading();
-    final res = await ref.read(movementPatternRepositoryProvider).createMovementPattern(
-          name,
-          description,
-        );
+    final res =
+        await ref.read(movementPatternRepositoryProvider).createMovementPattern(
+              name,
+              description,
+            );
     state = res.fold(
       (l) => AsyncValue.error(l.error, StackTrace.current),
       AsyncValue.data,
     );
+
+    return res.fold((l) => null, (r) => r);
   }
 }

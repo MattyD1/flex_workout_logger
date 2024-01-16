@@ -1,9 +1,12 @@
+import 'package:faker/faker.dart';
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_quick_create_form.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:go_router/go_router.dart';
 
 ///
 class MovementPatternSelectionSheet<T extends MovementPatternEntity>
@@ -41,17 +44,24 @@ class MovementPatternSelectionSheet<T extends MovementPatternEntity>
                 ),
                 TextButton(
                   onPressed: () async {
-                    final result = await _showBottomSheet(
+                    var res = await _showBottomSheet(
                       state.context,
                       items,
-                      onChanged,
                     );
 
-                    if (result == null) return;
+                    if (res == false) {
+                      res = await _showBottomAddSheet(
+                        state.context,
+                      );
+                    }
 
-                    onChanged(result as T);
+                    if (res == null) return;
 
-                    state.didChange(result);
+                    debugPrint('result: $res');
+
+                    onChanged(res as T);
+
+                    state.didChange(res);
                   },
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -126,12 +136,11 @@ class MovementPatternSelectionSheet<T extends MovementPatternEntity>
         );
 }
 
-Future<T?> _showBottomSheet<T>(
+Future<dynamic> _showBottomSheet<T>(
   BuildContext context,
   List<DropdownMenuItem<T>> items,
-  T? selectedItem,
 ) {
-  return showModalBottomSheet<T>(
+  return showModalBottomSheet<dynamic>(
     context: context,
     showDragHandle: true,
     elevation: 0,
@@ -209,8 +218,7 @@ Future<T?> _showBottomSheet<T>(
                 children: [
                   IconButton.filled(
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      _showBottomAddSheet(context, selectedItem);
+                      context.pop(false);
                     },
                     icon: const Icon(
                       CupertinoIcons.add,
@@ -232,15 +240,17 @@ Future<T?> _showBottomSheet<T>(
 
 Future<T?> _showBottomAddSheet<T>(
   BuildContext context,
-  T? selectedItem,
 ) {
   return showModalBottomSheet<T>(
     context: context,
     elevation: 0,
+    isScrollControlled: true,
     backgroundColor: context.colorScheme.offBackground,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
     ),
-    builder: (context) => const MovementPatternQuickCreateForm(),
+    builder: (context) => const Wrap(
+      children: [MovementPatternQuickCreateForm()],
+    ),
   );
 }
