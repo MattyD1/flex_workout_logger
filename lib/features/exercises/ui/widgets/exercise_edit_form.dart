@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -40,6 +41,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   Engagement? _engagement;
   Style? _style;
   ExerciseBaseExercise? _baseExercise;
+  ExerciseMovementPattern? _movementPattern;
 
   @override
   void dispose() {
@@ -232,6 +234,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                             _style ?? Style.reps,
                           ),
                           _baseExercise,
+                          _movementPattern!,
                         );
                   },
             child: isLoading

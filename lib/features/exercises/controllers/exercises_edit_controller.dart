@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/providers.dart';
@@ -28,11 +29,18 @@ class ExercisesEditController extends _$ExercisesEditController {
     ExerciseEngagement engagement,
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
+    ExerciseMovementPattern? movementPattern,
   ) async {
     state = const AsyncLoading();
-    final res = await ref
-        .read(exerciseRepositoryProvider)
-        .updateExercise(id, name, description, engagement, style, baseExercise);
+    final res = await ref.read(exerciseRepositoryProvider).updateExercise(
+          id,
+          name,
+          description,
+          engagement,
+          style,
+          baseExercise,
+          movementPattern,
+        );
 
     state = res.fold(
       (l) => AsyncValue.error(l.error, StackTrace.current),

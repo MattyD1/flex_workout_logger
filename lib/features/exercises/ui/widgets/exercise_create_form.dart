@@ -1,12 +1,16 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_selection_sheet.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
@@ -35,6 +39,8 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   Style? _style = Style.reps;
 
   ExerciseBaseExercise? _baseExercise;
+
+  ExerciseMovementPattern? _movementPattern;
 
   int _selectedVariation = 1;
 
@@ -66,6 +72,8 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
         .read(exercisesListControllerProvider.notifier)
         .getBaseExerciseList();
 
+    final movementPatterns = ref.watch(movementPatternListControllerProvider);
+
     final res = ref.watch(exercisesCreateControllerProvider);
     final errorText = res.maybeWhen(
       error: (error, stackTrace) => error.toString(),
@@ -94,6 +102,24 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             onValueChanged: _onVariationChanged,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          MovementPatternSelectionSheet<MovementPatternEntity>(
+            validator: (value) {
+              if (_movementPattern == null) {
+                return 'The exercise requires a movement pattern';
+              }
+              return _movementPattern!.validate;
+            },
+            hintText: 'Select a movement pattern',
+            labelText: 'Movement Pattern',
+            onChanged: (value) =>
+                _movementPattern = ExerciseMovementPattern(value),
+            items: movementPatterns.asData?.value
+                    .map(
+                      (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                    )
+                    .toList() ??
+                [],
+          ),
           if (_selectedVariation == 2)
             SelectionSheet<ExerciseEntity>(
               validator: (value) => _baseExercise?.validate,
@@ -209,6 +235,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                             _style ?? Style.reps,
                           ),
                           _baseExercise,
+                          _movementPattern!,
                         );
 
                     // FIX: engagement should not be hardcoded

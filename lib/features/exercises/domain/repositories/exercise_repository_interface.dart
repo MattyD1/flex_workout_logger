@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
@@ -24,6 +25,7 @@ abstract class IExerciseRepository {
     ExerciseEngagement engagement,
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
+    ExerciseMovementPattern? movementPattern,
   );
 
   /// Update Exercise
@@ -34,6 +36,7 @@ abstract class IExerciseRepository {
     ExerciseEngagement engagement,
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
+    ExerciseMovementPattern? movementPattern,
   );
 
   /// Delete Exercise by id
