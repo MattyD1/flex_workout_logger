@@ -11,6 +11,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_quick_create_form.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_selection_sheet.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -104,24 +105,24 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             onValueChanged: _onVariationChanged,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
-          MovementPatternSelectionSheet<MovementPatternEntity>(
-            validator: (value) {
-              if (_movementPattern == null) {
-                return 'The exercise requires a movement pattern';
-              }
-              return _movementPattern!.validate;
-            },
-            hintText: 'Select a movement pattern',
-            labelText: 'Movement Pattern',
-            onChanged: (value) =>
-                _movementPattern = ExerciseMovementPattern(value),
-            items: movementPatterns.asData?.value
-                    .map(
-                      (e) => DropdownMenuItem(value: e, child: Text(e.name)),
-                    )
-                    .toList() ??
-                [],
-          ),
+          // MovementPatternSelectionSheet<MovementPatternEntity>(
+          //   validator: (value) {
+          //     if (_movementPattern == null) {
+          //       return 'The exercise requires a movement pattern';
+          //     }
+          //     return _movementPattern!.validate;
+          //   },
+          //   hintText: 'Select a movement pattern',
+          //   labelText: 'Movement Pattern',
+          //   onChanged: (value) =>
+          //       _movementPattern = ExerciseMovementPattern(value),
+          //   items: movementPatterns.asData?.value
+          //           .map(
+          //             (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+          //           )
+          //           .toList() ??
+          //       [],
+          // ),
           SelectionSheet<MovementPatternEntity>(
             validator: (value) => _movementPattern?.validate,
             hintText: 'Select a movement pattern',
@@ -156,6 +157,9 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                     )
                     .toList() ??
                 [],
+            canSearch: true,
+            canCreate: true,
+            createForm: const MovementPatternQuickCreateForm(),
           ),
           if (_selectedVariation == 2)
             SelectionSheet<ExerciseEntity>(

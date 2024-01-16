@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 ///
 class SelectionSheet<T extends Selectable> extends FormField<T> {
@@ -13,6 +14,7 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
   SelectionSheet({
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T> onChanged,
+    bool canSearch = false,
     bool canCreate = false,
     bool isRequired = false,
     Widget? createForm,
@@ -50,17 +52,29 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final result = await _showBottomSheet(
+                    var res = await _showBottomSheet(
                       state.context,
                       items,
                       selectedItem,
+                      canSearch: canSearch,
+                      canCreate: canCreate,
                     );
 
-                    if (result == null) return;
+                    if (canCreate && createForm != null && res == false) {
+                      // ignore: use_build_context_synchronously
+                      res = await _showBottomAddSheet(
+                        state.context,
+                        createForm,
+                      );
+                    }
 
-                    onChanged(result as T);
+                    if (res == null) return;
 
-                    state.didChange(result);
+                    debugPrint('result: $res');
+
+                    onChanged(res as T);
+
+                    state.didChange(res);
                   },
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -139,27 +153,106 @@ Future<T?> _showBottomSheet<T>(
   BuildContext context,
   List<DropdownMenuItem<T>> items,
   T? selectedValue,
+  {
+    bool canSearch = false,
+    bool canCreate = false,
+  }
 ) {
   return showModalBottomSheet<T>(
     context: context,
     showDragHandle: true,
     scrollControlDisabledMaxHeightRatio: 0.9,
     backgroundColor: context.colorScheme.offBackground,
+    elevation: 0,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
     ),
-    builder: (context) => ListView.separated(
-      itemCount: items.length,
-      separatorBuilder: (context, index) => Divider(
-        color: context.colorScheme.divider,
-        height: 1,
-        indent: 64,
-      ),
-      itemBuilder: (context, index) {
-        final currentItem = items[index];
+    builder: (context) => Stack(
+      children: [
+        ListView.separated(
+          padding: canSearch || canCreate ? EdgeInsets.only(bottom: 110 + MediaQuery.of(context).viewInsets.bottom) : null,
+          itemCount: items.length,
+          separatorBuilder: (context, index) => Divider(
+            color: context.colorScheme.divider,
+            height: 1,
+            indent: 64,
+          ),
+          itemBuilder: (context, index) {
+            final currentItem = items[index];
 
-        return currentItem.child;
-      },
+            return currentItem.child;
+          },
+        ),
+        if (canSearch || canCreate)
+          Positioned(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    context.colorScheme.offBackground.withOpacity(0),
+                    context.colorScheme.offBackground,
+                  ],
+                  stops: const [
+                    0,
+                    0.65,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: AppLayout.defaultPadding,
+                  right: AppLayout.defaultPadding,
+                  bottom: 44,
+                  top: AppLayout.smallPadding,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if(canSearch)
+                      // TODO: implement search bar
+                      //const SearchBar(),
+                    if (canCreate)
+                      IconButton.filled(
+                        onPressed: () {
+                          context.pop(false);
+                        },
+                        icon: const Icon(
+                          CupertinoIcons.add,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: context.colorScheme.foreground,
+                          foregroundColor: context.colorScheme.background,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          )
+      ]
+    )
+  );
+}
+
+Future<T?> _showBottomAddSheet<T>(
+  BuildContext context,
+  Widget createForm,
+) {
+  return showModalBottomSheet<T>(
+    context: context,
+    elevation: 0,
+    isScrollControlled: true,
+    backgroundColor: context.colorScheme.offBackground,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
+    builder: (context) => Wrap(
+      children: [createForm],
     ),
   );
 }
