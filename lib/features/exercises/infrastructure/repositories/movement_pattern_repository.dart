@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/repositories/movem
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
+import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:realm/realm.dart';
@@ -20,9 +21,33 @@ class MovementPatternRepository implements IMovementPatternRepository {
   @override
   FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern(
     MovementPatternName name,
-    MovementPatternDescription description,
+    MovementPatternDescription? description,
   ) async {
-    throw UnimplementedError();
+    try {
+      final currentDateTime = DateTimeX.current;
+      final name_ = name.value.getOrElse((l) => 'No name provided');
+      final description_ = description?.value.getOrElse((l) => '');
+
+      final movementPatternToAdd = MovementPattern(
+        ObjectId(),
+        name_,
+        description_ ?? '',
+        currentDateTime,
+        currentDateTime,
+      );
+
+      final res = realm.write<MovementPattern>(() {
+        return realm.add(movementPatternToAdd);
+      });
+
+      return right(res.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
@@ -91,9 +116,9 @@ class MovementPatternRepository implements IMovementPatternRepository {
 
   @override
   FutureOr<Either<Failure, MovementPatternEntity>> updateMovementPattern(
-    String id,
-    MovementPatternName name,
-    MovementPatternDescription description,
+    String? id,
+    MovementPatternName? name,
+    MovementPatternDescription? description,
   ) async {
     throw UnimplementedError();
   }

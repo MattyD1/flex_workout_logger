@@ -1,12 +1,13 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/utils/enum_abstract.dart';
+import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'exercise_entity.freezed.dart';
 
 /// Strongly Typed Model [ExerciseEntity]
 @freezed
-class ExerciseEntity with _$ExerciseEntity {
+class ExerciseEntity with _$ExerciseEntity, Selectable {
   /// [ExerciseEntity] factory constructor
   const factory ExerciseEntity({
     required String id,

@@ -19,14 +19,14 @@ abstract class IMovementPatternRepository {
   /// Create MovementPattern
   FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern(
     MovementPatternName name,
-    MovementPatternDescription description,
+    MovementPatternDescription? description,
   );
 
   /// Update MovementPattern
   FutureOr<Either<Failure, MovementPatternEntity>> updateMovementPattern(
-    String id,
-    MovementPatternName name,
-    MovementPatternDescription description,
+    String? id,
+    MovementPatternName? name,
+    MovementPatternDescription? description,
   );
 
   /// Delete MovementPattern by id

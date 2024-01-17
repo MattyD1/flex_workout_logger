@@ -126,6 +126,7 @@ class ExerciseRepository implements IExerciseRepository {
     try {
       final objectIds = ids.map(ObjectId.fromHexString).toList();
 
+      // ignore: use_raw_strings
       final res = realm.query<Exercise>('id IN \$0', [objectIds]);
 
       if (res.isEmpty) {

@@ -1,26 +1,32 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
+import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 ///
-class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
+class SelectionSheet<T extends Selectable> extends FormField<T> {
   ///
-  // ignore: use_super_parameters
   SelectionSheet({
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T> onChanged,
+    bool canCreate = false,
+    bool isRequired = false,
+    Widget? createForm,
     String? hintText,
     String? labelText,
-    T? initialValue,
-    Key? key,
+    super.initialValue,
+    super.key,
     FormFieldValidator<T>? validator,
   }) : super(
-          key: key,
-          validator: validator,
-          initialValue: initialValue,
+          validator: (value) {
+            if (isRequired && value == null) {
+              return 'This field is required';
+            }
+
+            return validator?.call(value);
+          },
           builder: (state) {
             final selectedItem =
                 items.where((element) => element.value == state.value).toList();
@@ -33,6 +39,14 @@ class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
                       labelText ?? 'Select',
                       style: state.context.textTheme.label,
                     ),
+                    const Spacer(),
+                    if (isRequired)
+                      Text(
+                        'Required',
+                        style: state.context.textTheme.bodySmall.copyWith(
+                          color: state.context.colorScheme.mutedForeground,
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(
@@ -40,17 +54,26 @@ class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final result = await _showBottomSheet(
+                    var res = await _showBottomSheet(
                       state.context,
                       items,
                       selectedItem,
+                      canCreate: canCreate,
                     );
 
-                    if (result == null) return;
+                    if (canCreate && createForm != null && res == false) {
+                      // ignore: use_build_context_synchronously
+                      res = await _showBottomAddSheet(
+                        state.context,
+                        createForm,
+                      );
+                    }
 
-                    onChanged(result as T);
+                    if (res == null) return;
 
-                    state.didChange(result);
+                    onChanged(res as T);
+
+                    state.didChange(res);
                   },
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -128,38 +151,102 @@ class SelectionSheet<T extends ExerciseEntity> extends FormField<T> {
 Future<T?> _showBottomSheet<T>(
   BuildContext context,
   List<DropdownMenuItem<T>> items,
-  T? selectedValue,
-) {
+  T? selectedValue, {
+  bool canCreate = false,
+}) {
   return showModalBottomSheet<T>(
     context: context,
     showDragHandle: true,
     scrollControlDisabledMaxHeightRatio: 0.9,
     backgroundColor: context.colorScheme.offBackground,
+    elevation: 0,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
     ),
-    builder: (context) => ListView.separated(
-      itemCount: items.length,
-      separatorBuilder: (context, index) => Divider(
-        color: context.colorScheme.divider,
-        height: 1,
-        indent: 64,
-      ),
-      itemBuilder: (context, index) {
-        final currentItem = items[index];
+    builder: (context) => Stack(
+      children: [
+        ListView.separated(
+          padding: EdgeInsets.only(
+            bottom: canCreate ? 64 : AppLayout.largePadding,
+          ),
+          itemCount: items.length,
+          separatorBuilder: (context, index) => Divider(
+            color: context.colorScheme.divider,
+            height: 1,
+            indent: 64,
+          ),
+          itemBuilder: (context, index) {
+            final currentItem = items[index];
 
-        return Column(
-          children: [
-            ExerciseListTile(
-              exercise: currentItem.value! as ExerciseEntity,
-              trailingIcon: CupertinoIcons.add_circled,
-              onTap: () {
-                Navigator.of(context).pop(currentItem.value);
-              },
+            return currentItem.child;
+          },
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  context.colorScheme.offBackground.withOpacity(0),
+                  context.colorScheme.offBackground,
+                ],
+                stops: const [
+                  0,
+                  0.65,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
-          ],
-        );
-      },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: AppLayout.defaultPadding,
+                right: AppLayout.defaultPadding,
+                bottom: 44,
+                top: AppLayout.smallPadding,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (canCreate)
+                    IconButton.filled(
+                      onPressed: () {
+                        context.pop(false);
+                      },
+                      icon: const Icon(
+                        CupertinoIcons.add,
+                      ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foreground,
+                        foregroundColor: context.colorScheme.background,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<T?> _showBottomAddSheet<T>(
+  BuildContext context,
+  Widget createForm,
+) {
+  return showModalBottomSheet<T>(
+    context: context,
+    elevation: 0,
+    isScrollControlled: true,
+    backgroundColor: context.colorScheme.offBackground,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
+    builder: (context) => Wrap(
+      children: [createForm],
     ),
   );
 }

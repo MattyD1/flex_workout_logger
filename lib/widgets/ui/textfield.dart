@@ -16,6 +16,7 @@ class MyTextField extends StatelessWidget {
     super.key,
     this.isRequired,
     this.isTextArea,
+    this.autoFocus,
   });
 
   /// Label
@@ -38,6 +39,9 @@ class MyTextField extends StatelessWidget {
 
   /// Read Only
   final bool readOnly;
+
+  /// Auto Focus
+  final bool? autoFocus;
 
   /// Is Field Required
   final bool? isRequired;
@@ -70,6 +74,7 @@ class MyTextField extends StatelessWidget {
           onChanged: onChanged,
           validator: validator,
           readOnly: readOnly,
+          autofocus: autoFocus ?? false,
           maxLines: isTextArea != null && isTextArea! ? null : 1,
           minLines: isTextArea != null && isTextArea! ? 5 : 1,
           decoration: InputDecoration(

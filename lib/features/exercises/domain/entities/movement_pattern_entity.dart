@@ -1,10 +1,11 @@
+import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'movement_pattern_entity.freezed.dart';
 
 /// Strongly Typed Model [MovementPatternEntity]
 @freezed
-class MovementPatternEntity with _$MovementPatternEntity {
+class MovementPatternEntity with _$MovementPatternEntity, Selectable {
   /// [MovementPatternEntity] factory constructor
   const factory MovementPatternEntity({
     required String id,
