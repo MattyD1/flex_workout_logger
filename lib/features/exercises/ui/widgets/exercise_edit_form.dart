@@ -1,17 +1,21 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_form.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
 import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
 import 'package:flex_workout_logger/widgets/ui/textfield.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +39,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   ExerciseEntity? _currentBaseExercise;
+  MovementPatternEntity? _currentMovementPattern;
 
   ExerciseName? _name;
   ExerciseDescription? _description;
@@ -46,6 +51,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   @override
   void dispose() {
     _nameController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -75,6 +81,11 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       final e = next.asData?.value.baseExercise;
       _currentBaseExercise = e;
       _baseExercise = ExerciseBaseExercise(widget.id, e);
+
+      // Initalize movement pattern
+      final m = next.asData?.value.movementPattern;
+      _currentMovementPattern = m;
+      _movementPattern = ExerciseMovementPattern(_currentMovementPattern);
     });
     super.initState();
   }
@@ -97,6 +108,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
     final variationExercises = ref
         .read(exercisesListControllerProvider.notifier)
         .getBaseExerciseList(baseExerciseId: widget.id);
+
+    final movementPatterns = ref.watch(movementPatternListControllerProvider);
 
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
@@ -123,12 +136,34 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
               initialValue: _currentBaseExercise,
               hintText: 'Select a base exercise',
               labelText: 'Base Exercise',
+              isRequired: true,
               onChanged: (value) {
                 _baseExercise = ExerciseBaseExercise(widget.id, value);
               },
               items: variationExercises.asData?.value
                       .map(
-                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                        (e) => DropdownMenuItem(
+                          value: e, 
+                          child: CupertinoListTile(
+                            title: Text(
+                              e.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.textTheme.listTitle.copyWith(
+                                color: context.colorScheme.foreground,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop(e);
+                            },
+                            leading: const Icon(Icons.fitness_center),
+                            padding: const EdgeInsets.fromLTRB(
+                              20,
+                              16,
+                              14,
+                              16,
+                            ),
+                          ),
+                        ),
                       )
                       .toList() ??
                   [],
@@ -154,6 +189,45 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             controller: _descriptionController,
             readOnly: isLoading,
             isTextArea: true,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          SelectionSheet<MovementPatternEntity>(
+            validator: (value) => _movementPattern?.validate,
+            initialValue: _currentMovementPattern,
+            hintText: 'Select a movement pattern',
+            labelText: 'Movement Pattern',
+            isRequired: true,
+            onChanged: (value) =>
+                _movementPattern = ExerciseMovementPattern(value),
+            items: movementPatterns.asData?.value
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: CupertinoListTile(
+                          title: Text(
+                            e.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.listTitle.copyWith(
+                              color: context.colorScheme.foreground,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop(e);
+                          },
+                          leading: const Icon(Icons.fitness_center),
+                          padding: const EdgeInsets.fromLTRB(
+                            20,
+                            16,
+                            14,
+                            16,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList() ??
+                [],
+            canCreate: true,
+            createForm: const MovementPatternCreateForm(),
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           SizedBox(
@@ -209,6 +283,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             values: Style.values.toList(),
             groupValue: _style,
           ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          
           const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading

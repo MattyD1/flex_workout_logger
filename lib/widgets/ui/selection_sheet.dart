@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -16,10 +18,11 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
     Widget? createForm,
     String? hintText,
     String? labelText,
-    super.initialValue,
+    Selectable? initialValue,
     super.key,
     FormFieldValidator<T>? validator,
   }) : super(
+          initialValue: initialValue != null ? initialValue as T : null,
           validator: (value) {
             if (isRequired && value == null) {
               return 'This field is required';
@@ -167,7 +170,7 @@ Future<T?> _showBottomSheet<T>(
       children: [
         ListView.separated(
           padding: EdgeInsets.only(
-            bottom: canCreate ? 64 : AppLayout.largePadding,
+            bottom: canCreate ? (Platform.isAndroid ? 110 : 64) : AppLayout.largePadding,
           ),
           itemCount: items.length,
           separatorBuilder: (context, index) => Divider(
