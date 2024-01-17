@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:flex_workout_logger/utils/enum_abstract.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,6 +18,7 @@ class ExerciseEntity with _$ExerciseEntity, Selectable {
     required Style style,
     required DateTime createdAt,
     required DateTime updatedAt,
+    @Default([]) List<MuscleGroupEntity> primaryMuscleGroups,
     ExerciseEntity? baseExercise,
     MovementPatternEntity? movementPattern,
   }) = _ExerciseEntity;
