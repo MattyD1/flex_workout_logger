@@ -14,7 +14,7 @@ part 'providers.g.dart';
 @riverpod
 Future<Realm> realm(RealmRef ref) async {
   final config = Configuration.local(
-    [Exercise.schema, MovementPattern.schema],
+    [Exercise.schema, MovementPattern.schema, MuscleGroup.schema],
     initialDataCallback: realmSeed,
   );
   return Realm(config);
