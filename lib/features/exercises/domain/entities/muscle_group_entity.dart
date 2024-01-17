@@ -12,6 +12,6 @@ class MuscleGroupEntity with _$MuscleGroupEntity {
     required String description,
     required DateTime createdAt,
     required DateTime updatedAt,
-    List<String>? exerciseIds,
+    List<String>? primaryExerciseIds,
   }) = _MuscleGroupEntity;
 }
