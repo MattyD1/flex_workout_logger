@@ -25,7 +25,7 @@ void realmSeed(Realm realm) {
     'Leg Raise',
   ];
 
-  final intialMovementPatterns = <String>[
+  final initialMovementPatternNames = <String>[
     'Squat',
     'Hip Hinge',
     'Vertical Pull',
@@ -41,6 +41,24 @@ void realmSeed(Realm realm) {
     'Mobility',
   ];
 
+  final initialMuscleGroupNames = <String>[
+    'Quads',
+    'Glutes',
+    'Hamstrings',
+    'Erectors',
+    'Lats',
+    'Biceps',
+    'Shoulders',
+    'Triceps',
+    'Retractors',
+    'Chest',
+    'Calves',
+    'Abs',
+    'Forearms',
+    'Neck',
+    'Groin',
+  ];
+
   late final initialExercises = initialExerciseNames.map(
     (e) => Exercise(
       ObjectId(),
@@ -53,8 +71,18 @@ void realmSeed(Realm realm) {
     ),
   );
 
-  late final initialMovementPatterns = intialMovementPatterns.map(
+  late final initialMovementPatterns = initialMovementPatternNames.map(
     (e) => MovementPattern(
+      ObjectId(),
+      e,
+      '',
+      DateTimeX.current.toUtc(),
+      DateTimeX.current.toUtc(),
+    ),
+  );
+
+  late final initialMuscleGroups = initialMuscleGroupNames.map(
+    (e) => MuscleGroup(
       ObjectId(),
       e,
       '',
@@ -65,5 +93,6 @@ void realmSeed(Realm realm) {
 
   realm
     ..addAll(initialExercises)
-    ..addAll(initialMovementPatterns);
+    ..addAll(initialMovementPatterns)
+    ..addAll(initialMuscleGroups);
 }

@@ -1,6 +1,7 @@
 import 'package:flex_workout_logger/config/providers.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/exercise_repository.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/movement_pattern_repository.dart';
+import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/muscle_group_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'providers.g.dart';
@@ -23,6 +24,14 @@ MovementPatternRepository movementPatternRepository(
   MovementPatternRepositoryRef ref,
 ) {
   return MovementPatternRepository(
+    realm: ref.watch(realmClientProvider),
+  );
+}
+
+/// Muscle group repository provider
+@riverpod
+MuscleGroupRepository muscleGroupRepository(MuscleGroupRepositoryRef ref) {
+  return MuscleGroupRepository(
     realm: ref.watch(realmClientProvider),
   );
 }

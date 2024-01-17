@@ -6,7 +6,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/muscle
 import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:realm/realm.dart';
 
 /// Fully implemented repository for muscle groups
