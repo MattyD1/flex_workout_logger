@@ -2,8 +2,10 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/muscle_group_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
@@ -12,6 +14,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_form.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_selection_sheet.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
@@ -76,6 +79,8 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
     final movementPatterns = ref.watch(movementPatternListControllerProvider);
 
+    final muscleGroups = ref.watch(muscleGroupListControllerProvider);
+
     final res = ref.watch(exercisesCreateControllerProvider);
     final errorText = res.maybeWhen(
       error: (error, stackTrace) => error.toString(),
@@ -101,6 +106,36 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           VariationSegementedController(
             selectedValue: _selectedVariation,
             onValueChanged: _onVariationChanged,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          MuscleGroupSelectionSheet<MuscleGroupEntity>(
+            items: muscleGroups.asData?.value
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: CupertinoListTile(
+                          title: Text(
+                            e.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.listTitle.copyWith(
+                              color: context.colorScheme.foreground,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop(e);
+                          },
+                          leading: const Icon(Icons.fitness_center),
+                          padding: const EdgeInsets.fromLTRB(
+                            20,
+                            16,
+                            14,
+                            16,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList() ??
+                [],
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           if (_selectedVariation == 2)
