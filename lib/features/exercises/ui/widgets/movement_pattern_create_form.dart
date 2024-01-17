@@ -139,6 +139,7 @@ class _MovementPatternCreateFormState
               controller: null,
               readOnly: isLoading,
               isRequired: true,
+              autoFocus: true,
             ),
           ],
         ),
