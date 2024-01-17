@@ -1,5 +1,6 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:realm/realm.dart';
 
 part 'schema.g.dart';
@@ -71,6 +72,32 @@ extension ConvertMovementPattern on _MovementPattern {
       name: name,
       description: description,
       exerciseIds: linkedExercises.map((e) => e.id.hexString).toList(),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+@RealmModel()
+class _MuscleGroup {
+  @PrimaryKey()
+  late ObjectId id;
+
+  late String name;
+  late String description;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+/// _MuscleGroup extension
+extension ConvertMuscleGroup on _MuscleGroup {
+  /// Convert [_MuscleGroup] to [MuscleGroupEntity]
+  MuscleGroupEntity toEntity() {
+    return MuscleGroupEntity(
+      id: id.hexString,
+      name: name,
+      description: description,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
