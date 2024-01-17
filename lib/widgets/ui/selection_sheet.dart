@@ -22,7 +22,7 @@ class SelectionSheet<T extends Selectable> extends FormField<T> {
     super.key,
     FormFieldValidator<T>? validator,
   }) : super(
-          initialValue: initialValue != null ? initialValue as T : null,
+          initialValue: initialValue as T?,
           validator: (value) {
             if (isRequired && value == null) {
               return 'This field is required';
@@ -170,7 +170,9 @@ Future<T?> _showBottomSheet<T>(
       children: [
         ListView.separated(
           padding: EdgeInsets.only(
-            bottom: canCreate ? (Platform.isAndroid ? 110 : 64) : AppLayout.largePadding,
+            bottom: canCreate
+                ? (Platform.isAndroid ? 110 : 64)
+                : AppLayout.largePadding,
           ),
           itemCount: items.length,
           separatorBuilder: (context, index) => Divider(
