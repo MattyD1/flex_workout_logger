@@ -23,7 +23,7 @@ void main() {
     faker = Faker();
     realm = Realm(
       Configuration.inMemory(
-        [Exercise.schema, MovementPattern.schema],
+        [Exercise.schema, MovementPattern.schema, MuscleGroup.schema],
       ),
     );
   });
