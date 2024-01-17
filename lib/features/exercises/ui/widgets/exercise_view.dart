@@ -191,15 +191,17 @@ class ExerciseView extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: 16),
-            Text(exercise.baseExercise?.name ?? 'No Base Exercise'),
-            const SizedBox(height: 16),
-            Row(
+            Wrap(
+              spacing: AppLayout.miniPadding,
+              runSpacing: AppLayout.miniPadding,
               children: [
-                _bubble(context, 'Horizontal Push'),
-                const SizedBox(width: 8),
-                _bubble(context, 'Bilateral'),
-                const SizedBox(width: 8),
-                _bubble(context, 'Reps'),
+                if (exercise.movementPattern != null)
+                  _bubble(
+                    context,
+                    exercise.movementPattern!.name,
+                  ),
+                _bubble(context, exercise.engagement.name),
+                _bubble(context, exercise.style.name),
               ],
             ),
             const SizedBox(height: 16),
