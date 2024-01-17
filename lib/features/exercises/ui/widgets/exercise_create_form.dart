@@ -103,43 +103,6 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             onValueChanged: _onVariationChanged,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
-          SelectionSheet<MovementPatternEntity>(
-            validator: (value) => _movementPattern?.validate,
-            hintText: 'Select a movement pattern',
-            labelText: 'Movement Pattern',
-            isRequired: true,
-            onChanged: (value) =>
-                _movementPattern = ExerciseMovementPattern(value),
-            items: movementPatterns.asData?.value
-                    .map(
-                      (e) => DropdownMenuItem(
-                        value: e,
-                        child: CupertinoListTile(
-                          title: Text(
-                            e.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.textTheme.listTitle.copyWith(
-                              color: context.colorScheme.foreground,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pop(e);
-                          },
-                          leading: const Icon(Icons.fitness_center),
-                          padding: const EdgeInsets.fromLTRB(
-                            20,
-                            16,
-                            14,
-                            16,
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList() ??
-                [],
-            canCreate: true,
-            createForm: const MovementPatternCreateForm(),
-          ),
           if (_selectedVariation == 2)
             SelectionSheet<ExerciseEntity>(
               validator: (value) => _baseExercise?.validate,
@@ -189,6 +152,43 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             isTextArea: true,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          SelectionSheet<MovementPatternEntity>(
+            validator: (value) => _movementPattern?.validate,
+            hintText: 'Select a movement pattern',
+            labelText: 'Movement Pattern',
+            isRequired: true,
+            onChanged: (value) =>
+                _movementPattern = ExerciseMovementPattern(value),
+            items: movementPatterns.asData?.value
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: CupertinoListTile(
+                          title: Text(
+                            e.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.listTitle.copyWith(
+                              color: context.colorScheme.foreground,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop(e);
+                          },
+                          leading: const Icon(Icons.fitness_center),
+                          padding: const EdgeInsets.fromLTRB(
+                            20,
+                            16,
+                            14,
+                            16,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList() ??
+                [],
+            canCreate: true,
+            createForm: const MovementPatternCreateForm(),
+          ),
           SizedBox(
             width: double.infinity,
             child: Column(
