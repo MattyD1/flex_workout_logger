@@ -209,6 +209,7 @@ class ExerciseRepository implements IExerciseRepository {
       final engagement_ = engagement.value.getOrElse((l) => res.engagement);
       final style_ = style.value.getOrElse((l) => res.style);
       final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
+      final movementPattern_ = movementPattern?.value.getOrElse((l) => null);
 
       // ignore: avoid_init_to_null
       late Exercise? baseExerciseRes_ =
@@ -224,6 +225,19 @@ class ExerciseRepository implements IExerciseRepository {
         }
       }
 
+      // ignore: avoid_init_to_null
+      late MovementPattern? movementPatternRes_ = null;
+
+      if (movementPattern_ != null) {
+        final objectId = ObjectId.fromHexString(movementPattern_.id);
+
+        movementPatternRes_ = realm.find<MovementPattern>(objectId);
+
+        if (movementPatternRes_ == null) {
+          return left(const Failure.empty());
+        }
+      }
+
       final updatedExercise = Exercise(
         objectId,
         name_,
@@ -232,7 +246,8 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         res.createdAt,
         DateTimeX.current,
-      )..baseExercise = baseExerciseRes_ ?? res.baseExercise;
+      )..baseExercise = baseExerciseRes_ ?? res.baseExercise
+      ..movementPattern = movementPatternRes_ ?? res.movementPattern;
 
       realm.write(() {
         realm.add(updatedExercise, update: true);

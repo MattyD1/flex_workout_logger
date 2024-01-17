@@ -10,6 +10,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_form.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
@@ -143,31 +144,42 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
               items: variationExercises.asData?.value
                       .map(
                         (e) => DropdownMenuItem(
-                          value: e,
-                          child: CupertinoListTile(
-                            title: Text(
-                              e.name,
-                              overflow: TextOverflow.ellipsis,
-                              style: context.textTheme.listTitle.copyWith(
-                                color: context.colorScheme.foreground,
-                              ),
-                            ),
+                          value: e, 
+                          child: ExerciseListTile(
+                            exercise: e,
+                            trailingIcon: CupertinoIcons.add_circled,
                             onTap: () {
                               Navigator.of(context).pop(e);
                             },
-                            leading: const Icon(Icons.fitness_center),
-                            padding: const EdgeInsets.fromLTRB(
-                              20,
-                              16,
-                              14,
-                              16,
-                            ),
                           ),
                         ),
                       )
                       .toList() ??
                   [],
             ),
+          MyTextField(
+            label: 'Exercise Name',
+            hintText: 'Bench Press, Squat, etc.',
+            errorText: errorText,
+            onChanged: (value) => _name = ExerciseName(value),
+            validator: (value) => _name?.validate,
+            controller: _nameController,
+            readOnly: isLoading,
+            isRequired: true,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          MyTextField(
+            label: 'Description',
+            hintText:
+                'Describe the exercise, including any additional setup that is required.',
+            errorText: errorText,
+            onChanged: (value) => _description = ExerciseDescription(value),
+            validator: (value) => _description?.validate,
+            controller: _descriptionController,
+            readOnly: isLoading,
+            isTextArea: true,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
           if (_currentMovementPattern != null)
             SelectionSheet<MovementPatternEntity>(
               validator: (value) => _movementPattern?.validate,
@@ -207,30 +219,6 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
               canCreate: true,
               createForm: const MovementPatternCreateForm(),
             ),
-          MyTextField(
-            label: 'Exercise Name',
-            hintText: 'Bench Press, Squat, etc.',
-            errorText: errorText,
-            onChanged: (value) => _name = ExerciseName(value),
-            validator: (value) => _name?.validate,
-            controller: _nameController,
-            readOnly: isLoading,
-            isRequired: true,
-          ),
-          const SizedBox(height: AppLayout.defaultPadding),
-          MyTextField(
-            label: 'Description',
-            hintText:
-                'Describe the exercise, including any additional setup that is required.',
-            errorText: errorText,
-            onChanged: (value) => _description = ExerciseDescription(value),
-            validator: (value) => _description?.validate,
-            controller: _descriptionController,
-            readOnly: isLoading,
-            isTextArea: true,
-          ),
-          const SizedBox(height: AppLayout.defaultPadding),
-          const SizedBox(height: AppLayout.defaultPadding),
           SizedBox(
             width: double.infinity,
             child: Column(
@@ -284,7 +272,6 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             values: Style.values.toList(),
             groupValue: _style,
           ),
-          const SizedBox(height: AppLayout.defaultPadding),
           const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
