@@ -144,17 +144,19 @@ class ExerciseListTile extends StatelessWidget {
       ),
       subtitle: Row(
         children: <Widget>[
-          Text(
-            exercise.baseExercise != null
-                ? '${exercise.baseExercise!.name} Variation'
-                : 'Movement Pattern',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.textTheme.listSubtitle.copyWith(
-              color: context.colorScheme.offForeground,
+          if (exercise.movementPattern != null || exercise.baseExercise != null)
+            Text(
+              exercise.baseExercise != null
+                  ? '${exercise.baseExercise!.name} Variation'
+                  : exercise.movementPattern?.name ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.listSubtitle.copyWith(
+                color: context.colorScheme.offForeground,
+              ),
             ),
-          ),
-          const SizedBox(width: AppLayout.defaultPadding),
+          if (exercise.movementPattern != null || exercise.baseExercise != null)
+            const SizedBox(width: AppLayout.defaultPadding),
           Expanded(
             child: Text(
               'List of Muscle Groups jlikjdaldjaflfijealjkj',
