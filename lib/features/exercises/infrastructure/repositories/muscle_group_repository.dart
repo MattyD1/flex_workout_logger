@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/repositories/muscl
 import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
+import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:realm/realm.dart';
@@ -21,9 +22,32 @@ class MuscleGroupRepository implements IMuscleGroupRepository {
   FutureOr<Either<Failure, MuscleGroupEntity>> createMuscleGroup(
     MuscleGroupName name,
     MuscleGroupDescription? description,
-  ) {
-    // TODO: implement createMuscleGroup
-    throw UnimplementedError();
+  ) async {
+    try {
+      final currentDateTime = DateTimeX.current;
+      final name_ = name.value.getOrElse((l) => 'No name provided');
+      final description_ = description?.value.getOrElse((l) => '');
+
+      final muscleGroupToAdd = MuscleGroup(
+        ObjectId(),
+        name_,
+        description_ ?? '',
+        currentDateTime,
+        currentDateTime,
+      );
+
+      final res = realm.write<MuscleGroup>(() {
+        return realm.add(muscleGroupToAdd);
+      });
+
+      return right(res.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
