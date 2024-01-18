@@ -113,25 +113,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: CupertinoListTile(
-                          title: Text(
-                            e.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.textTheme.listTitle.copyWith(
-                              color: context.colorScheme.foreground,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pop(e);
-                          },
-                          leading: const Icon(Icons.fitness_center),
-                          padding: const EdgeInsets.fromLTRB(
-                            20,
-                            16,
-                            14,
-                            16,
-                          ),
-                        ),
+                        child: const Placeholder(),
                       ),
                     )
                     .toList() ??

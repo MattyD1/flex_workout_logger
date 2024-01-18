@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -39,21 +41,31 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                   ],
                 ),
 
+                /// Primary muscle groups
+                // const SizedBox(height: AppLayout.defaultPadding),
+                // const Text('Primary'),
                 /// Chosen stuff goes
                 if (state.value != null && state.value!.isNotEmpty)
                   ...state.value!.map(
                     (e) => Column(
                       children: [
                         CupertinoListTile(
-                          title: Text(
-                            e.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: state.context.textTheme.listTitle.copyWith(
-                              color: state.context.colorScheme.foreground,
-                            ),
+                          title: Row(
+                            children : [
+                              const Icon(Icons.fitness_center),
+                              const SizedBox(width: AppLayout.defaultPadding),
+                              Text (
+                                e.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: state.context.textTheme.listTitle.copyWith(
+                                  color: state.context.colorScheme.foreground,
+                                ),
+                              ),
+                            ],
                           ),
                           subtitle: Row(
                             children: [
+                              const SizedBox(width: 44),
                               TextButton(
                                 onPressed: () async {},
                                 style: TextButton.styleFrom(
@@ -129,7 +141,6 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                               ),
                             ],
                           ),
-                          leading: const Icon(Icons.fitness_center),
                           padding: const EdgeInsets.only(
                             left: 4,
                             top: 16,
@@ -143,10 +154,16 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                       ],
                     ),
                   ),
+
+                /// Secondary muscle groups
+                // const SizedBox(height: AppLayout.defaultPadding),
+                // const Text('Secondary'),
+
+
+                /// Add button
                 const SizedBox(
                   height: AppLayout.defaultPadding,
                 ),
-
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
@@ -286,6 +303,9 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                 child: ColoredBox(
                   color: context.colorScheme.offBackground,
                   child: ListView.separated(
+                    padding: EdgeInsets.only(
+                      bottom: Platform.isAndroid ? 110 : 64
+                    ),
                     itemCount: items.length,
                     separatorBuilder: (context, index) => Divider(
                       color: context.colorScheme.divider,
@@ -305,14 +325,25 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                         ),
                         onTap: () {
                           if (currentItems.contains(currentItem.value)) {
-                            return;
+                            setState(() {
+                              currentItems.remove(currentItem.value);
+                            });
+                          } else {
+                            setState(() {
+                              currentItems.add(currentItem.value!);
+                            });
                           }
-
-                          setState(() {
-                            currentItems.add(currentItem.value!);
-                          });
                         },
                         leading: const Icon(Icons.fitness_center),
+                        trailing: currentItems.contains(currentItem.value) 
+                          ? const Padding(
+                            padding: EdgeInsets.only(left: AppLayout.miniPadding),
+                            child: Icon(CupertinoIcons.check_mark_circled_solid, size: 16,), 
+                          )
+                          : const Padding(
+                            padding: EdgeInsets.only(left: AppLayout.miniPadding),
+                            child: Icon(CupertinoIcons.add_circled, size: 16,),
+                          ),
                         padding: const EdgeInsets.fromLTRB(
                           20,
                           16,
