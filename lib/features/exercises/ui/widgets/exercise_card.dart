@@ -157,16 +157,17 @@ class ExerciseListTile extends StatelessWidget {
             ),
           if (exercise.movementPattern != null || exercise.baseExercise != null)
             const SizedBox(width: AppLayout.defaultPadding),
-          Expanded(
-            child: Text(
-              'List of Muscle Groups jlikjdaldjaflfijealjkj',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.textTheme.listSubtitle.copyWith(
-                color: context.colorScheme.offForeground,
+          if (exercise.primaryMuscleGroups.isNotEmpty)
+            Expanded(
+              child: Text(
+                exercise.primaryMuscleGroups.map((e) => e.name).join(' • '),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textTheme.listSubtitle.copyWith(
+                  color: context.colorScheme.offForeground,
+                ),
               ),
             ),
-          ),
         ],
       ),
       onTap: onTap,

@@ -173,54 +173,65 @@ class ExerciseView extends ConsumerWidget {
         const SizedBox(height: 16),
 
         /// General information
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'General',
-              style: context.textTheme.headlineLarge,
-            ),
-            if (exercise.description.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  exercise.description,
-                  style: context.textTheme.bodyMedium.copyWith(
-                    color: context.colorScheme.mutedForeground,
+        SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'General',
+                style: context.textTheme.headlineLarge,
+              ),
+              if (exercise.description.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    exercise.description,
+                    style: context.textTheme.bodyMedium.copyWith(
+                      color: context.colorScheme.mutedForeground,
+                    ),
                   ),
                 ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: AppLayout.miniPadding,
+                runSpacing: AppLayout.miniPadding,
+                children: [
+                  if (exercise.movementPattern != null)
+                    _bubble(
+                      context,
+                      exercise.movementPattern!.name,
+                    ),
+                  _bubble(context, exercise.engagement.name),
+                  _bubble(context, exercise.style.name),
+                ],
               ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: AppLayout.miniPadding,
-              runSpacing: AppLayout.miniPadding,
-              children: [
-                if (exercise.movementPattern != null)
-                  _bubble(
-                    context,
-                    exercise.movementPattern!.name,
-                  ),
-                _bubble(context, exercise.engagement.name),
-                _bubble(context, exercise.style.name),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Muscle Groups',
-              style: context.textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                _bubble(context, 'Chest', isPrimary: true),
-                const SizedBox(width: 8),
-                _bubble(context, 'Deltoids'),
-                const SizedBox(width: 8),
-                _bubble(context, 'Triceps'),
-              ],
-            ),
-          ],
+              const SizedBox(height: 16),
+              if (exercise.primaryMuscleGroups.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Muscle Groups',
+                      style: context.textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        ...exercise.primaryMuscleGroups.map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: _bubble(context, e.name, isPrimary: true),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
+
         // TODO: Progress graph
       ],
     );
