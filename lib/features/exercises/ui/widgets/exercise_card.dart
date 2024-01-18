@@ -159,7 +159,7 @@ class ExerciseListTile extends StatelessWidget {
             const SizedBox(width: AppLayout.defaultPadding),
           Expanded(
             child: Text(
-              'List of Muscle Groups jlikjdaldjaflfijealjkj',
+              exercise.primaryMuscleGroups.map((e) => e.name).join(' • '),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.listSubtitle.copyWith(
