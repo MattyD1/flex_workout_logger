@@ -308,14 +308,14 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                     padding: EdgeInsets.only(
                       bottom: Platform.isAndroid ? 110 : 64
                     ),
-                    itemCount: items.length,
+                    itemCount: currentItems.length,
                     separatorBuilder: (context, index) => Divider(
                       color: context.colorScheme.divider,
                       height: 1,
                       indent: 64,
                     ),
                     itemBuilder: (context, index) {
-                      final currentItem = items[index];
+                      final currentItem = currentItems[index];
 
                       return CupertinoListTile(
                         title: Text(
