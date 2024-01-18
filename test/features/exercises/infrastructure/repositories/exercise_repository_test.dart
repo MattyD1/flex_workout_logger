@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/exercise_repository.dart';
@@ -49,6 +50,7 @@ void main() {
         ExerciseStyle(Style.reps),
         ExerciseBaseExercise(null, null),
         ExerciseMovementPattern(movementPatternToAdd.toEntity()),
+        ExerciseMuscleGroups([]),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
