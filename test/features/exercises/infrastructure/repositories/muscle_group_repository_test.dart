@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:faker/faker.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group_description.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/repositories/muscle_group_repository.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +30,20 @@ void main() {
   MuscleGroupRepository makeRepository() => MuscleGroupRepository(realm: realm);
 
   group('MuscleGroupRepository', () {
+    test('Create Muscle Group', () async {
+      final repository = makeRepository();
+      final res = await repository.createMuscleGroup(
+        MuscleGroupName('Test muscle group'), 
+        MuscleGroupDescription('New Description'),
+      );
+
+      final muscleGroup = res.fold((l) => null, (r) => r);
+
+      expect(res.isRight(), true);
+      expect(muscleGroup, isNotNull);
+      expect(muscleGroup!.name, 'Test muscle group');
+    });
+    
     test('getExercises', () async {
       final initialData = MockMuscleGroup.generateList(10);
       initializeDatabase(realm, initialData);
