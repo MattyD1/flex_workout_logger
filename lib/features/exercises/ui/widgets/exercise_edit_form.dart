@@ -143,21 +143,6 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_muscleGroups != null)
-            MuscleGroupSelectionSheet<MuscleGroupEntity>(
-              validator: (value) => _muscleGroups?.validate,
-              onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
-              initialValue: _currentMuscleGroups,
-              items: muscleGroups.asData?.value
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: const Placeholder(),
-                        ),
-                      )
-                      .toList() ??
-                  [],
-            ),
           if (_currentBaseExercise != null)
             SelectionSheet<ExerciseEntity>(
               validator: (value) => _baseExercise?.validate,
