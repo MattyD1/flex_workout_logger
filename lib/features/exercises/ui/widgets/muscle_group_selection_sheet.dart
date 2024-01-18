@@ -15,7 +15,10 @@ class MuscleGroupSelectionSheet<T extends Selectable>
   ///
   MuscleGroupSelectionSheet({
     required List<DropdownMenuItem<T>> items,
+    required ValueChanged<List<T>> onChanged,
     super.key,
+    super.initialValue,
+    super.validator,
   }) : super(
           builder: (state) {
             final selectedItems = items
@@ -52,13 +55,14 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                       children: [
                         CupertinoListTile(
                           title: Row(
-                            children : [
+                            children: [
                               const Icon(Icons.fitness_center),
                               const SizedBox(width: AppLayout.defaultPadding),
-                              Text (
+                              Text(
                                 e.name,
                                 overflow: TextOverflow.ellipsis,
-                                style: state.context.textTheme.listTitle.copyWith(
+                                style:
+                                    state.context.textTheme.listTitle.copyWith(
                                   color: state.context.colorScheme.foreground,
                                 ),
                               ),
@@ -160,7 +164,6 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                 // const SizedBox(height: AppLayout.defaultPadding),
                 // const Text('Secondary'),
 
-
                 /// Add button
                 const SizedBox(
                   height: AppLayout.defaultPadding,
@@ -174,6 +177,8 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                         items,
                         selectedItems,
                       );
+
+                      onChanged(res);
 
                       state.didChange(res);
                     },
@@ -305,9 +310,8 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                 child: ColoredBox(
                   color: context.colorScheme.offBackground,
                   child: ListView.separated(
-                    padding: EdgeInsets.only(
-                      bottom: Platform.isAndroid ? 110 : 64
-                    ),
+                    padding:
+                        EdgeInsets.only(bottom: Platform.isAndroid ? 110 : 64),
                     itemCount: currentItems.length,
                     separatorBuilder: (context, index) => Divider(
                       color: context.colorScheme.divider,
@@ -326,7 +330,8 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                           ),
                         ),
                         onTap: () {
-                          if (currentSelectedItems.contains(currentItem.value)) {
+                          if (currentSelectedItems
+                              .contains(currentItem.value)) {
                             setState(() {
                               currentSelectedItems.remove(currentItem.value);
                             });
@@ -337,15 +342,24 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                           }
                         },
                         leading: const Icon(Icons.fitness_center),
-                        trailing: currentSelectedItems.contains(currentItem.value) 
-                          ? const Padding(
-                            padding: EdgeInsets.only(left: AppLayout.miniPadding),
-                            child: Icon(CupertinoIcons.check_mark_circled_solid, size: 16,), 
-                          )
-                          : const Padding(
-                            padding: EdgeInsets.only(left: AppLayout.miniPadding),
-                            child: Icon(CupertinoIcons.add_circled, size: 16,),
-                          ),
+                        trailing:
+                            currentSelectedItems.contains(currentItem.value)
+                                ? const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: AppLayout.miniPadding),
+                                    child: Icon(
+                                      CupertinoIcons.check_mark_circled_solid,
+                                      size: 16,
+                                    ),
+                                  )
+                                : const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: AppLayout.miniPadding),
+                                    child: Icon(
+                                      CupertinoIcons.add_circled,
+                                      size: 16,
+                                    ),
+                                  ),
                         padding: const EdgeInsets.fromLTRB(
                           20,
                           16,
@@ -397,8 +411,8 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                         setState(() {
                           currentSelectedItems.add(res as T);
                           currentItems.add(DropdownMenuItem(
-                              value: res,
-                              child: const Placeholder(),
+                            value: res,
+                            child: const Placeholder(),
                           ));
                         });
                       },

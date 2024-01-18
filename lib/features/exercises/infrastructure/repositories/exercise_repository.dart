@@ -1,3 +1,5 @@
+// ignore_for_file: use_raw_strings
+
 import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
@@ -6,6 +8,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
@@ -30,6 +33,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
+    ExerciseMuscleGroups muscleGroups,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
@@ -68,6 +72,12 @@ class ExerciseRepository implements IExerciseRepository {
         }
       }
 
+      final muscleGroups_ = muscleGroups.value.getOrElse((l) => []);
+      final muscleGroupIds =
+          muscleGroups_.map((e) => ObjectId.fromHexString(e.id)).toList();
+      final muscleGroupsRes_ =
+          realm.query<MuscleGroup>('id IN \$0', [muscleGroupIds]);
+
       final exerciseToAdd = Exercise(
         ObjectId(),
         name_,
@@ -81,6 +91,9 @@ class ExerciseRepository implements IExerciseRepository {
         ..movementPattern = movementPatternRes_;
 
       final res = realm.write<Exercise>(() {
+        // Add muscle groups to exercise
+        exerciseToAdd.primaryMuscleGroups.addAll(muscleGroupsRes_);
+
         return realm.add(exerciseToAdd);
       });
 
@@ -126,7 +139,6 @@ class ExerciseRepository implements IExerciseRepository {
     try {
       final objectIds = ids.map(ObjectId.fromHexString).toList();
 
-      // ignore: use_raw_strings
       final res = realm.query<Exercise>('id IN \$0', [objectIds]);
 
       if (res.isEmpty) {
@@ -246,8 +258,9 @@ class ExerciseRepository implements IExerciseRepository {
         style_.index,
         res.createdAt,
         DateTimeX.current,
-      )..baseExercise = baseExerciseRes_ ?? res.baseExercise
-      ..movementPattern = movementPatternRes_ ?? res.movementPattern;
+      )
+        ..baseExercise = baseExerciseRes_ ?? res.baseExercise
+        ..movementPattern = movementPatternRes_ ?? res.movementPattern;
 
       realm.write(() {
         realm.add(updatedExercise, update: true);
