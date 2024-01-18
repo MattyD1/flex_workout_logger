@@ -10,6 +10,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
@@ -42,10 +43,9 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   ExerciseDescription? _description;
   Engagement? _engagement = Engagement.bilateral;
   Style? _style = Style.reps;
-
   ExerciseBaseExercise? _baseExercise;
-
   ExerciseMovementPattern? _movementPattern;
+  ExerciseMuscleGroups? _muscleGroups;
 
   int _selectedVariation = 1;
 
@@ -109,6 +109,8 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           MuscleGroupSelectionSheet<MuscleGroupEntity>(
+            validator: (value) => _muscleGroups?.validate,
+            onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
             items: muscleGroups.asData?.value
                     .map(
                       (e) => DropdownMenuItem(
@@ -282,6 +284,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                           ),
                           _baseExercise,
                           _movementPattern!,
+                          _muscleGroups ?? ExerciseMuscleGroups([]),
                         );
 
                     // FIX: engagement should not be hardcoded
