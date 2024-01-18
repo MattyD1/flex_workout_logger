@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_create_form.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -218,7 +219,8 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
   List<DropdownMenuItem<T>> items,
   List<T> selectedItems,
 ) async {
-  final currentItems = selectedItems;
+  final currentItems = items;
+  final currentSelectedItems = selectedItems;
 
   await showModalBottomSheet<List<T>>(
     context: context,
@@ -253,8 +255,8 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                     children: [
                       // Selected items
                       const SizedBox(width: 8),
-                      if (currentItems.isNotEmpty)
-                        ...currentItems.map(
+                      if (currentSelectedItems.isNotEmpty)
+                        ...currentSelectedItems.map(
                           (e) => Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: const Icon(Icons.fitness_center, size: 24),
@@ -263,7 +265,7 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                       const Spacer(),
                       IconButton.filled(
                         onPressed: () {
-                          context.pop(currentItems);
+                          context.pop(currentSelectedItems);
                         },
                         style: IconButton.styleFrom(
                           padding: const EdgeInsets.all(AppLayout.smallPadding),
@@ -324,18 +326,18 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                           ),
                         ),
                         onTap: () {
-                          if (currentItems.contains(currentItem.value)) {
+                          if (currentSelectedItems.contains(currentItem.value)) {
                             setState(() {
-                              currentItems.remove(currentItem.value);
+                              currentSelectedItems.remove(currentItem.value);
                             });
                           } else {
                             setState(() {
-                              currentItems.add(currentItem.value!);
+                              currentSelectedItems.add(currentItem.value!);
                             });
                           }
                         },
                         leading: const Icon(Icons.fitness_center),
-                        trailing: currentItems.contains(currentItem.value) 
+                        trailing: currentSelectedItems.contains(currentItem.value) 
                           ? const Padding(
                             padding: EdgeInsets.only(left: AppLayout.miniPadding),
                             child: Icon(CupertinoIcons.check_mark_circled_solid, size: 16,), 
@@ -386,9 +388,32 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    IconButton.filled(
+                      onPressed: () async {
+                        final res = await _showBottomAddSheet(context);
+
+                        if (res == null) return;
+
+                        setState(() {
+                          currentSelectedItems.add(res as T);
+                          currentItems.add(DropdownMenuItem(
+                              value: res,
+                              child: const Placeholder(),
+                          ));
+                        });
+                      },
+                      icon: const Icon(
+                        CupertinoIcons.add,
+                      ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.muted,
+                        foregroundColor: context.colorScheme.foreground,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     TextButton(
                       onPressed: () {
-                        context.pop(currentItems);
+                        context.pop(currentSelectedItems);
                       },
                       style: IconButton.styleFrom(
                         backgroundColor: context.colorScheme.foreground,
@@ -406,5 +431,22 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
     ),
   );
 
-  return currentItems;
+  return currentSelectedItems;
+}
+
+Future<T?> _showBottomAddSheet<T extends Selectable>(
+  BuildContext context,
+) {
+  return showModalBottomSheet<T>(
+    context: context,
+    elevation: 0,
+    isScrollControlled: true,
+    backgroundColor: context.colorScheme.offBackground,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
+    builder: (context) => const Wrap(
+      children: [MuscleGroupCreateForm()],
+    ),
+  );
 }
