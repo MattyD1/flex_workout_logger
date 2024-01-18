@@ -32,6 +32,7 @@ void main() {
   group('MuscleGroupRepository', () {
     test('Create Muscle Group', () async {
       final repository = makeRepository();
+
       final res = await repository.createMuscleGroup(
         MuscleGroupName('Test muscle group'), 
         MuscleGroupDescription('New Description'),
@@ -39,12 +40,12 @@ void main() {
 
       final muscleGroup = res.fold((l) => null, (r) => r);
 
-      expect(res.isRight(), true);
-      expect(muscleGroup, isNotNull);
-      expect(muscleGroup!.name, 'Test muscle group');
+      expect(res.isRight(), true); // Assert that response is successfull
+      expect(muscleGroup, isNotNull); // Assert that muscle group is not null
+      expect(muscleGroup!.name, 'Test muscle group'); // Assert that name is correct
     });
-    
-    test('getExercises', () async {
+
+    test('getMuscleGroups', () async {
       final initialData = MockMuscleGroup.generateList(10);
       initializeDatabase(realm, initialData);
 
