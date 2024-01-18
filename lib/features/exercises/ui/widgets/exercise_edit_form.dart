@@ -285,6 +285,22 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             groupValue: _style,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
+          if (_muscleGroups != null)
+            MuscleGroupSelectionSheet<MuscleGroupEntity>(
+              validator: (value) => _muscleGroups?.validate,
+              onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
+              initialValue: _currentMuscleGroups,
+              items: muscleGroups.asData?.value
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: const Placeholder(),
+                        ),
+                      )
+                      .toList() ??
+                  [],
+            ),
+          const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
             onPressed: isLoading
                 ? null

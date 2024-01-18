@@ -108,20 +108,6 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             onValueChanged: _onVariationChanged,
           ),
           const SizedBox(height: AppLayout.defaultPadding),
-          MuscleGroupSelectionSheet<MuscleGroupEntity>(
-            validator: (value) => _muscleGroups?.validate,
-            onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
-            items: muscleGroups.asData?.value
-                    .map(
-                      (e) => DropdownMenuItem(
-                        value: e,
-                        child: const Placeholder(),
-                      ),
-                    )
-                    .toList() ??
-                [],
-          ),
-          const SizedBox(height: AppLayout.defaultPadding),
           if (_selectedVariation == 2)
             SelectionSheet<ExerciseEntity>(
               validator: (value) => _baseExercise?.validate,
@@ -262,6 +248,20 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
             },
             values: Style.values.toList(),
             groupValue: _style,
+          ),
+          const SizedBox(height: AppLayout.defaultPadding),
+          MuscleGroupSelectionSheet<MuscleGroupEntity>(
+            validator: (value) => _muscleGroups?.validate,
+            onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
+            items: muscleGroups.asData?.value
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: const Placeholder(),
+                      ),
+                    )
+                    .toList() ??
+                [],
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           ElevatedButton(
