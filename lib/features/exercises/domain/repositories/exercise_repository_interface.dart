@@ -39,6 +39,7 @@ abstract class IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
+    ExerciseMuscleGroups muscleGroups,
   );
 
   /// Delete Exercise by id

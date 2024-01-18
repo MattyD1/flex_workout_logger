@@ -5,6 +5,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/providers.dart';
@@ -30,6 +31,7 @@ class ExercisesEditController extends _$ExercisesEditController {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
+    ExerciseMuscleGroups muscleGroups,
   ) async {
     state = const AsyncLoading();
     final res = await ref.read(exerciseRepositoryProvider).updateExercise(
@@ -40,6 +42,7 @@ class ExercisesEditController extends _$ExercisesEditController {
           style,
           baseExercise,
           movementPattern,
+          muscleGroups,
         );
 
     state = res.fold(

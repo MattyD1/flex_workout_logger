@@ -2,16 +2,20 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/movement_pattern_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/muscle_group_list_controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_form.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_selection_sheet.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/widgets/ui/radio_list.dart';
 import 'package:flex_workout_logger/widgets/ui/selection_sheet.dart';
@@ -41,6 +45,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   final _descriptionController = TextEditingController();
   ExerciseEntity? _currentBaseExercise;
   MovementPatternEntity? _currentMovementPattern;
+  List<MuscleGroupEntity>? _currentMuscleGroups;
 
   ExerciseName? _name;
   ExerciseDescription? _description;
@@ -48,6 +53,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   Style? _style;
   ExerciseBaseExercise? _baseExercise;
   ExerciseMovementPattern? _movementPattern;
+  ExerciseMuscleGroups? _muscleGroups;
 
   @override
   void dispose() {
@@ -79,14 +85,18 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       _style = next.asData?.value.style ?? Style.reps;
 
       // Initalize base exercises
-      final e = next.asData?.value.baseExercise;
-      _currentBaseExercise = e;
-      _baseExercise = ExerciseBaseExercise(widget.id, e);
+      final be = next.asData?.value.baseExercise;
+      _currentBaseExercise = be;
+      _baseExercise = ExerciseBaseExercise(widget.id, be);
 
       // Initalize movement pattern
-      final m = next.asData?.value.movementPattern;
-      _currentMovementPattern = m;
+      final mp = next.asData?.value.movementPattern;
+      _currentMovementPattern = mp;
       _movementPattern = ExerciseMovementPattern(_currentMovementPattern);
+
+      final mg = next.asData?.value.primaryMuscleGroups;
+      _currentMuscleGroups = mg;
+      _muscleGroups = ExerciseMuscleGroups(_currentMuscleGroups ?? []);
     });
     super.initState();
   }
@@ -112,6 +122,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
     final movementPatterns = ref.watch(movementPatternListControllerProvider);
 
+    final muscleGroups = ref.watch(muscleGroupListControllerProvider);
+
     final res = ref.watch(exercisesEditControllerProvider(widget.id));
 
     final errorText = res.maybeWhen(
@@ -131,6 +143,21 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (_muscleGroups != null)
+            MuscleGroupSelectionSheet<MuscleGroupEntity>(
+              validator: (value) => _muscleGroups?.validate,
+              onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
+              initialValue: _currentMuscleGroups,
+              items: muscleGroups.asData?.value
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: const Placeholder(),
+                        ),
+                      )
+                      .toList() ??
+                  [],
+            ),
           if (_currentBaseExercise != null)
             SelectionSheet<ExerciseEntity>(
               validator: (value) => _baseExercise?.validate,
@@ -144,7 +171,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
               items: variationExercises.asData?.value
                       .map(
                         (e) => DropdownMenuItem(
-                          value: e, 
+                          value: e,
                           child: ExerciseListTile(
                             exercise: e,
                             trailingIcon: CupertinoIcons.add_circled,
@@ -298,6 +325,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                           ),
                           _baseExercise,
                           _movementPattern,
+                          _muscleGroups!,
                         );
                   },
             child: isLoading

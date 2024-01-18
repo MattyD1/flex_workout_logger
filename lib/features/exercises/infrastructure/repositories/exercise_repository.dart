@@ -206,6 +206,7 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
+    ExerciseMuscleGroups muscleGroups,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -222,6 +223,7 @@ class ExerciseRepository implements IExerciseRepository {
       final style_ = style.value.getOrElse((l) => res.style);
       final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
       final movementPattern_ = movementPattern?.value.getOrElse((l) => null);
+      final muscleGroups_ = muscleGroups.value.getOrElse((l) => []);
 
       // ignore: avoid_init_to_null
       late Exercise? baseExerciseRes_ =
@@ -250,6 +252,11 @@ class ExerciseRepository implements IExerciseRepository {
         }
       }
 
+      final muscleGroupIds =
+          muscleGroups_.map((e) => ObjectId.fromHexString(e.id)).toList();
+      final muscleGroupsRes_ =
+          realm.query<MuscleGroup>('id IN \$0', [muscleGroupIds]);
+
       final updatedExercise = Exercise(
         objectId,
         name_,
@@ -263,6 +270,8 @@ class ExerciseRepository implements IExerciseRepository {
         ..movementPattern = movementPatternRes_ ?? res.movementPattern;
 
       realm.write(() {
+        updatedExercise.primaryMuscleGroups.addAll(muscleGroupsRes_);
+
         realm.add(updatedExercise, update: true);
       });
 
