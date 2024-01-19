@@ -327,6 +327,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
                           _baseExercise,
                           _movementPattern,
                           _muscleGroups!,
+                          ExerciseMuscleGroups([]),
                         );
                   },
             child: isLoading

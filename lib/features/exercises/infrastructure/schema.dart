@@ -26,6 +26,7 @@ class _Exercise {
   late _Exercise? baseExercise;
   late _MovementPattern? movementPattern;
   late List<_MuscleGroup> primaryMuscleGroups;
+  late List<_MuscleGroup> secondaryMuscleGroups;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -45,6 +46,8 @@ extension ConvertExercise on _Exercise {
       movementPattern: movementPattern?.toEntity(),
       primaryMuscleGroups:
           primaryMuscleGroups.map((e) => e.toEntity()).toList(),
+      secondaryMuscleGroups:
+          secondaryMuscleGroups.map((e) => e.toEntity()).toList(),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

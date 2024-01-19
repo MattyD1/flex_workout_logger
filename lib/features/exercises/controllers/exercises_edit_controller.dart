@@ -31,7 +31,8 @@ class ExercisesEditController extends _$ExercisesEditController {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   ) async {
     state = const AsyncLoading();
     final res = await ref.read(exerciseRepositoryProvider).updateExercise(
@@ -42,7 +43,8 @@ class ExercisesEditController extends _$ExercisesEditController {
           style,
           baseExercise,
           movementPattern,
-          muscleGroups,
+          primaryMuscleGroups,
+          secondaryMuscleGroups,
         );
 
     state = res.fold(

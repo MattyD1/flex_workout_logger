@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_create_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_create_form.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -226,6 +227,9 @@ Future<List<T>> _showBottomSheet<T extends Selectable>(
 ) async {
   final currentItems = items;
   final currentSelectedItems = selectedItems;
+
+  final primaryItems = <T>[];
+  final secondaryItems = <T>[];
 
   await showModalBottomSheet<List<T>>(
     context: context,

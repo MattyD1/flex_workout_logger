@@ -27,9 +27,33 @@ class ExercisesCreateController extends _$ExercisesCreateController {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    // Map<MuscleGroupEnum, ExerciseMuscleGroups> muscleGroups,
   ) async {
     state = const AsyncLoading();
+
+    ///  {
+    ///     KEY: MuscleGroupEnum.primary,
+    ///     VALUE: ExerciseMuscleGroups([])
+    ///  },
+    ///
+    ///
+    ///   {
+    ///    KEY: MuscleGroupEnum.secondary,
+    ///   VALUE: MuscleGroup([])
+    ///
+    ///  }
+
+    /// Translate from map to two muscle group lists
+    // final primaryMuscleGroups = muscleGroups.entries
+    //     .where((element) => element.key == MuscleGroupEnum.primary)
+    //     .first
+    //     .value;
+
+    // final secondaryMuscleGroups = muscleGroups.entries
+    //     .where((element) => element.key == MuscleGroupEnum.secondary)
+    //     .first
+    //     .value;
+
     final res = await ref.read(exerciseRepositoryProvider).createExercise(
           name,
           description,
@@ -37,11 +61,21 @@ class ExercisesCreateController extends _$ExercisesCreateController {
           style,
           baseExercise,
           movementPattern,
-          muscleGroups,
+          ExerciseMuscleGroups([]),
+          ExerciseMuscleGroups([]),
         );
     state = res.fold(
       (l) => AsyncValue.error(l.error, StackTrace.current),
       AsyncValue.data,
     );
   }
+}
+
+/// Muscle group enum
+enum MuscleGroupEnum {
+  /// Identifies primary muscle groups in a movement
+  primary,
+
+  /// Identifies secondary muscle groups in a movement
+  secondary
 }

@@ -284,7 +284,6 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                           ),
                           _baseExercise,
                           _movementPattern!,
-                          _muscleGroups ?? ExerciseMuscleGroups([]),
                         );
 
                     // FIX: engagement should not be hardcoded

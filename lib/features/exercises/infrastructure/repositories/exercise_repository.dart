@@ -33,7 +33,8 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
@@ -42,8 +43,12 @@ class ExerciseRepository implements IExerciseRepository {
       final engagement_ =
           engagement.value.getOrElse((l) => Engagement.bilateral);
       final style_ = style.value.getOrElse((l) => Style.reps);
-
       final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
+      final primaryMuscleGroups_ =
+          primaryMuscleGroups.value.getOrElse((l) => []);
+      final secondaryMuscleGroups_ =
+          secondaryMuscleGroups.value.getOrElse((l) => []);
+
       // ignore: avoid_init_to_null
       late Exercise? baseExerciseRes_ =
           null; // Init to null to avoid initialization error
@@ -72,11 +77,17 @@ class ExerciseRepository implements IExerciseRepository {
         }
       }
 
-      final muscleGroups_ = muscleGroups.value.getOrElse((l) => []);
-      final muscleGroupIds =
-          muscleGroups_.map((e) => ObjectId.fromHexString(e.id)).toList();
-      final muscleGroupsRes_ =
-          realm.query<MuscleGroup>('id IN \$0', [muscleGroupIds]);
+      final primaryMuscleGroupIds = primaryMuscleGroups_
+          .map((e) => ObjectId.fromHexString(e.id))
+          .toList();
+      final secondaryMuscleGroupIds = secondaryMuscleGroups_
+          .map((e) => ObjectId.fromHexString(e.id))
+          .toList();
+
+      final primaryMuscleGroupsRes_ =
+          realm.query<MuscleGroup>('id IN \$0', [primaryMuscleGroupIds]);
+      final secondaryMuscleGroupsRes_ =
+          realm.query<MuscleGroup>('id IN \$0', [secondaryMuscleGroupIds]);
 
       final exerciseToAdd = Exercise(
         ObjectId(),
@@ -92,7 +103,8 @@ class ExerciseRepository implements IExerciseRepository {
 
       final res = realm.write<Exercise>(() {
         // Add muscle groups to exercise
-        exerciseToAdd.primaryMuscleGroups.addAll(muscleGroupsRes_);
+        exerciseToAdd.primaryMuscleGroups.addAll(primaryMuscleGroupsRes_);
+        exerciseToAdd.secondaryMuscleGroups.addAll(secondaryMuscleGroupsRes_);
 
         return realm.add(exerciseToAdd);
       });
@@ -206,7 +218,8 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -223,7 +236,10 @@ class ExerciseRepository implements IExerciseRepository {
       final style_ = style.value.getOrElse((l) => res.style);
       final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
       final movementPattern_ = movementPattern?.value.getOrElse((l) => null);
-      final muscleGroups_ = muscleGroups.value.getOrElse((l) => []);
+      final primaryMuscleGroups_ =
+          primaryMuscleGroups.value.getOrElse((l) => []);
+      final secondaryMuscleGroups_ =
+          secondaryMuscleGroups.value.getOrElse((l) => []);
 
       // ignore: avoid_init_to_null
       late Exercise? baseExerciseRes_ =
@@ -252,10 +268,17 @@ class ExerciseRepository implements IExerciseRepository {
         }
       }
 
-      final muscleGroupIds =
-          muscleGroups_.map((e) => ObjectId.fromHexString(e.id)).toList();
-      final muscleGroupsRes_ =
-          realm.query<MuscleGroup>('id IN \$0', [muscleGroupIds]);
+      final primaryMuscleGroupIds = primaryMuscleGroups_
+          .map((e) => ObjectId.fromHexString(e.id))
+          .toList();
+      final primaryMuscleGroupRes_ =
+          realm.query<MuscleGroup>('id IN \$0', [primaryMuscleGroupIds]);
+
+      final secondaryMuscleGroupIds = secondaryMuscleGroups_
+          .map((e) => ObjectId.fromHexString(e.id))
+          .toList();
+      final secondaryMuscleGroupRes_ =
+          realm.query<MuscleGroup>('id IN \$0', [secondaryMuscleGroupIds]);
 
       final updatedExercise = Exercise(
         objectId,
@@ -270,7 +293,8 @@ class ExerciseRepository implements IExerciseRepository {
         ..movementPattern = movementPatternRes_ ?? res.movementPattern;
 
       realm.write(() {
-        updatedExercise.primaryMuscleGroups.addAll(muscleGroupsRes_);
+        updatedExercise.primaryMuscleGroups.addAll(primaryMuscleGroupRes_);
+        updatedExercise.secondaryMuscleGroups.addAll(secondaryMuscleGroupRes_);
 
         realm.add(updatedExercise, update: true);
       });
