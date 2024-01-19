@@ -8,7 +8,7 @@ part 'exercise_entity.freezed.dart';
 
 /// Strongly Typed Model [ExerciseEntity]
 @freezed
-class ExerciseEntity with _$ExerciseEntity, Selectable {
+class ExerciseEntity with _$ExerciseEntity, Selectable, DatabaseEntity {
   /// [ExerciseEntity] factory constructor
   const factory ExerciseEntity({
     required String id,

@@ -5,7 +5,7 @@ part 'muscle_group_entity.freezed.dart';
 
 /// Strongly Typed Model [MuscleGroupEntity]
 @freezed
-class MuscleGroupEntity with _$MuscleGroupEntity, Selectable {
+class MuscleGroupEntity with _$MuscleGroupEntity, Selectable, DatabaseEntity {
   /// [MuscleGroupEntity] factory constructor
   const factory MuscleGroupEntity({
     required String id,
