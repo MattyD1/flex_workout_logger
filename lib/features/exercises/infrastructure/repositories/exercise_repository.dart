@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/exercise_repository_interface.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
@@ -14,6 +16,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
+import 'package:flex_workout_logger/utils/infrastructure.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:realm/realm.dart';
 
@@ -42,41 +45,20 @@ class ExerciseRepository implements IExerciseRepository {
       final engagement_ =
           engagement.value.getOrElse((l) => Engagement.bilateral);
       final style_ = style.value.getOrElse((l) => Style.reps);
-
-      final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
-      // ignore: avoid_init_to_null
-      late Exercise? baseExerciseRes_ =
-          null; // Init to null to avoid initialization error
-
-      if (baseExercise_ != null) {
-        final objectId = ObjectId.fromHexString(baseExercise_.id);
-
-        baseExerciseRes_ = realm.find<Exercise>(objectId);
-
-        if (baseExerciseRes_ == null) {
-          return left(const Failure.empty());
-        }
-      }
-
-      final movementPattern_ = movementPattern?.value.getOrElse((l) => null);
-      // ignore: avoid_init_to_null
-      late MovementPattern? movementPatternRes_ = null;
-
-      if (movementPattern_ != null) {
-        final objectId = ObjectId.fromHexString(movementPattern_.id);
-
-        movementPatternRes_ = realm.find<MovementPattern>(objectId);
-
-        if (movementPatternRes_ == null) {
-          return left(const Failure.empty());
-        }
-      }
-
-      final muscleGroups_ = muscleGroups.value.getOrElse((l) => []);
-      final muscleGroupIds =
-          muscleGroups_.map((e) => ObjectId.fromHexString(e.id)).toList();
-      final muscleGroupsRes_ =
-          realm.query<MuscleGroup>('id IN \$0', [muscleGroupIds]);
+      final baseExercise_ = getRealmObjectFromEntity<ExerciseEntity, Exercise>(
+        realm,
+        baseExercise?.value.getOrElse((l) => null),
+      );
+      final movementPattern_ =
+          getRealmObjectFromEntity<MovementPatternEntity, MovementPattern>(
+        realm,
+        movementPattern?.value.getOrElse((l) => null),
+      );
+      final muscleGroups_ =
+          getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
+        realm,
+        muscleGroups.value.getOrElse((l) => []),
+      );
 
       final exerciseToAdd = Exercise(
         ObjectId(),
@@ -87,12 +69,12 @@ class ExerciseRepository implements IExerciseRepository {
         currentDateTime,
         currentDateTime,
       )
-        ..baseExercise = baseExerciseRes_
-        ..movementPattern = movementPatternRes_;
+        ..baseExercise = baseExercise_
+        ..movementPattern = movementPattern_;
 
       final res = realm.write<Exercise>(() {
         // Add muscle groups to exercise
-        exerciseToAdd.primaryMuscleGroups.addAll(muscleGroupsRes_);
+        exerciseToAdd.primaryMuscleGroups.addAll(muscleGroups_);
 
         return realm.add(exerciseToAdd);
       });
@@ -221,41 +203,20 @@ class ExerciseRepository implements IExerciseRepository {
       final description_ = description.value.getOrElse((l) => res.description);
       final engagement_ = engagement.value.getOrElse((l) => res.engagement);
       final style_ = style.value.getOrElse((l) => res.style);
-      final baseExercise_ = baseExercise?.value.getOrElse((l) => null);
-      final movementPattern_ = movementPattern?.value.getOrElse((l) => null);
-      final muscleGroups_ = muscleGroups.value.getOrElse((l) => []);
-
-      // ignore: avoid_init_to_null
-      late Exercise? baseExerciseRes_ =
-          null; // Init to null to avoid initialization error
-
-      if (baseExercise_ != null) {
-        final objectId = ObjectId.fromHexString(baseExercise_.id);
-
-        baseExerciseRes_ = realm.find<Exercise>(objectId);
-
-        if (baseExerciseRes_ == null) {
-          return left(const Failure.empty());
-        }
-      }
-
-      // ignore: avoid_init_to_null
-      late MovementPattern? movementPatternRes_ = null;
-
-      if (movementPattern_ != null) {
-        final objectId = ObjectId.fromHexString(movementPattern_.id);
-
-        movementPatternRes_ = realm.find<MovementPattern>(objectId);
-
-        if (movementPatternRes_ == null) {
-          return left(const Failure.empty());
-        }
-      }
-
-      final muscleGroupIds =
-          muscleGroups_.map((e) => ObjectId.fromHexString(e.id)).toList();
-      final muscleGroupsRes_ =
-          realm.query<MuscleGroup>('id IN \$0', [muscleGroupIds]);
+      final baseExercise_ = getRealmObjectFromEntity<ExerciseEntity, Exercise>(
+        realm,
+        baseExercise?.value.getOrElse((l) => null),
+      );
+      final movementPattern_ =
+          getRealmObjectFromEntity<MovementPatternEntity, MovementPattern>(
+        realm,
+        movementPattern?.value.getOrElse((l) => null),
+      );
+      final muscleGroups_ =
+          getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
+        realm,
+        muscleGroups.value.getOrElse((l) => []),
+      );
 
       final updatedExercise = Exercise(
         objectId,
@@ -266,11 +227,11 @@ class ExerciseRepository implements IExerciseRepository {
         res.createdAt,
         DateTimeX.current,
       )
-        ..baseExercise = baseExerciseRes_ ?? res.baseExercise
-        ..movementPattern = movementPatternRes_ ?? res.movementPattern;
+        ..baseExercise = baseExercise_ ?? res.baseExercise
+        ..movementPattern = movementPattern_ ?? res.movementPattern;
 
       realm.write(() {
-        updatedExercise.primaryMuscleGroups.addAll(muscleGroupsRes_);
+        updatedExercise.primaryMuscleGroups.addAll(muscleGroups_);
 
         realm.add(updatedExercise, update: true);
       });

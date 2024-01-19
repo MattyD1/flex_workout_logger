@@ -5,7 +5,8 @@ part 'movement_pattern_entity.freezed.dart';
 
 /// Strongly Typed Model [MovementPatternEntity]
 @freezed
-class MovementPatternEntity with _$MovementPatternEntity, Selectable {
+class MovementPatternEntity
+    with _$MovementPatternEntity, Selectable, DatabaseEntity {
   /// [MovementPatternEntity] factory constructor
   const factory MovementPatternEntity({
     required String id,
