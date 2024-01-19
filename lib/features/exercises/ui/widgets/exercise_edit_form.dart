@@ -289,7 +289,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
             MuscleGroupSelectionSheet<MuscleGroupEntity>(
               validator: (value) => _muscleGroups?.validate,
               onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
-              initialValue: _currentMuscleGroups,
+              // initialValue: _currentMuscleGroups,
               items: muscleGroups.asData?.value
                       .map(
                         (e) => DropdownMenuItem(
