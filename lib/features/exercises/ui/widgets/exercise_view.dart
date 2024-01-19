@@ -215,14 +215,16 @@ class ExerciseView extends ConsumerWidget {
                       'Muscle Groups',
                       style: context.textTheme.headlineSmall,
                     ),
-                    const SizedBox(height: 8),
-                    Row(
+                    const SizedBox(height: AppLayout.miniPadding),
+                    Wrap(
+                      spacing: AppLayout.miniPadding,
+                      runSpacing: AppLayout.miniPadding,
                       children: [
                         ...exercise.primaryMuscleGroups.map(
-                          (e) => Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: _bubble(context, e.name, isPrimary: true),
-                          ),
+                          (e) => _bubble(context, e.name, isPrimary: true),
+                        ),
+                        ...exercise.secondaryMuscleGroups.map(
+                          (e) => _bubble(context, e.name),
                         ),
                       ],
                     ),

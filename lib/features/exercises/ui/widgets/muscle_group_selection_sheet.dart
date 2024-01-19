@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_groups_primary_and_secondary.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_create_form.dart';
 import 'package:flex_workout_logger/utils/interfaces.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 
 ///
@@ -16,7 +15,7 @@ class MuscleGroupSelectionSheet<T extends Selectable>
   ///
   MuscleGroupSelectionSheet({
     required List<DropdownMenuItem<T>> items,
-    required ValueChanged<List<T>> onChanged,
+    required ValueChanged<Map<MuscleGroupPriority, List<T>>> onChanged,
     super.key,
     super.initialValue,
     super.validator,
@@ -42,15 +41,12 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                 if (state.value != null && state.value!.isNotEmpty)
                   ...state.value!.entries.map(
                     (e) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// Primary muscle groups
                         const SizedBox(height: AppLayout.defaultPadding),
-                        Text(e.key.toString()),
-
-                        /// Secondary muscle groups
-                        const SizedBox(height: AppLayout.defaultPadding),
+                        Text(e.key == MuscleGroupPriority.primary ? 'Primary' : 'Secondary'),
                         ...e.value.map(
-                          (e) => Column(
+                          (f) => Column(
                             children: [
                               CupertinoListTile(
                                 title: Row(
@@ -59,7 +55,7 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     const SizedBox(
                                         width: AppLayout.defaultPadding),
                                     Text(
-                                      e.name,
+                                      f.name,
                                       overflow: TextOverflow.ellipsis,
                                       style: state.context.textTheme.listTitle
                                           .copyWith(
@@ -72,49 +68,119 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                 subtitle: Row(
                                   children: [
                                     const SizedBox(width: 44),
-                                    TextButton(
-                                      onPressed: () async {},
-                                      style: TextButton.styleFrom(
-                                        // Set minimum size to zero
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: AppLayout.miniPadding,
+                                    if (e.key == MuscleGroupPriority.primary)
+                                      TextButton(
+                                        onPressed: () async {
+                                          final newPrimary = state.value!.entries.first.value;
+                                          newPrimary.remove(f);
+                                          final newSecondary = state.value!.entries.last.value;
+                                          newSecondary.add(f);
+
+                                          final res = {
+                                            MuscleGroupPriority.primary: newPrimary,
+                                            MuscleGroupPriority.secondary: newSecondary,
+                                          };
+
+                                          onChanged(res);
+                                          
+                                          state.didChange(res);
+                                        },
+                                        style: TextButton.styleFrom(
+                                          // Set minimum size to zero
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: AppLayout.miniPadding,
+                                          ),
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: state
+                                              .context.colorScheme.foreground,
                                         ),
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor: state
-                                            .context.colorScheme.foreground,
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(
-                                            CupertinoIcons.plus_circle,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            'Add as primary',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: state.context.colorScheme
-                                                  .mutedForeground,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              CupertinoIcons.minus_circle,
+                                              size: 16,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              'Remove as primary',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: state.context.colorScheme
+                                                    .mutedForeground,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    if (e.key == MuscleGroupPriority.secondary)
+                                      TextButton(
+                                        onPressed: () async {
+                                          final newPrimary = state.value!.entries.first.value;
+                                          newPrimary.add(f);
+                                          final newSecondary = state.value!.entries.last.value;
+                                          newSecondary.remove(f);
+
+                                          state.didChange({
+                                            MuscleGroupPriority.primary: newPrimary,
+                                            MuscleGroupPriority.secondary: newSecondary,
+                                          });
+                                        },
+                                        style: TextButton.styleFrom(
+                                          // Set minimum size to zero
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: AppLayout.miniPadding,
+                                          ),
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: state
+                                              .context.colorScheme.foreground,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              CupertinoIcons.plus_circle,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              'Add as primary',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: state.context.colorScheme
+                                                    .mutedForeground,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     const SizedBox(
                                       width: AppLayout.defaultPadding,
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        // final removeItem = state.value!
-                                        //     .filter((t) => t != e)
-                                        //     .toList();
+                                          final newPrimary = state.value!.entries.first.value;
+                                          if(newPrimary.contains(f)){
+                                            newPrimary.remove(f);
+                                          }
+                                          final newSecondary = state.value!.entries.last.value;
+                                          if(newSecondary.contains(f)){
+                                            newSecondary.remove(f);
+                                          }
 
-                                        // state.didChange(removeItem);
-                                      },
+                                          final res = {
+                                            MuscleGroupPriority.primary: newPrimary,
+                                            MuscleGroupPriority.secondary: newSecondary,
+                                          };
+
+                                          onChanged(res);
+
+                                          state.didChange(res);
+                                        },
                                       style: TextButton.styleFrom(
                                         // Set minimum size to zero
                                         padding: const EdgeInsets.symmetric(
@@ -164,10 +230,6 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                     ),
                   ),
 
-                // const SizedBox(height: AppLayout.defaultPadding),
-                // const Text('Primary'),
-                /// Chosen stuff goes
-
                 /// Add button
                 const SizedBox(
                   height: AppLayout.defaultPadding,
@@ -186,7 +248,7 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                             },
                       );
 
-                      // onChanged(res);
+                      onChanged(res);
 
                       state.didChange(res);
                     },
@@ -366,10 +428,17 @@ Future<Map<MuscleGroupPriority, List<T>>>
                           ),
                         ),
                         onTap: () {
-                          if (primaryMuscleGroups.contains(currentItem.value) ||
-                              secondaryMuscleGroups
-                                  .contains(currentItem.value)) {
-                            return;
+                          if (primaryMuscleGroups.contains(currentItem.value)){
+                            setState(() {
+                              currentSelectedItems[MuscleGroupPriority.primary]
+                                  ?.remove(currentItem.value!);
+                            });
+                          }
+                          if(secondaryMuscleGroups.contains(currentItem.value)) {
+                            setState(() {
+                              currentSelectedItems[MuscleGroupPriority.secondary]
+                                  ?.remove(currentItem.value!);
+                            });
                           }
 
                           if (primaryMuscleGroups.isEmpty) {
@@ -386,6 +455,23 @@ Future<Map<MuscleGroupPriority, List<T>>>
                           });
                         },
                         leading: const Icon(Icons.fitness_center),
+                        trailing: primaryMuscleGroups.contains(currentItem.value) || secondaryMuscleGroups.contains(currentItem.value)
+                                ? const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: AppLayout.miniPadding),
+                                    child: Icon(
+                                      CupertinoIcons.check_mark_circled_solid,
+                                      size: 16,
+                                    ),
+                                  )
+                                : const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: AppLayout.miniPadding),
+                                    child: Icon(
+                                      CupertinoIcons.add_circled,
+                                      size: 16,
+                                    ),
+                                  ),
                         padding: const EdgeInsets.fromLTRB(
                           20,
                           16,
@@ -508,9 +594,4 @@ Future<T?> _showBottomAddSheet<T>(
       children: [MuscleGroupCreateForm()],
     ),
   );
-}
-
-enum MuscleGroupPriority {
-  primary,
-  secondary,
 }

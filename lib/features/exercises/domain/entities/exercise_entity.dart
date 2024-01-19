@@ -19,6 +19,7 @@ class ExerciseEntity with _$ExerciseEntity, Selectable, DatabaseEntity {
     required DateTime createdAt,
     required DateTime updatedAt,
     @Default([]) List<MuscleGroupEntity> primaryMuscleGroups,
+    @Default([]) List<MuscleGroupEntity> secondaryMuscleGroups,
     ExerciseEntity? baseExercise,
     MovementPatternEntity? movementPattern,
   }) = _ExerciseEntity;

@@ -10,9 +10,9 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_groups_primary_and_secondary.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_form.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_selection_sheet.dart';
@@ -45,7 +45,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
   Style? _style = Style.reps;
   ExerciseBaseExercise? _baseExercise;
   ExerciseMovementPattern? _movementPattern;
-  ExerciseMuscleGroups? _muscleGroups;
+  MuscleGroupsPrimaryAndSecondary? _muscleGroups;
 
   int _selectedVariation = 1;
 
@@ -252,7 +252,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           const SizedBox(height: AppLayout.defaultPadding),
           MuscleGroupSelectionSheet<MuscleGroupEntity>(
             validator: (value) => _muscleGroups?.validate,
-            onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
+            onChanged: (value) => _muscleGroups = MuscleGroupsPrimaryAndSecondary(value),
             items: muscleGroups.asData?.value
                     .map(
                       (e) => DropdownMenuItem(
@@ -273,6 +273,8 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                     }
 
                     if (_name == null) return;
+
+                    final emptyMuscleGroups = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
                     ref.read(exercisesCreateControllerProvider.notifier).handle(
                           _name!,
                           _description,
@@ -284,7 +286,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                           ),
                           _baseExercise,
                           _movementPattern!,
-                          _muscleGroups ?? ExerciseMuscleGroups([]),
+                          _muscleGroups ?? MuscleGroupsPrimaryAndSecondary(emptyMuscleGroups),
                         );
 
                     // FIX: engagement should not be hardcoded
