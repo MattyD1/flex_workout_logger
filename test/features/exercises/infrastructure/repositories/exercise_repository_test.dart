@@ -51,6 +51,7 @@ void main() {
         ExerciseBaseExercise(null, null),
         ExerciseMovementPattern(movementPatternToAdd.toEntity()),
         ExerciseMuscleGroups([]),
+        ExerciseMuscleGroups([]),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
@@ -152,7 +153,9 @@ void main() {
           ExerciseStyle(Style.reps),
           ExerciseBaseExercise(null, itemToUpdate.baseExercise?.toEntity()),
           ExerciseMovementPattern(null),
-          ExerciseMuscleGroups([]));
+          ExerciseMuscleGroups([]),
+          ExerciseMuscleGroups([]),
+      );
 
       final exercise = res.fold((l) => throw l, (r) => r);
 
