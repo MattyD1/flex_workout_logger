@@ -97,6 +97,8 @@ class _MuscleGroup {
 
   @Backlink(#primaryMuscleGroups)
   late Iterable<_Exercise> linkedPrimaryExercises;
+  @Backlink(#primaryMuscleGroups)
+  late Iterable<_Exercise> linkedSecondaryExercises;
 }
 
 /// _MuscleGroup extension
@@ -109,6 +111,7 @@ extension ConvertMuscleGroup on _MuscleGroup {
       description: description,
       primaryExerciseIds:
           linkedPrimaryExercises.map((e) => e.id.hexString).toList(),
+      secondaryExerciseIds: linkedSecondaryExercises.map((e) => e.id.hexString).toList(),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

@@ -14,5 +14,6 @@ class MuscleGroupEntity with _$MuscleGroupEntity, Selectable, DatabaseEntity {
     required DateTime createdAt,
     required DateTime updatedAt,
     List<String>? primaryExerciseIds,
+    List<String>? secondaryExerciseIds,
   }) = _MuscleGroupEntity;
 }
