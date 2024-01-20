@@ -21,6 +21,276 @@ class MuscleGroupSelectionSheet<T extends Selectable>
     super.validator,
   }) : super(
           builder: (state) {
+            if(initialValue != null) {
+              final primary = <T>[];
+              final secondary = <T>[];
+
+              primary.addAll(state.value!.entries.first.value);
+              secondary.addAll(state.value!.entries.last.value);
+              
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Muscle Groups',
+                        style: state.context.textTheme.label,
+                      ),
+                      const Text(
+                        'What muscle groups are used in this exercise?',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+
+                  if (state.value != null && state.value!.isNotEmpty)
+                  ...state.value!.entries.map(
+                      (e) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: AppLayout.defaultPadding),
+                          Text(e.key == MuscleGroupPriority.primary ? 'Primary' : 'Secondary'),
+                          ...e.value.map(
+                            (f) => Column(
+                              children: [
+                                CupertinoListTile(
+                                  title: Row(
+                                    children: [
+                                      const Icon(Icons.fitness_center),
+                                      const SizedBox(
+                                          width: AppLayout.defaultPadding),
+                                      Text(
+                                        f.name,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: state.context.textTheme.listTitle
+                                            .copyWith(
+                                          color: state
+                                              .context.colorScheme.foreground,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      const SizedBox(width: 44),
+                                      if (e.key == MuscleGroupPriority.primary)
+                                        TextButton(
+                                          onPressed: () async {
+                                            primary.remove(f);
+                                            secondary.add(f);
+
+                                            final res = {
+                                              MuscleGroupPriority.primary: primary,
+                                              MuscleGroupPriority.secondary: secondary,
+                                            };
+
+                                            onChanged(res);
+                                            
+                                            state.didChange(res);
+                                          },
+                                          style: TextButton.styleFrom(
+                                            // Set minimum size to zero
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: AppLayout.miniPadding,
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            foregroundColor: state
+                                                .context.colorScheme.foreground,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                CupertinoIcons.minus_circle,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(
+                                                width: 8,
+                                              ),
+                                              Text(
+                                                'Remove as primary',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: state.context.colorScheme
+                                                      .mutedForeground,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      if (e.key == MuscleGroupPriority.secondary)
+                                        TextButton(
+                                          onPressed: () async {
+                                            primary.add(f);
+                                            secondary.remove(f);
+
+                                            final res = {
+                                              MuscleGroupPriority.primary: primary,
+                                              MuscleGroupPriority.secondary: secondary,
+                                            };
+
+                                            onChanged(res);
+                                            
+                                            state.didChange(res);
+                                          },
+                                          style: TextButton.styleFrom(
+                                            // Set minimum size to zero
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: AppLayout.miniPadding,
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            foregroundColor: state
+                                                .context.colorScheme.foreground,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                CupertinoIcons.plus_circle,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(
+                                                width: 8,
+                                              ),
+                                              Text(
+                                                'Add as primary',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: state.context.colorScheme
+                                                      .mutedForeground,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      const SizedBox(
+                                        width: AppLayout.defaultPadding,
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                            if(primary.contains(f)){
+                                              primary.remove(f);
+                                            }
+                                            if(secondary.contains(f)){
+                                              secondary.remove(f);
+                                            }
+
+                                            final res = {
+                                              MuscleGroupPriority.primary: primary,
+                                              MuscleGroupPriority.secondary: secondary,
+                                            };
+
+                                            onChanged(res);
+
+                                            state.didChange(res);
+                                          },
+                                        style: TextButton.styleFrom(
+                                          // Set minimum size to zero
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: AppLayout.miniPadding,
+                                          ),
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: state
+                                              .context.colorScheme.foreground,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              CupertinoIcons.minus_circle,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              'Remove',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: state.context.colorScheme
+                                                    .mutedForeground,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: const EdgeInsets.only(
+                                    left: 4,
+                                    top: 16,
+                                  ),
+                                ),
+                                Divider(
+                                  color: state.context.colorScheme.divider,
+                                  height: 1,
+                                  indent: 48,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  /// Add button
+                  const SizedBox(
+                    height: AppLayout.defaultPadding,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () async {
+                        final res = await _showBottomSheet<T>(
+                          state.context,
+                          items,
+                          {
+                            MuscleGroupPriority.primary: primary,
+                            MuscleGroupPriority.secondary: secondary,
+                          },
+                        );
+
+                        onChanged(res);
+
+                        state.didChange(res);
+                      },
+                      style: TextButton.styleFrom(
+                        // Set minimum size to zero
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppLayout.miniPadding,
+                          horizontal: AppLayout.defaultPadding,
+                        ),
+                        backgroundColor: state.context.colorScheme.muted,
+                        foregroundColor: state.context.colorScheme.foreground,
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            CupertinoIcons.add,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text('Add Muscle Group'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: AppLayout.defaultPadding,
+                  ),
+                  Divider(
+                    color: state.context.colorScheme.divider,
+                    thickness: 1,
+                  ),
+                ],
+              ); 
+            }
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
