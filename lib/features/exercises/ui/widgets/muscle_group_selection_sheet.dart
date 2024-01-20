@@ -433,12 +433,14 @@ Future<Map<MuscleGroupPriority, List<T>>>
                               currentSelectedItems[MuscleGroupPriority.primary]
                                   ?.remove(currentItem.value!);
                             });
+                            return;
                           }
                           if(secondaryMuscleGroups.contains(currentItem.value)) {
                             setState(() {
                               currentSelectedItems[MuscleGroupPriority.secondary]
                                   ?.remove(currentItem.value!);
                             });
+                            return;
                           }
 
                           if (primaryMuscleGroups.isEmpty) {
