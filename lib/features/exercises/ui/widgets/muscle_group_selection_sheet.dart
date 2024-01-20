@@ -23,11 +23,8 @@ class MuscleGroupSelectionSheet<T extends Selectable>
           builder: (state) {
             final initalPrimary = <T>[];
             final initalSecondary = <T>[];
-
-            if(initialValue != null) {
-              initalPrimary.addAll(state.value!.entries.first.value);
-              initalSecondary.addAll(state.value!.entries.last.value);
-            }
+            initalPrimary.addAll(state.value!.entries.first.value);
+            initalSecondary.addAll(state.value!.entries.last.value);
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,31 +76,17 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     if (e.key == MuscleGroupPriority.primary)
                                       TextButton(
                                         onPressed: () async {
-                                          if (initalPrimary.isNotEmpty) {
-                                            initalPrimary.remove(f);
-                                            initalSecondary.add(f);
+                                          initalPrimary.remove(f);
+                                          initalSecondary.add(f);
 
-                                            final res = {
-                                              MuscleGroupPriority.primary: initalPrimary,
-                                              MuscleGroupPriority.secondary: initalSecondary,
-                                            };
+                                          final res = {
+                                            MuscleGroupPriority.primary: initalPrimary,
+                                            MuscleGroupPriority.secondary: initalSecondary,
+                                          };
 
-                                            onChanged(res);
-                                            
-                                            state.didChange(res);
-                                          } else {
-                                            state.value!.entries.first.value.remove(f);
-                                            state.value!.entries.last.value.add(f);
-
-                                            final res = {
-                                              MuscleGroupPriority.primary: state.value!.entries.first.value,
-                                              MuscleGroupPriority.secondary: state.value!.entries.last.value,
-                                            };
-
-                                            onChanged(res);
-                                            
-                                            state.didChange(res);
-                                          }
+                                          onChanged(res);
+                                          
+                                          state.didChange(res);
                                         },
                                         style: TextButton.styleFrom(
                                           // Set minimum size to zero
@@ -138,31 +121,17 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     if (e.key == MuscleGroupPriority.secondary)
                                       TextButton(
                                         onPressed: () async {
-                                          if (initalPrimary.isNotEmpty) {
-                                            initalPrimary.add(f);
-                                            initalSecondary.remove(f);
+                                          initalPrimary.add(f);
+                                          initalSecondary.remove(f);
 
-                                            final res = {
-                                              MuscleGroupPriority.primary: initalPrimary,
-                                              MuscleGroupPriority.secondary: initalSecondary,
-                                            };
+                                          final res = {
+                                            MuscleGroupPriority.primary: initalPrimary,
+                                            MuscleGroupPriority.secondary: initalSecondary,
+                                          };
 
-                                            onChanged(res);
-                                            
-                                            state.didChange(res);
-                                          } else {
-                                            state.value!.entries.first.value.add(f);
-                                            state.value!.entries.last.value.remove(f);
-
-                                            final res = {
-                                              MuscleGroupPriority.primary: state.value!.entries.first.value,
-                                              MuscleGroupPriority.secondary: state.value!.entries.last.value,
-                                            };
-
-                                            onChanged(res);
-                                            
-                                            state.didChange(res);
-                                          }
+                                          onChanged(res);
+                                          
+                                          state.didChange(res);
                                         },
                                         style: TextButton.styleFrom(
                                           // Set minimum size to zero
@@ -199,39 +168,21 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        if(initalPrimary.isNotEmpty) {
-                                          if(initalPrimary.contains(f)){
-                                            initalPrimary.remove(f);
-                                          }
-                                          if(initalSecondary.contains(f)){
-                                            initalSecondary.remove(f);
-                                          }
-
-                                          final res = {
-                                            MuscleGroupPriority.primary: initalPrimary,
-                                            MuscleGroupPriority.secondary: initalSecondary,
-                                          };
-
-                                          onChanged(res);
-
-                                          state.didChange(res);
-                                        } else {
-                                          if(state.value!.entries.first.value.contains(f)){
-                                            state.value!.entries.first.value.remove(f);
-                                          }
-                                          if(state.value!.entries.last.value.contains(f)){
-                                            state.value!.entries.last.value.remove(f);
-                                          }
-
-                                          final res = {
-                                            MuscleGroupPriority.primary: state.value!.entries.first.value,
-                                            MuscleGroupPriority.secondary: state.value!.entries.last.value,
-                                          };
-
-                                          onChanged(res);
-
-                                          state.didChange(res);
+                                        if(initalPrimary.contains(f)){
+                                          initalPrimary.remove(f);
                                         }
+                                        if(initalSecondary.contains(f)){
+                                          initalSecondary.remove(f);
+                                        }
+
+                                        final res = {
+                                          MuscleGroupPriority.primary: initalPrimary,
+                                          MuscleGroupPriority.secondary: initalSecondary,
+                                        };
+
+                                        onChanged(res);
+
+                                        state.didChange(res);
                                       },
                                       style: TextButton.styleFrom(
                                         // Set minimum size to zero
@@ -293,16 +244,10 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                       final res = await _showBottomSheet<T>(
                         state.context,
                         items,
-                        initialValue == null 
-                          ? state.value ??
-                            {
-                              MuscleGroupPriority.primary: [],
-                              MuscleGroupPriority.secondary: [],
-                            }
-                          : {
-                            MuscleGroupPriority.primary: initalPrimary,
-                            MuscleGroupPriority.secondary: initalSecondary,
-                          }
+                        {
+                          MuscleGroupPriority.primary: initalPrimary,
+                          MuscleGroupPriority.secondary: initalSecondary,
+                        },
                       );
 
                       onChanged(res);

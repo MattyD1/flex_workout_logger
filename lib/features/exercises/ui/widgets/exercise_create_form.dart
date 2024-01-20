@@ -79,6 +79,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
     final movementPatterns = ref.watch(movementPatternListControllerProvider);
 
+    final emptyMuscleGroups = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
     final muscleGroups = ref.watch(muscleGroupListControllerProvider);
 
     final res = ref.watch(exercisesCreateControllerProvider);
@@ -251,6 +252,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           MuscleGroupSelectionSheet<MuscleGroupEntity>(
+            initialValue: emptyMuscleGroups,
             validator: (value) => _muscleGroups?.validate,
             onChanged: (value) => _muscleGroups = MuscleGroupsPrimaryAndSecondary(value),
             items: muscleGroups.asData?.value
@@ -274,7 +276,6 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
                     if (_name == null) return;
 
-                    final emptyMuscleGroups = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
                     ref.read(exercisesCreateControllerProvider.notifier).handle(
                           _name!,
                           _description,
