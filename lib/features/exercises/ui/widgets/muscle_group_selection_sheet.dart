@@ -21,274 +21,12 @@ class MuscleGroupSelectionSheet<T extends Selectable>
     super.validator,
   }) : super(
           builder: (state) {
+            final initalPrimary = <T>[];
+            final initalSecondary = <T>[];
+
             if(initialValue != null) {
-              final primary = <T>[];
-              final secondary = <T>[];
-
-              primary.addAll(state.value!.entries.first.value);
-              secondary.addAll(state.value!.entries.last.value);
-              
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Muscle Groups',
-                        style: state.context.textTheme.label,
-                      ),
-                      const Text(
-                        'What muscle groups are used in this exercise?',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-
-                  if (state.value != null && state.value!.isNotEmpty)
-                  ...state.value!.entries.map(
-                      (e) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: AppLayout.defaultPadding),
-                          Text(e.key == MuscleGroupPriority.primary ? 'Primary' : 'Secondary'),
-                          ...e.value.map(
-                            (f) => Column(
-                              children: [
-                                CupertinoListTile(
-                                  title: Row(
-                                    children: [
-                                      const Icon(Icons.fitness_center),
-                                      const SizedBox(
-                                          width: AppLayout.defaultPadding),
-                                      Text(
-                                        f.name,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: state.context.textTheme.listTitle
-                                            .copyWith(
-                                          color: state
-                                              .context.colorScheme.foreground,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  subtitle: Row(
-                                    children: [
-                                      const SizedBox(width: 44),
-                                      if (e.key == MuscleGroupPriority.primary)
-                                        TextButton(
-                                          onPressed: () async {
-                                            primary.remove(f);
-                                            secondary.add(f);
-
-                                            final res = {
-                                              MuscleGroupPriority.primary: primary,
-                                              MuscleGroupPriority.secondary: secondary,
-                                            };
-
-                                            onChanged(res);
-                                            
-                                            state.didChange(res);
-                                          },
-                                          style: TextButton.styleFrom(
-                                            // Set minimum size to zero
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: AppLayout.miniPadding,
-                                            ),
-                                            backgroundColor: Colors.transparent,
-                                            foregroundColor: state
-                                                .context.colorScheme.foreground,
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Icon(
-                                                CupertinoIcons.minus_circle,
-                                                size: 16,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text(
-                                                'Remove as primary',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: state.context.colorScheme
-                                                      .mutedForeground,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      if (e.key == MuscleGroupPriority.secondary)
-                                        TextButton(
-                                          onPressed: () async {
-                                            primary.add(f);
-                                            secondary.remove(f);
-
-                                            final res = {
-                                              MuscleGroupPriority.primary: primary,
-                                              MuscleGroupPriority.secondary: secondary,
-                                            };
-
-                                            onChanged(res);
-                                            
-                                            state.didChange(res);
-                                          },
-                                          style: TextButton.styleFrom(
-                                            // Set minimum size to zero
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: AppLayout.miniPadding,
-                                            ),
-                                            backgroundColor: Colors.transparent,
-                                            foregroundColor: state
-                                                .context.colorScheme.foreground,
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Icon(
-                                                CupertinoIcons.plus_circle,
-                                                size: 16,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text(
-                                                'Add as primary',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: state.context.colorScheme
-                                                      .mutedForeground,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      const SizedBox(
-                                        width: AppLayout.defaultPadding,
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                            if(primary.contains(f)){
-                                              primary.remove(f);
-                                            }
-                                            if(secondary.contains(f)){
-                                              secondary.remove(f);
-                                            }
-
-                                            final res = {
-                                              MuscleGroupPriority.primary: primary,
-                                              MuscleGroupPriority.secondary: secondary,
-                                            };
-
-                                            onChanged(res);
-
-                                            state.didChange(res);
-                                          },
-                                        style: TextButton.styleFrom(
-                                          // Set minimum size to zero
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: AppLayout.miniPadding,
-                                          ),
-                                          backgroundColor: Colors.transparent,
-                                          foregroundColor: state
-                                              .context.colorScheme.foreground,
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              CupertinoIcons.minus_circle,
-                                              size: 16,
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              'Remove',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: state.context.colorScheme
-                                                    .mutedForeground,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  padding: const EdgeInsets.only(
-                                    left: 4,
-                                    top: 16,
-                                  ),
-                                ),
-                                Divider(
-                                  color: state.context.colorScheme.divider,
-                                  height: 1,
-                                  indent: 48,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  /// Add button
-                  const SizedBox(
-                    height: AppLayout.defaultPadding,
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: () async {
-                        final res = await _showBottomSheet<T>(
-                          state.context,
-                          items,
-                          {
-                            MuscleGroupPriority.primary: primary,
-                            MuscleGroupPriority.secondary: secondary,
-                          },
-                        );
-
-                        onChanged(res);
-
-                        state.didChange(res);
-                      },
-                      style: TextButton.styleFrom(
-                        // Set minimum size to zero
-                        padding: const EdgeInsets.symmetric(
-                          vertical: AppLayout.miniPadding,
-                          horizontal: AppLayout.defaultPadding,
-                        ),
-                        backgroundColor: state.context.colorScheme.muted,
-                        foregroundColor: state.context.colorScheme.foreground,
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            CupertinoIcons.add,
-                            size: 20,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('Add Muscle Group'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: AppLayout.defaultPadding,
-                  ),
-                  Divider(
-                    color: state.context.colorScheme.divider,
-                    thickness: 1,
-                  ),
-                ],
-              ); 
+              initalPrimary.addAll(state.value!.entries.first.value);
+              initalSecondary.addAll(state.value!.entries.last.value);
             }
 
             return Column(
@@ -308,7 +46,7 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                   ],
                 ),
 
-                if (state.value != null && state.value!.isNotEmpty)
+                if (state.value != null && state.value!.entries.first.value.isNotEmpty)
                   ...state.value!.entries.map(
                     (e) => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,19 +79,31 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     if (e.key == MuscleGroupPriority.primary)
                                       TextButton(
                                         onPressed: () async {
-                                          final newPrimary = state.value!.entries.first.value;
-                                          newPrimary.remove(f);
-                                          final newSecondary = state.value!.entries.last.value;
-                                          newSecondary.add(f);
+                                          if (initalPrimary.isNotEmpty) {
+                                            initalPrimary.remove(f);
+                                            initalSecondary.add(f);
 
-                                          final res = {
-                                            MuscleGroupPriority.primary: newPrimary,
-                                            MuscleGroupPriority.secondary: newSecondary,
-                                          };
+                                            final res = {
+                                              MuscleGroupPriority.primary: initalPrimary,
+                                              MuscleGroupPriority.secondary: initalSecondary,
+                                            };
 
-                                          onChanged(res);
-                                          
-                                          state.didChange(res);
+                                            onChanged(res);
+                                            
+                                            state.didChange(res);
+                                          } else {
+                                            state.value!.entries.first.value.remove(f);
+                                            state.value!.entries.last.value.add(f);
+
+                                            final res = {
+                                              MuscleGroupPriority.primary: state.value!.entries.first.value,
+                                              MuscleGroupPriority.secondary: state.value!.entries.last.value,
+                                            };
+
+                                            onChanged(res);
+                                            
+                                            state.didChange(res);
+                                          }
                                         },
                                         style: TextButton.styleFrom(
                                           // Set minimum size to zero
@@ -388,15 +138,31 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     if (e.key == MuscleGroupPriority.secondary)
                                       TextButton(
                                         onPressed: () async {
-                                          final newPrimary = state.value!.entries.first.value;
-                                          newPrimary.add(f);
-                                          final newSecondary = state.value!.entries.last.value;
-                                          newSecondary.remove(f);
+                                          if (initalPrimary.isNotEmpty) {
+                                            initalPrimary.add(f);
+                                            initalSecondary.remove(f);
 
-                                          state.didChange({
-                                            MuscleGroupPriority.primary: newPrimary,
-                                            MuscleGroupPriority.secondary: newSecondary,
-                                          });
+                                            final res = {
+                                              MuscleGroupPriority.primary: initalPrimary,
+                                              MuscleGroupPriority.secondary: initalSecondary,
+                                            };
+
+                                            onChanged(res);
+                                            
+                                            state.didChange(res);
+                                          } else {
+                                            state.value!.entries.first.value.add(f);
+                                            state.value!.entries.last.value.remove(f);
+
+                                            final res = {
+                                              MuscleGroupPriority.primary: state.value!.entries.first.value,
+                                              MuscleGroupPriority.secondary: state.value!.entries.last.value,
+                                            };
+
+                                            onChanged(res);
+                                            
+                                            state.didChange(res);
+                                          }
                                         },
                                         style: TextButton.styleFrom(
                                           // Set minimum size to zero
@@ -433,24 +199,40 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                          final newPrimary = state.value!.entries.first.value;
-                                          if(newPrimary.contains(f)){
-                                            newPrimary.remove(f);
+                                        if(initalPrimary.isNotEmpty) {
+                                          if(initalPrimary.contains(f)){
+                                            initalPrimary.remove(f);
                                           }
-                                          final newSecondary = state.value!.entries.last.value;
-                                          if(newSecondary.contains(f)){
-                                            newSecondary.remove(f);
+                                          if(initalSecondary.contains(f)){
+                                            initalSecondary.remove(f);
                                           }
 
                                           final res = {
-                                            MuscleGroupPriority.primary: newPrimary,
-                                            MuscleGroupPriority.secondary: newSecondary,
+                                            MuscleGroupPriority.primary: initalPrimary,
+                                            MuscleGroupPriority.secondary: initalSecondary,
                                           };
 
                                           onChanged(res);
 
                                           state.didChange(res);
-                                        },
+                                        } else {
+                                          if(state.value!.entries.first.value.contains(f)){
+                                            state.value!.entries.first.value.remove(f);
+                                          }
+                                          if(state.value!.entries.last.value.contains(f)){
+                                            state.value!.entries.last.value.remove(f);
+                                          }
+
+                                          final res = {
+                                            MuscleGroupPriority.primary: state.value!.entries.first.value,
+                                            MuscleGroupPriority.secondary: state.value!.entries.last.value,
+                                          };
+
+                                          onChanged(res);
+
+                                          state.didChange(res);
+                                        }
+                                      },
                                       style: TextButton.styleFrom(
                                         // Set minimum size to zero
                                         padding: const EdgeInsets.symmetric(
@@ -511,11 +293,16 @@ class MuscleGroupSelectionSheet<T extends Selectable>
                       final res = await _showBottomSheet<T>(
                         state.context,
                         items,
-                        state.value ??
+                        initialValue == null 
+                          ? state.value ??
                             {
                               MuscleGroupPriority.primary: [],
                               MuscleGroupPriority.secondary: [],
-                            },
+                            }
+                          : {
+                            MuscleGroupPriority.primary: initalPrimary,
+                            MuscleGroupPriority.secondary: initalSecondary,
+                          }
                       );
 
                       onChanged(res);
