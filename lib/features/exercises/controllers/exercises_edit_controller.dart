@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_base_exercise.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
@@ -37,9 +36,8 @@ class ExercisesEditController extends _$ExercisesEditController {
   ) async {
     state = const AsyncLoading();
 
-    final emptyMuscleGroups = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
-    final primaryMuscleGroups = ExerciseMuscleGroups(muscleGroups.value.getOrElse((l) => emptyMuscleGroups).entries.first.value);
-    final secondaryMuscleGroups = ExerciseMuscleGroups(muscleGroups.value.getOrElse((l) => emptyMuscleGroups).entries.last.value);
+    final primaryMuscleGroups = ExerciseMuscleGroups(muscleGroups.value.getOrElse((l) => EMPTY_MUSCLE_GROUPS_MAP).entries.firstWhere((entry) => entry.key == MuscleGroupPriority.primary).value);
+    final secondaryMuscleGroups = ExerciseMuscleGroups(muscleGroups.value.getOrElse((l) => EMPTY_MUSCLE_GROUPS_MAP).entries.firstWhere((entry) => entry.key == MuscleGroupPriority.secondary).value);
 
     final res = await ref.read(exerciseRepositoryProvider).updateExercise(
           id,
