@@ -23,8 +23,8 @@ class MuscleGroupSelectionSheet<T extends Selectable>
           builder: (state) {
             final initalPrimary = <T>[];
             final initalSecondary = <T>[];
-            initalPrimary.addAll(state.value!.entries.first.value);
-            initalSecondary.addAll(state.value!.entries.last.value);
+            initalPrimary.addAll(state.value!.entries.firstWhere((entry) => entry.key == MuscleGroupPriority.primary).value);
+            initalSecondary.addAll(state.value!.entries.firstWhere((entry) => entry.key == MuscleGroupPriority.secondary).value);
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

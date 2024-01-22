@@ -96,9 +96,8 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
 
       final pmg = next.asData?.value.primaryMuscleGroups;
       final smg = next.asData?.value.secondaryMuscleGroups;
-      final emptyMuscleGroups = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
       _currentMuscleGroups = {MuscleGroupPriority.primary: pmg ?? [], MuscleGroupPriority.secondary: smg ?? []};
-      _muscleGroups = MuscleGroupsPrimaryAndSecondary(_currentMuscleGroups ?? emptyMuscleGroups);
+      _muscleGroups = MuscleGroupsPrimaryAndSecondary(_currentMuscleGroups ?? EMPTY_MUSCLE_GROUPS_MAP);
     });
     super.initState();
   }

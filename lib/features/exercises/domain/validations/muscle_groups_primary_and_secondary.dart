@@ -6,6 +6,15 @@ import 'package:fpdart/fpdart.dart';
 const MAX_ENTRIES = 2;
 const MAX_MUSCLE_GROUPS = 5;
 
+///
+enum MuscleGroupPriority {
+  ///
+  primary,
+  ///
+  secondary,
+}
+const EMPTY_MUSCLE_GROUPS_MAP = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
+
 /// Exercise Movement Pattern value
 class MuscleGroupsPrimaryAndSecondary extends Validation<Map<MuscleGroupPriority, List<MuscleGroupEntity>>> {
   ///
@@ -34,7 +43,14 @@ Either<Failure, Map<MuscleGroupPriority, List<MuscleGroupEntity>>> _validate(
     );
   }
 
-  if (input.entries.first.value.isEmpty && input.entries.last.value.isNotEmpty) {
+  if(input == EMPTY_MUSCLE_GROUPS_MAP) {
+    return right(input);
+  }
+
+  final primary = input.entries.firstWhere((entry) => entry.key == MuscleGroupPriority.primary).value;
+  final secondary = input.entries.firstWhere((entry) => entry.key == MuscleGroupPriority.secondary).value;
+
+  if (primary.isEmpty && secondary.isNotEmpty) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The exercise must have at least one primary muscle group, if any.',
@@ -42,7 +58,7 @@ Either<Failure, Map<MuscleGroupPriority, List<MuscleGroupEntity>>> _validate(
     );
   }
 
-  if (input.entries.first.value.length > MAX_MUSCLE_GROUPS || input.entries.last.value.length > MAX_MUSCLE_GROUPS) {
+  if (primary.length > MAX_MUSCLE_GROUPS || secondary.length > MAX_MUSCLE_GROUPS) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The exercise can only have 5 muscles groups per subgroup.',
@@ -51,10 +67,4 @@ Either<Failure, Map<MuscleGroupPriority, List<MuscleGroupEntity>>> _validate(
   }
 
   return right(input);
-}
-
-///
-enum MuscleGroupPriority {
-  primary,
-  secondary,
 }

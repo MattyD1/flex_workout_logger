@@ -79,7 +79,6 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
 
     final movementPatterns = ref.watch(movementPatternListControllerProvider);
 
-    final emptyMuscleGroups = {MuscleGroupPriority.primary: <MuscleGroupEntity>[], MuscleGroupPriority.secondary: <MuscleGroupEntity>[]};
     final muscleGroups = ref.watch(muscleGroupListControllerProvider);
 
     final res = ref.watch(exercisesCreateControllerProvider);
@@ -252,7 +251,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
           ),
           const SizedBox(height: AppLayout.defaultPadding),
           MuscleGroupSelectionSheet<MuscleGroupEntity>(
-            initialValue: emptyMuscleGroups,
+            initialValue: EMPTY_MUSCLE_GROUPS_MAP,
             validator: (value) => _muscleGroups?.validate,
             onChanged: (value) => _muscleGroups = MuscleGroupsPrimaryAndSecondary(value),
             items: muscleGroups.asData?.value
@@ -287,7 +286,7 @@ class _ExerciseCreateFormState extends ConsumerState<ExerciseCreateForm> {
                           ),
                           _baseExercise,
                           _movementPattern!,
-                          _muscleGroups ?? MuscleGroupsPrimaryAndSecondary(emptyMuscleGroups),
+                          _muscleGroups ?? MuscleGroupsPrimaryAndSecondary(EMPTY_MUSCLE_GROUPS_MAP),
                         );
 
                     // FIX: engagement should not be hardcoded
