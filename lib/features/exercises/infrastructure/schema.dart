@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/load_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:realm/realm.dart';
@@ -114,6 +115,31 @@ extension ConvertMuscleGroup on _MuscleGroup {
       secondaryExerciseIds: linkedSecondaryExercises.map((e) => e.id.hexString).toList(),
       createdAt: createdAt,
       updatedAt: updatedAt,
+    );
+  }
+}
+
+@RealmModel()
+class _Load {
+  @PrimaryKey()
+  late ObjectId id;
+
+  late double weight;
+
+  @MapTo('unit')
+  late int unitAsInt;
+  WeightUnit get unit => WeightUnit.values[unitAsInt];
+  set unit(WeightUnit value) => unitAsInt = value.index;
+}
+
+/// _Load extension
+extension ConvertLoad on _Load {
+  /// Convert [_Load] to [LoadEntity]
+  LoadEntity toEntity() {
+    return LoadEntity(
+      id: id.hexString, 
+      weight: weight, 
+      unit: unit,
     );
   }
 }
