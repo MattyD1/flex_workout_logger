@@ -160,7 +160,7 @@ class ExerciseListTile extends StatelessWidget {
           if (exercise.primaryMuscleGroups.isNotEmpty)
             Expanded(
               child: Text(
-                exercise.primaryMuscleGroups.map((e) => e.name).join(' • '),
+                exercise.primaryMuscleGroups.map((e) => e.name).join(' • ') + (exercise.secondaryMuscleGroups.isNotEmpty ? (' • ') + exercise.secondaryMuscleGroups.map((e) => e.name).join(' • ') : ''),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.listSubtitle.copyWith(

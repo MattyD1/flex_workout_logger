@@ -36,7 +36,8 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   ) async {
     try {
       final currentDateTime = DateTimeX.current;
@@ -54,10 +55,15 @@ class ExerciseRepository implements IExerciseRepository {
         realm,
         movementPattern?.value.getOrElse((l) => null),
       );
-      final muscleGroups_ =
+      final primaryMuscleGroups_ =
           getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
         realm,
-        muscleGroups.value.getOrElse((l) => []),
+        primaryMuscleGroups.value.getOrElse((l) => []),
+      );
+      final secondaryMuscleGroups_ =
+          getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
+        realm,
+        secondaryMuscleGroups.value.getOrElse((l) => []),
       );
 
       final exerciseToAdd = Exercise(
@@ -74,7 +80,8 @@ class ExerciseRepository implements IExerciseRepository {
 
       final res = realm.write<Exercise>(() {
         // Add muscle groups to exercise
-        exerciseToAdd.primaryMuscleGroups.addAll(muscleGroups_);
+        exerciseToAdd.primaryMuscleGroups.addAll(primaryMuscleGroups_);
+        exerciseToAdd.secondaryMuscleGroups.addAll(secondaryMuscleGroups_);
 
         return realm.add(exerciseToAdd);
       });
@@ -188,7 +195,8 @@ class ExerciseRepository implements IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   ) async {
     try {
       final objectId = ObjectId.fromHexString(id);
@@ -212,10 +220,15 @@ class ExerciseRepository implements IExerciseRepository {
         realm,
         movementPattern?.value.getOrElse((l) => null),
       );
-      final muscleGroups_ =
+      final primaryMuscleGroups_ =
           getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
         realm,
-        muscleGroups.value.getOrElse((l) => []),
+        primaryMuscleGroups.value.getOrElse((l) => []),
+      );
+      final secondaryMuscleGroups_ =
+          getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
+        realm,
+        secondaryMuscleGroups.value.getOrElse((l) => []),
       );
 
       final updatedExercise = Exercise(
@@ -231,7 +244,8 @@ class ExerciseRepository implements IExerciseRepository {
         ..movementPattern = movementPattern_ ?? res.movementPattern;
 
       realm.write(() {
-        updatedExercise.primaryMuscleGroups.addAll(muscleGroups_);
+        updatedExercise.primaryMuscleGroups.addAll(primaryMuscleGroups_);
+        updatedExercise.secondaryMuscleGroups.addAll(secondaryMuscleGroups_);
 
         realm.add(updatedExercise, update: true);
       });

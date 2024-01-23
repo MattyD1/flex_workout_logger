@@ -10,9 +10,9 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_engagement.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_movement_pattern.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_groups_primary_and_secondary.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/movement_pattern_create_form.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_group_selection_sheet.dart';
@@ -45,7 +45,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   final _descriptionController = TextEditingController();
   ExerciseEntity? _currentBaseExercise;
   MovementPatternEntity? _currentMovementPattern;
-  List<MuscleGroupEntity>? _currentMuscleGroups;
+  Map<MuscleGroupPriority, List<MuscleGroupEntity>>? _currentMuscleGroups;
 
   ExerciseName? _name;
   ExerciseDescription? _description;
@@ -53,7 +53,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
   Style? _style;
   ExerciseBaseExercise? _baseExercise;
   ExerciseMovementPattern? _movementPattern;
-  ExerciseMuscleGroups? _muscleGroups;
+  MuscleGroupsPrimaryAndSecondary? _muscleGroups;
 
   @override
   void dispose() {
@@ -94,9 +94,10 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
       _currentMovementPattern = mp;
       _movementPattern = ExerciseMovementPattern(_currentMovementPattern);
 
-      final mg = next.asData?.value.primaryMuscleGroups;
-      _currentMuscleGroups = mg;
-      _muscleGroups = ExerciseMuscleGroups(_currentMuscleGroups ?? []);
+      final pmg = next.asData?.value.primaryMuscleGroups;
+      final smg = next.asData?.value.secondaryMuscleGroups;
+      _currentMuscleGroups = {MuscleGroupPriority.primary: pmg ?? [], MuscleGroupPriority.secondary: smg ?? []};
+      _muscleGroups = MuscleGroupsPrimaryAndSecondary(_currentMuscleGroups ?? EMPTY_MUSCLE_GROUPS_MAP);
     });
     super.initState();
   }
@@ -288,7 +289,7 @@ class _ExerciseEditFormState extends ConsumerState<ExerciseEditForm> {
           if (_muscleGroups != null)
             MuscleGroupSelectionSheet<MuscleGroupEntity>(
               validator: (value) => _muscleGroups?.validate,
-              onChanged: (value) => _muscleGroups = ExerciseMuscleGroups(value),
+              onChanged: (value) => _muscleGroups = MuscleGroupsPrimaryAndSecondary(value),
               initialValue: _currentMuscleGroups,
               items: muscleGroups.asData?.value
                       .map(

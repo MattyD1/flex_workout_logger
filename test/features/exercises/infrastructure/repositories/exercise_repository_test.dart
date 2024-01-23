@@ -51,6 +51,7 @@ void main() {
         ExerciseBaseExercise(null, null),
         ExerciseMovementPattern(movementPatternToAdd.toEntity()),
         ExerciseMuscleGroups([]),
+        ExerciseMuscleGroups([]),
       );
 
       final exercise = res.fold((l) => null, (r) => r);
@@ -145,14 +146,16 @@ void main() {
       final itemToUpdate = faker.randomGenerator.element(initialData);
 
       final res = await repository.updateExercise(
-          itemToUpdate.id.hexString,
-          ExerciseName('Updated exercise'),
-          ExerciseDescription('New Description'),
-          ExerciseEngagement(Engagement.bilateral),
-          ExerciseStyle(Style.reps),
-          ExerciseBaseExercise(null, itemToUpdate.baseExercise?.toEntity()),
-          ExerciseMovementPattern(null),
-          ExerciseMuscleGroups([]));
+        itemToUpdate.id.hexString,
+        ExerciseName('Updated exercise'),
+        ExerciseDescription('New Description'),
+        ExerciseEngagement(Engagement.bilateral),
+        ExerciseStyle(Style.reps),
+        ExerciseBaseExercise(null, itemToUpdate.baseExercise?.toEntity()),
+        ExerciseMovementPattern(null),
+        ExerciseMuscleGroups([]),
+        ExerciseMuscleGroups([]),
+      );
 
       final exercise = res.fold((l) => throw l, (r) => r);
 

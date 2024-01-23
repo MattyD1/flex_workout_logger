@@ -6,6 +6,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_muscle_groups.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_name.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_style.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_groups_primary_and_secondary.dart';
 import 'package:flex_workout_logger/features/exercises/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,9 +28,13 @@ class ExercisesCreateController extends _$ExercisesCreateController {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    MuscleGroupsPrimaryAndSecondary muscleGroups,
   ) async {
     state = const AsyncLoading();
+
+    final primaryMuscleGroups = ExerciseMuscleGroups(muscleGroups.value.getOrElse((l) => EMPTY_MUSCLE_GROUPS_MAP).entries.firstWhere((entry) => entry.key == MuscleGroupPriority.primary).value);
+    final secondaryMuscleGroups = ExerciseMuscleGroups(muscleGroups.value.getOrElse((l) => EMPTY_MUSCLE_GROUPS_MAP).entries.firstWhere((entry) => entry.key == MuscleGroupPriority.secondary).value);
+
     final res = await ref.read(exerciseRepositoryProvider).createExercise(
           name,
           description,
@@ -37,7 +42,8 @@ class ExercisesCreateController extends _$ExercisesCreateController {
           style,
           baseExercise,
           movementPattern,
-          muscleGroups,
+          primaryMuscleGroups,
+          secondaryMuscleGroups,
         );
     state = res.fold(
       (l) => AsyncValue.error(l.error, StackTrace.current),

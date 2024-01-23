@@ -27,7 +27,8 @@ abstract class IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   );
 
   /// Update Exercise
@@ -39,7 +40,8 @@ abstract class IExerciseRepository {
     ExerciseStyle style,
     ExerciseBaseExercise? baseExercise,
     ExerciseMovementPattern? movementPattern,
-    ExerciseMuscleGroups muscleGroups,
+    ExerciseMuscleGroups primaryMuscleGroups,
+    ExerciseMuscleGroups secondaryMuscleGroups,
   );
 
   /// Delete Exercise by id
