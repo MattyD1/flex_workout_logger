@@ -26,4 +26,7 @@ abstract class ILoadRepository {
 
   /// Delete Load by id
   FutureOr<Either<Failure, bool>> deleteLoad(String id);
+
+  /// Delete many Loads by id
+  FutureOr<Either<Failure, int>> deleteMultipleLoads(List<String> ids);
 }
