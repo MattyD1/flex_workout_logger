@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/base_load
 import 'package:flex_workout_logger/features/exercises/domain/entities/load_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/base_load_repository_interface.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/base_load_assisted.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/base_load_body_weight.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/base_load_load.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
@@ -23,6 +24,7 @@ class BaseLoadRepository implements IBaseLoadRepository {
   FutureOr<Either<Failure, BaseLoadEntity>> createBaseLoad(
     BaseLoadLoad load,
     BaseLoadAssisted assisted,
+    BaseLoadBodyWeight bodyWeight,
   ) async {
     try {
       throw UnimplementedError();
@@ -81,6 +83,7 @@ class BaseLoadRepository implements IBaseLoadRepository {
     String id,
     BaseLoadLoad load,
     BaseLoadAssisted assisted,
+    BaseLoadBodyWeight bodyWeight,
   ) async {
     try {
       throw UnimplementedError();

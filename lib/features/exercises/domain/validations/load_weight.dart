@@ -2,8 +2,8 @@ import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:flex_workout_logger/utils/validation_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 
-const MIN_WEIGHT = -999.0;
-const MAX_WEIGHT = 999.0;
+const MIN_WEIGHT = -9999.0;
+const MAX_WEIGHT = 9999.0;
 
 /// Load Weight value
 class LoadWeight extends Validation<double> {

@@ -12,6 +12,8 @@ class LoadEntity with _$LoadEntity, DatabaseEntity {
     required String id,
     required double weight,
     required WeightUnit unit,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _LoadEntity;
 }
 

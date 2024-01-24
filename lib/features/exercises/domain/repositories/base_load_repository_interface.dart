@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/base_load_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/base_load_assisted.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/base_load_body_weight.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/base_load_load.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
@@ -15,6 +16,7 @@ abstract class IBaseLoadRepository {
   FutureOr<Either<Failure, BaseLoadEntity>> createBaseLoad(
     BaseLoadLoad load,
     BaseLoadAssisted assisted,
+    BaseLoadBodyWeight bodyWeight,
   );
 
   /// Update BaseLoad
@@ -22,6 +24,7 @@ abstract class IBaseLoadRepository {
     String id,
     BaseLoadLoad load,
     BaseLoadAssisted assisted,
+    BaseLoadBodyWeight bodyWeight,
   );
 
   /// Delete BaseLoad by id

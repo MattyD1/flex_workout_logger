@@ -127,6 +127,10 @@ class _BaseLoad {
 
   late _Load? load;
   late bool assisted;
+  late bool bodyWeight;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
 }
 
 /// _BaseLoad extension
@@ -137,6 +141,9 @@ extension ConvertBaseLoad on _BaseLoad {
       id: id.hexString,
       load: load!.toEntity(),
       assisted: assisted,
+      bodyWeight: bodyWeight,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 }
@@ -152,6 +159,9 @@ class _Load {
   late int unitAsInt;
   WeightUnit get unit => WeightUnit.values[unitAsInt];
   set unit(WeightUnit value) => unitAsInt = value.index;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
 }
 
 /// _Load extension
@@ -162,6 +172,8 @@ extension ConvertLoad on _Load {
       id: id.hexString, 
       weight: weight, 
       unit: unit,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 }

@@ -12,5 +12,8 @@ class BaseLoadEntity with _$BaseLoadEntity, DatabaseEntity {
     required String id,
     required LoadEntity load,
     required bool assisted,
+    required bool bodyWeight,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _BaseLoadEntity;
 }
