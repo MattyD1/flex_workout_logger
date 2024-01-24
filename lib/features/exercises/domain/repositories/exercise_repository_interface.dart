@@ -16,7 +16,7 @@ abstract class IExerciseRepository {
   /// Get Exercise list
   FutureOr<Either<Failure, List<ExerciseEntity>>> getExercises();
 
-  /// Get Exericse by id
+  /// Get Exercise by id
   FutureOr<Either<Failure, ExerciseEntity>> getExerciseById(String id);
 
   /// Create Exercise

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/repositories/movement_pattern_interface.dart';
+import 'package:flex_workout_logger/features/exercises/domain/repositories/movement_pattern_repository_interface.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_description.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern_name.dart';
 import 'package:flex_workout_logger/features/exercises/infrastructure/schema.dart';

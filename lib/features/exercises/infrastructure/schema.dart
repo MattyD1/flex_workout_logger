@@ -1,4 +1,6 @@
+import 'package:flex_workout_logger/features/exercises/domain/entities/base_load_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/load_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern_entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group_entity.dart';
 import 'package:realm/realm.dart';
@@ -112,6 +114,64 @@ extension ConvertMuscleGroup on _MuscleGroup {
       primaryExerciseIds:
           linkedPrimaryExercises.map((e) => e.id.hexString).toList(),
       secondaryExerciseIds: linkedSecondaryExercises.map((e) => e.id.hexString).toList(),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+@RealmModel()
+class _BaseLoad {
+  @PrimaryKey()
+  late ObjectId id;
+
+  late _Load? load;
+  late bool assisted;
+  late bool bodyWeight;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+/// _BaseLoad extension
+extension ConvertBaseLoad on _BaseLoad {
+  /// Convert [_BaseLoad] to [BaseLoadEntity]
+  BaseLoadEntity toEntity() {
+    return BaseLoadEntity(
+      id: id.hexString,
+      load: load!.toEntity(),
+      assisted: assisted,
+      bodyWeight: bodyWeight,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+@RealmModel()
+class _Load {
+  @PrimaryKey()
+  late ObjectId id;
+
+  late double weight;
+
+  @MapTo('unit')
+  late int unitAsInt;
+  WeightUnit get unit => WeightUnit.values[unitAsInt];
+  set unit(WeightUnit value) => unitAsInt = value.index;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+/// _Load extension
+extension ConvertLoad on _Load {
+  /// Convert [_Load] to [LoadEntity]
+  LoadEntity toEntity() {
+    return LoadEntity(
+      id: id.hexString, 
+      weight: weight, 
+      unit: unit,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
